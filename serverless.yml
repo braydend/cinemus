@@ -49,6 +49,9 @@ provider:
 # you can define service wide environment variables here
   environment:
     MOVIE_DB_API_KEY: ${param:MOVIE_DB_API_KEY}
+    MONGO_DB_USERNAME: ${param:MONGO_DB_USERNAME}
+    MONGO_DB_PASSWORD: ${param:MONGO_DB_PASSWORD}
+    DATABASE_NAME: ${param:DATABASE_NAME}
 
 package:
   patterns:
