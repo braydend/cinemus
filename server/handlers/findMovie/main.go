@@ -6,9 +6,9 @@ import (
 	"encoding/json"
 	"github.com/aws/aws-lambda-go/events"
 	"github.com/aws/aws-lambda-go/lambda"
-	"github.com/braydend/movie-list/api"
-	"github.com/braydend/movie-list/db/mongo"
-	"github.com/braydend/movie-list/utils"
+	"github.com/braydend/movie-list/server/api"
+	"github.com/braydend/movie-list/server/db/mongo"
+	"github.com/braydend/movie-list/server/utils"
 	"log"
 )
 

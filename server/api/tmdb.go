@@ -3,7 +3,7 @@ package api
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/braydend/movie-list/utils"
+	"github.com/braydend/movie-list/server/utils"
 	"io/ioutil"
 	"log"
 	"net/http"
