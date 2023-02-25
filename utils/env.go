@@ -3,6 +3,7 @@ package utils
 import (
 	"log"
 	"os"
+	"strings"
 )
 
 func GetEnvVar(key string) (val string) {
@@ -12,5 +13,5 @@ func GetEnvVar(key string) (val string) {
 		log.Fatalf("Environment vaiable %s not found", key)
 	}
 
-	return val
+	return strings.TrimSpace(val)
 }
