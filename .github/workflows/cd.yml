@@ -22,6 +22,7 @@ jobs:
         run: touch package.json && touch package-lock.json
 
       - name: Use Node.js 16
+        uses: actions/setup-node@v3
         with:
           node-version-file: '.nvmrc'
           cache: 'npm'
