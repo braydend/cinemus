@@ -23,8 +23,17 @@ frameworkVersion: '3'
 provider:
   name: aws
   runtime: go1.x
+  httpApi:
+    cors: true
+    authorizers:
+      jwtAuth:
+        type: jwt
+        identitySource: $request.header.Authorization
+        issuerUrl: ${param:JWT_ISSUER}
+        audience:
+          - ${param:JWT_AUDIENCE}
 
-# you can overwrite defaults here
+  # you can overwrite defaults here
   stage: dev
   region: ap-southeast-2
 
@@ -65,12 +74,16 @@ functions:
       - httpApi:
           path: /findShow
           method: get
+          authorizer:
+            name: jwtAuth
   findMovie:
     handler: bin/findMovie
     events:
       - httpApi:
           path: /findMovie
           method: get
+          authorizer:
+            name: jwtAuth
 #    The following are a few example events you can configure
 #    NOTE: Please make sure to change your handler code to work with those events
 #    Check the event documentation for details
