@@ -3,3 +3,7 @@ export const auth = {
     domain: "dev-pt5nxvvf.au.auth0.com",
     audience: "https://fph4gxpg5c.execute-api.ap-southeast-2.amazonaws.com"
 }
+
+export const endpoints = {
+    lambdaBase: "https://fph4gxpg5c.execute-api.ap-southeast-2.amazonaws.com"
+}
