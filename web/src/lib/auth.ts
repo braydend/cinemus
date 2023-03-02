@@ -41,8 +41,6 @@ export async function handleCallback() {
 
     if (!token) throw Error("Unable to get access token")
 
-    console.log(token)
-
     userInfo.set(user);
     authToken.set(token)
 }
