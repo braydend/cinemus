@@ -21,10 +21,10 @@ func Handler(ctx context.Context, request events.APIGatewayProxyRequest) (Respon
 
 	if err != nil {
 		var media []mongo.Media
-		queryResults := api.FindShow(query)
+		queryResults := api.FindMovie(query)
 
 		for _, result := range queryResults {
-			media = append(media, mongo.Media{Id: result.ID, Name: result.Name})
+			media = append(media, mongo.Media{Id: result.ID, Name: result.Title})
 		}
 
 		mongo.AddToCache(mongo.SearchResults{Query: query, Results: media, MediaType: "movie"})
