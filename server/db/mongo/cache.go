@@ -3,20 +3,11 @@ package mongo
 import (
 	"context"
 	"fmt"
-	"github.com/braydend/movie-list/server/utils"
 	"go.mongodb.org/mongo-driver/bson"
 	"go.mongodb.org/mongo-driver/mongo"
 	"log"
 	"time"
 )
-
-func getDatabase() *mongo.Database {
-	dbName := utils.GetEnvVar("DATABASE_NAME")
-	client := CreateInstance()
-	db := client.Database(dbName)
-
-	return db
-}
 
 func GetFromCache(query string, mediaType string) ([]Media, error) {
 	var result CachedSearchResult
