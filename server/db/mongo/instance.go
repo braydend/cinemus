@@ -10,7 +10,7 @@ import (
 	"time"
 )
 
-func CreateInstance() *mongo.Client {
+func createInstance() *mongo.Client {
 	username := utils.GetEnvVar("MONGO_DB_USERNAME")
 	password := utils.GetEnvVar("MONGO_DB_PASSWORD")
 
@@ -26,4 +26,12 @@ func CreateInstance() *mongo.Client {
 	}
 
 	return client
+}
+
+func getDatabase() *mongo.Database {
+	dbName := utils.GetEnvVar("DATABASE_NAME")
+	client := createInstance()
+	db := client.Database(dbName)
+
+	return db
 }
