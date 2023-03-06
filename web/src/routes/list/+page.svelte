@@ -4,23 +4,32 @@
     import {searchMovie, searchShow} from "../../lib/queries/search";
     import type { MediaResponse } from "../../lib/queries/search";
     import type {Media} from "../../lib/types";
+    import {updateList} from "../../lib/queries/list";
+    import {onMount} from "svelte";
 
     type MediaType = "movie" | "show"
 
     let mediaType: MediaType = "movie"
     let query = ""
     let selections: Media[] = []
+    let hasMounted = false
+
+    onMount(() => {
+        hasMounted = true
+    });
 
     let promise
 
     const addSelection = (selection: Media) => {
         if (!Boolean(selections.find(({ id }) => id === selection.id))) {
             selections = [...selections, selection]
+            updateList(selections.map(({ id }) => id), $authToken)
         }
     };
 
     const removeSelection = (selectionId: Media["id"]) => {
         selections = selections.filter(({ id }) => id !== selectionId)
+        updateList(selections.map(({ id }) => id), $authToken)
     };
 
     const search = async (type: MediaType): Promise<MediaResponse> => {
