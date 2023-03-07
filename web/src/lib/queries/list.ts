@@ -20,3 +20,21 @@ export const updateList = async (mediaIds: string[], authToken: string): Promise
 
     throw Error(await response.text())
 }
+
+export const getList = async (authToken: string): Promise<{ids: string[]}> => {
+    const response = await fetch(
+        `${endpoints.lambdaBase}/getList`,
+        {
+            method: "GET",
+            headers: {
+                "Authorization": `Bearer ${authToken}`
+            },
+        }
+    )
+
+    if (response.ok) {
+        return await response.json()
+    }
+
+    throw Error(await response.text())
+}

@@ -68,19 +68,19 @@ package:
     - ./bin/**
 
 functions:
-  findShow:
-    handler: bin/findShow
+  searchShow:
+    handler: bin/searchShows
     events:
       - httpApi:
-          path: /findShow
+          path: /searchShows
           method: get
           authorizer:
             name: jwtAuth
-  findMovie:
-    handler: bin/findMovie
+  searchMovie:
+    handler: bin/searchMovies
     events:
       - httpApi:
-          path: /findMovie
+          path: /searchMovies
           method: get
           authorizer:
             name: jwtAuth
