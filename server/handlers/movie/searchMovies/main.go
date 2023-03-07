@@ -47,7 +47,7 @@ func Handler(ctx context.Context, request events.APIGatewayProxyRequest) (Respon
 		Body:            buf.String(),
 		Headers: map[string]string{
 			"Content-Type":           "application/json",
-			"X-MyCompany-Func-Reply": "findMovie-handler",
+			"X-MyCompany-Func-Reply": "searchMovies-handler",
 		},
 	}
 

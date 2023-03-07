@@ -8,7 +8,7 @@ export type MediaResponse = {
 };
 
 const buildUrl = (type: SearchType, query: string) => {
-    const endpoint = type === "movie" ? "findMovie" : "findShow"
+    const endpoint = type === "movie" ? "searchMovies" : "searchShows"
 
     return `${endpoints.lambdaBase}/${endpoint}?query=${query}`
 };
@@ -31,5 +31,5 @@ const search = async (query: string, authToken: string, mediaType: SearchType): 
     throw Error(await response.text())
 }
 
-export const searchShow = (query: string, authToken: string) => search(query, authToken, "show")
-export const searchMovie = (query: string, authToken: string) => search(query, authToken, "movie")
+export const searchShows = (query: string, authToken: string) => search(query, authToken, "show")
+export const searchMovies = (query: string, authToken: string) => search(query, authToken, "movie")
