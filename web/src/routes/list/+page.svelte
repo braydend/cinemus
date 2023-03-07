@@ -1,10 +1,10 @@
 <script lang="ts">
     import { authToken } from "../../lib/auth";
     import debounce from "lodash.debounce"
-    import {searchMovie, searchShow} from "../../lib/queries/search";
+    import {searchMovies, searchShows} from "../../lib/queries/search";
     import type { MediaResponse } from "../../lib/queries/search";
     import type {Media} from "../../lib/types";
-    import {updateList} from "../../lib/queries/list";
+    import {getList, updateList} from "../../lib/queries/list";
     import {onMount} from "svelte";
 
     type MediaType = "movie" | "show"
@@ -12,13 +12,14 @@
     let mediaType: MediaType = "movie"
     let query = ""
     let selections: Media[] = []
-    let hasMounted = false
+    let updateListPromise
 
-    onMount(() => {
-        hasMounted = true
+
+    onMount(async () => {
+        // Update this to use real name when API is updated
+        selections = (await getList($authToken)).ids.map(id => ({name: `foo-${id}`, id}))
     });
 
-    let promise
 
     const addSelection = (selection: Media) => {
         if (!Boolean(selections.find(({ id }) => id === selection.id))) {
@@ -33,17 +34,17 @@
     };
 
     const search = async (type: MediaType): Promise<MediaResponse> => {
-        if (type === "movie") return await searchMovie(query, $authToken)
-        if (type === "show") return await searchShow(query, $authToken)
+        if (type === "movie") return await searchMovies(query, $authToken)
+        if (type === "show") return await searchShows(query, $authToken)
     }
 
     // Research if type is changed
     $: if (mediaType && query.length > 0) {
-        promise = search(mediaType)
+        updateListPromise = search(mediaType)
     }
 
     const handleInput = debounce(
-        () => { promise = search(mediaType) }
+        () => { updateListPromise = search(mediaType) }
         , 1000);
 </script>
 <main>
@@ -53,8 +54,8 @@
     <input name="media-type" type="radio" id="show" value="show" bind:group={mediaType} />
     <input type="text" bind:value={query} on:input={handleInput} />
 
-    {#if promise}
-        {#await promise}
+    {#if updateListPromise}
+        {#await updateListPromise}
             <div>searching</div>
             {:then response}
             <ul>
