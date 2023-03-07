@@ -8,6 +8,8 @@ import (
 	"github.com/aws/aws-lambda-go/lambda"
 	"github.com/braydend/movie-list/server/api"
 	"github.com/braydend/movie-list/server/db/mongo"
+	"github.com/braydend/movie-list/server/domain"
+	"github.com/braydend/movie-list/server/types"
 	"github.com/braydend/movie-list/server/utils"
 	"log"
 )
@@ -20,14 +22,14 @@ func Handler(ctx context.Context, request events.APIGatewayProxyRequest) (Respon
 	results, err := mongo.GetFromCache(query, "movie")
 
 	if err != nil {
-		var media []mongo.Media
-		queryResults := api.FindMovie(query)
+		var media []types.Media
+		queryResults := api.SearchMovies(query)
 
 		for _, result := range queryResults {
-			media = append(media, mongo.Media{Id: result.ID, Name: result.Title})
+			media = append(media, domain.ParseMediaFromMovie(result))
 		}
 
-		mongo.AddToCache(mongo.SearchResults{Query: query, Results: media, MediaType: "movie"})
+		mongo.AddToCache(types.SearchResults{Query: query, Results: media, MediaType: "movie"})
 
 		results = media
 	}
