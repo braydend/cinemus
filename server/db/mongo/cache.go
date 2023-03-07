@@ -3,13 +3,14 @@ package mongo
 import (
 	"context"
 	"fmt"
+	"github.com/braydend/movie-list/server/types"
 	"go.mongodb.org/mongo-driver/bson"
 	"log"
 	"time"
 )
 
-func GetFromCache(query string, mediaType string) ([]Media, error) {
-	var result CachedSearchResult
+func GetFromCache(query string, mediaType string) ([]types.Media, error) {
+	var result types.CachedSearchResult
 	currentDate := time.Now().Unix()
 
 	filter := bson.M{
@@ -29,24 +30,7 @@ func GetFromCache(query string, mediaType string) ([]Media, error) {
 	return result.Results, nil
 }
 
-type Media struct {
-	Id   int
-	Name string
-}
-
-type SearchResults struct {
-	Query     string `bson:"query"`
-	Results   []Media
-	MediaType string `bson:"mediaType"`
-}
-
-type CachedSearchResult struct {
-	SearchResults `bson:"searchResults"`
-	Expiry        int64  `bson:"expiry"`
-	ID            string `bson:"_id"`
-}
-
-func AddToCache(value SearchResults) {
+func AddToCache(value types.SearchResults) {
 	db := getDatabase()
 	coll := db.Collection("cache")
 	expiry := time.Now().AddDate(0, 0, 3).Unix()
