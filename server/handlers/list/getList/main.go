@@ -30,7 +30,6 @@ func Handler(ctx context.Context, request events.APIGatewayProxyRequest) (Respon
 	}
 
 	err = mongo.Retrieve("lists", bson.M{"user": sub}, &list)
-	fmt.Printf("list: %v", list)
 
 	if err != nil {
 		log.Fatalf("Failed to retrieve list: %s", err)

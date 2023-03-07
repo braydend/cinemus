@@ -15,12 +15,6 @@
     let updateListPromise
 
 
-    onMount(async () => {
-        // Update this to use real name when API is updated
-        selections = (await getList($authToken)).ids.map(id => ({name: `foo-${id}`, id}))
-    });
-
-
     const addSelection = (selection: Media) => {
         if (!Boolean(selections.find(({ id }) => id === selection.id))) {
             selections = [...selections, selection]
@@ -41,6 +35,12 @@
     // Research if type is changed
     $: if (mediaType && query.length > 0) {
         updateListPromise = search(mediaType)
+    }
+
+    // Get list when user is authed
+    $: if ($authToken) {
+        // Update this to use real name when API is updated
+        (async() => {selections = (await getList($authToken)).ids.map(id => ({name: `foo-${id}`, id}))})()
     }
 
     const handleInput = debounce(
