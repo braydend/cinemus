@@ -4,15 +4,12 @@ import (
 	"context"
 	"fmt"
 	"go.mongodb.org/mongo-driver/bson"
-	"go.mongodb.org/mongo-driver/mongo"
 	"log"
 	"time"
 )
 
 func GetFromCache(query string, mediaType string) ([]Media, error) {
 	var result CachedSearchResult
-	db := getDatabase()
-	coll := db.Collection("cache")
 	currentDate := time.Now().Unix()
 
 	filter := bson.M{
@@ -23,14 +20,9 @@ func GetFromCache(query string, mediaType string) ([]Media, error) {
 		},
 	}
 
-	err := coll.FindOne(context.TODO(), filter).Decode(&result)
-	if err == mongo.ErrNoDocuments {
-		log.Printf("Cache miss for %s", query)
-		return nil, err
-	}
+	err := Retrieve("cache", filter, &result)
 
 	if err != nil {
-		log.Printf("Error retrieving %s from cache: %v", query, err)
 		return nil, err
 	}
 
