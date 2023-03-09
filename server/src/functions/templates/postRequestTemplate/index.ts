@@ -5,9 +5,12 @@ export default {
   handler: `${handlerPath(__dirname)}/handler.main`,
   events: [
     {
-      http: {
+      httpApi: {
         method: 'post',
-        path: 'postRequestTemplate',
+        path: '/postRequestTemplate',
+        authorizer: {
+          name: "jwtAuth"
+        },
         request: {
           schemas: {
             'application/json': schema,
