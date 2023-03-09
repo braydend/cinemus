@@ -3,15 +3,32 @@ import type { AWS } from '@serverless/typescript';
 import {searchMovies, searchShows} from "./src/functions"
 
 const serverlessConfiguration: AWS = {
-  service: 'movie-list',
+  service: 'cinemus',
+  app: 'cinemus',
+  org: 'braydend',
   frameworkVersion: '3',
   plugins: ['serverless-esbuild', 'serverless-offline'],
   provider: {
     name: 'aws',
     runtime: 'nodejs16.x',
+    stage: "dev",
+    region: "ap-southeast-2",
     apiGateway: {
       minimumCompressionSize: 1024,
       shouldStartNameWithService: true,
+    },
+    httpApi: {
+      cors: true,
+      authorizers: {
+        jwtAuth: {
+          type: "jwt",
+          identitySource: "$request.header.Authorization",
+          issuerUrl: "${param:JWT_ISSUER}",
+          audience: [
+            "${param:JWT_AUDIENCE}"
+          ]
+        }
+      }
     },
     environment: {
       AWS_NODEJS_CONNECTION_REUSE_ENABLED: '1',
