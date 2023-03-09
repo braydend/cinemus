@@ -16,6 +16,10 @@ const serverlessConfiguration: AWS = {
     environment: {
       AWS_NODEJS_CONNECTION_REUSE_ENABLED: '1',
       NODE_OPTIONS: '--enable-source-maps --stack-trace-limit=1000',
+      MOVIE_DB_API_KEY: "${param:MOVIE_DB_API_KEY}",
+      // MONGO_DB_USERNAME: ${param:MONGO_DB_USERNAME},
+      // MONGO_DB_PASSWORD: ${param:MONGO_DB_PASSWORD},
+      // DATABASE_NAME: ${param:DATABASE_NAME},
     },
   },
   // import the function via paths
