@@ -9,7 +9,7 @@ const getList: AuthorisedAPIGatewayProxyEvent = async (event) => {
   const { requestContext: { authorizer: { jwt: { claims: { sub }} }} } = event
   const [_, userId] = sub.split("|")
 
-  const data = await retrieveOne("lists", {userId})
+  const data = await retrieveOne<List>("lists", {userId})
 
   return formatJSONResponse({
     data

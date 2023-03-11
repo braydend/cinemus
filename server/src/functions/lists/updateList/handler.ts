@@ -21,9 +21,9 @@ const updateList: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (eve
     },
   } = event
   const [_, userId] = sub.split("|")
-  const data = {userId, ids}
+  const data: List = {userId, mediaIds: ids}
 
-  const result = await upsert("lists", data, {userId })
+  const result = await upsert<List>("lists", data, {userId })
 
   return formatJSONResponse({
     data: result
