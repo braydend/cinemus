@@ -1,9 +1,9 @@
 export const auth = {
     clientId: "XFquV2psiu7v2mhCqcjZdPU0lkdgOFCJ",
     domain: "dev-pt5nxvvf.au.auth0.com",
-    audience: "https://fph4gxpg5c.execute-api.ap-southeast-2.amazonaws.com"
+    audience: "localhost:3000"
 }
 
 export const endpoints = {
-    lambdaBase: "https://fph4gxpg5c.execute-api.ap-southeast-2.amazonaws.com"
+    lambdaBase: "https://4sdlin94ck.execute-api.ap-southeast-2.amazonaws.com"
 }
