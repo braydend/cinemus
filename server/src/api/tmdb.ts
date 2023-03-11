@@ -5,6 +5,7 @@ endpoint := fmt.Sprintf("%s/search/%s?api_key=%s&query=%s", tmdbBaseUrl, mediaTy
  */
 import axios from "axios"
 import {secrets} from "../config";
+import {addToCache} from "../db/mongodb/cache";
 
 type MediaCategory = "movie"|"tv"
 
@@ -51,12 +52,25 @@ const markMediaTypes = <MediaType extends Media>(media: MediaType[], type: Media
     return media.map(data => ({...data, __type: typeString}))
 }
 
-export const searchMovies = (query: string)=>search<TmdbMovie>("movie", query)
-export const searchShows = (query: string)=>search<TmdbShow>("tv", query)
+export const searchMovies = async (query: string)=> {
+    const results = await search<TmdbMovie>("movie", query)
+    for (const movie of results.results) {
+        // Don't await caching of data returned from API
+        addToCache("movie", movie.id.toString(10), movie)
+    }
+    return results
+}
+export const searchShows = async (query: string) => {
+    const results = await search<TmdbShow>("tv", query)
+    for (const show of results.results) {
+        // Don't await caching of data returned from API
+        addToCache("show", show.id.toString(10), show)
+    }
+    return results
+}
 const search = async <MediaType extends Media>(mediaType: MediaCategory, query: string): Promise<SearchResponse<MediaType>> => {
     try {
         const response = await axios.get<SearchResponse<MediaType>>(`${tmdbBaseUrl}/search/${mediaType}?api_key=${secrets.MOVIE_DB_API_KEY}&query=${query}`)
-
 
         return {...response.data, results: markMediaTypes(response.data.results, mediaType)}
     } catch (e) {
