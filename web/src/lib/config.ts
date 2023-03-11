@@ -5,5 +5,5 @@ export const auth = {
 }
 
 export const endpoints = {
-    lambdaBase: "https://4sdlin94ck.execute-api.ap-southeast-2.amazonaws.com"
+    lambdaBase: "http://localhost:3000"
 }

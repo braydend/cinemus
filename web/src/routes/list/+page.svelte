@@ -40,7 +40,7 @@
     // Get list when user is authed
     $: if ($authToken) {
         // Update this to use real name when API is updated
-        (async() => {selections = (await getList($authToken)).ids.map(id => ({name: `foo-${id}`, id}))})()
+        (async() => {selections = (await getList($authToken)).data.mediaIds.map(id => ({name: `foo-${id}`, id}))})()
     }
 
     const handleInput = debounce(
@@ -59,7 +59,7 @@
             <div>searching</div>
             {:then response}
             <ul>
-                {#each response as { Id: id, Name: name }}
+                {#each response.results as { id: id, title: name }}
                     <li on:click={() => addSelection({id, name})}>{name}</li>
                 {/each}
             </ul>
