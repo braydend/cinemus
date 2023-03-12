@@ -39,3 +39,21 @@ export const getList = async (authToken: string): Promise<{data: {mediaIds: stri
 
     throw Error(await response.text())
 }
+
+export const getMovie = async (authToken: string, id: string): Promise<{movie: {id: string, title: string}}> => {
+    const response = await fetch(
+        `${endpoints.lambdaBase}/getMovie?id=${id}`,
+        {
+            method: "GET",
+            headers: {
+                "Authorization": `Bearer ${authToken}`
+            },
+        }
+    )
+
+    if (response.ok) {
+        return await response.json()
+    }
+
+    throw Error(await response.text())
+}
