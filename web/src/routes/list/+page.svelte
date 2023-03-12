@@ -4,7 +4,8 @@
     import {searchMovies, searchShows} from "../../lib/queries/search";
     import type { MediaResponse } from "../../lib/queries/search";
     import type {Media} from "../../lib/types";
-    import {getList, updateList} from "../../lib/queries/list";
+    import {getList, getMovie, getShow, updateList} from "../../lib/queries/list";
+    import type {Movie, Show} from "../../lib/queries/list"
     import {onMount} from "svelte";
 
     type MediaType = "movie" | "show"
@@ -40,7 +41,18 @@
     // Get list when user is authed
     $: if ($authToken) {
         // Update this to use real name when API is updated
-        (async() => {selections = (await getList($authToken)).data.mediaIds.map(id => ({name: `foo-${id}`, id}))})()
+        (async () => {
+            const media = (await getList($authToken)).data;
+            for (const {id, __type} of media) {
+                if (__type === "movie"){
+                    getMovie($authToken, id).then(data => data.movie)
+                }
+                if (__type === "show"){
+                    getShow($authToken, id).then(data => data.show)
+                }
+            }
+        })()
+        // (async() => {selections = (await getList($authToken)).data.mediaIds.map(id => ({name: `foo-${id}`, id}))})()
     }
 
     const handleInput = debounce(
