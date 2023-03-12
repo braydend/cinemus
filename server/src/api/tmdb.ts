@@ -47,19 +47,29 @@ export interface SearchResponse<MediaType extends Media> {
     total_pages: number;
 }
 
-const markMediaTypes = <MediaType extends Media>(media: MediaType[], type: MediaCategory): MediaType[] => {
+const markMediaType = <MediaType extends Media>(media: MediaType, type: MediaCategory): MediaType => {
     const typeString = type === "tv" ? "show" : "movie";
-    return media.map(data => ({...data, __type: typeString}))
+    return {...media, __type: typeString}
 }
 
-export const searchMovies = async (query: string)=> {
-    const results = await search<TmdbMovie>("movie", query)
-    for (const movie of results.results) {
-        // Don't await caching of data returned from API
-        addToCache("movie", movie.id.toString(10), movie)
-    }
-    return results
+const markMediaTypes = <MediaType extends Media>(media: MediaType[], type: MediaCategory): MediaType[] => {
+    return media.map(data => markMediaType(data, type))
 }
+
+export const get = async <MediaType extends Media>(id: string, type: MediaCategory): Promise<MediaType> => {
+    try {
+        const response = await axios.get<MediaType>(`${tmdbBaseUrl}/movie/${id}?api_key=${secrets.MOVIE_DB_API_KEY}`);
+
+        return markMediaType(response.data, type)
+    } catch (e) {
+        throw Error(`Failed to find ${type} with id ${id}: ${e}`)
+    }
+};
+
+export const getMovie = (id: string): Promise<TmdbMovie> => get<TmdbMovie>(id, "movie")
+export const getShow = (id: string): Promise<TmdbShow> => get<TmdbShow>(id, "tv")
+
+export const searchMovies = (query: string)=> search<TmdbMovie>("movie", query)
 export const searchShows = async (query: string) => {
     const results = await search<TmdbShow>("tv", query)
     for (const show of results.results) {
