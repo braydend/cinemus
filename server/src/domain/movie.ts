@@ -3,7 +3,7 @@ import {addToCache, retrieveFromCache} from "../db/mongodb/cache";
 import {mapApiResponseToMedia} from "./media";
 
 export const getMovie = async (id: string) => {
-    const cachedMovie = await retrieveFromCache<TmdbMovie>(id)
+    const cachedMovie = await retrieveFromCache<TmdbMovie>(id, {["data.__type"]: "movie"})
     if (cachedMovie) {
         return mapApiResponseToMedia(cachedMovie.data)
     }

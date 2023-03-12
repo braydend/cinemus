@@ -17,9 +17,9 @@ export const addToCache = async <Data>(key: string, data: Data): Promise<Cacheab
     return await upsert("cache", dataToCache, filter)
 };
 
-export const retrieveFromCache = async <Data>(key: string): Promise<Cacheable<Data> | null> => {
+export const retrieveFromCache = async <Data>(key: string, additionalFilter?: Filter<Document>): Promise<Cacheable<Data> | null> => {
     const currentTimestamp = dayjs().unix()
-    const filter: Filter<Document> = {key, expiry: {$gt: currentTimestamp}}
+    const filter: Filter<Document> = {key, expiry: {$gt: currentTimestamp}, ...additionalFilter}
 
     return await retrieveOne<Cacheable<Data>>("cache", filter)
 };
