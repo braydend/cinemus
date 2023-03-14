@@ -19,13 +19,13 @@
     const addSelection = (selection: Media) => {
         if (!Boolean(selections.find(({ id }) => id === selection.id))) {
             selections = [...selections, selection]
-            updateList(selections.map(({ id }) => id), $authToken)
+            updateList(selections.map(({ id, __type }) => ({id: `${id}`, __type})), $authToken)
         }
     };
 
     const removeSelection = (selectionId: Media["id"]) => {
         selections = selections.filter(({ id }) => id !== selectionId)
-        updateList(selections.map(({ id }) => id), $authToken)
+        updateList(selections.map(({ id, __type }) => ({id: `${id}`, __type})), $authToken)
     };
 
     const search = async (type: MediaType): Promise<MediaResponse> => {
@@ -42,13 +42,18 @@
     $: if ($authToken) {
         // Update this to use real name when API is updated
         (async () => {
-            const media = (await getList($authToken)).data;
+            const {media} = (await getList($authToken)).data;
+            selections = []
             for (const {id, __type} of media) {
                 if (__type === "movie"){
-                    getMovie($authToken, id).then(data => data.movie)
+                    getMovie($authToken, id).then(data => {
+                        selections = [...selections, data.movie]
+                    })
                 }
                 if (__type === "show"){
-                    getShow($authToken, id).then(data => data.show)
+                    getShow($authToken, id).then(data => {
+                        selections = [...selections, data.show]
+                    })
                 }
             }
         })()
@@ -71,8 +76,8 @@
             <div>searching</div>
             {:then response}
             <ul>
-                {#each response.results as { id: id, title: name }}
-                    <li on:click={() => addSelection({id, name})}>{name}</li>
+                {#each response.results as media}
+                    <li on:click={() => addSelection(media)}>{media.name}</li>
                 {/each}
             </ul>
             {:catch e}
