@@ -2,21 +2,6 @@ import type {APIGatewayProxyResult, Handler } from "aws-lambda"
 import type {FromSchema, JSONSchema} from "json-schema-to-ts";
 import {APIGatewayProxyWithLambdaAuthorizerEvent} from "aws-lambda/trigger/api-gateway-proxy";
 
-/*
-{
-  claims: {
-    iss: 'https://dev-pt5nxvvf.au.auth0.com/',
-    sub: 'auth0|63fd31f5d7ea5c12c38c52f6',
-    aud: [ 'localhost:3000', 'https://dev-pt5nxvvf.au.auth0.com/userinfo' ],
-    iat: 1678343750,
-    exp: 1678430150,
-    azp: 'XFquV2psiu7v2mhCqcjZdPU0lkdgOFCJ',
-    scope: 'openid profile email'
-  },
-  scopes: [ 'openid', 'profile', 'email' ]
-}
- */
-
 type JWT = {
   claims: {
     iss: string,
