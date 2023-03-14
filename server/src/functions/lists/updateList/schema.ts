@@ -1,12 +1,21 @@
 export default {
   type: "object",
   properties: {
-    ids: {
+    media: {
       type: 'array',
       items: {
-        type: "string"
+        type: "object",
+        properties: {
+          id: {
+            type: "string"
+          },
+          __type: {
+            enum: ["movie", "show"],
+          }
+        },
+        required: ["id", "__type"]
       }
     }
   },
-  required: ['ids']
+  required: ['media']
 } as const;
