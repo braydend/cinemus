@@ -3,8 +3,9 @@ import {endpoints} from "../config";
 type SearchType = "movie" | "show"
 
 export type MediaResponse = {
-    Id: string,
-    Name: string
+    id: string,
+    title: string
+    __type: "movie"|"show"
 };
 
 const buildUrl = (type: SearchType, query: string) => {

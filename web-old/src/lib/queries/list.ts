@@ -1,6 +1,6 @@
 import {endpoints} from "../config";
 
-export const updateList = async (mediaIds: string[], authToken: string): Promise<undefined> => {
+export const updateList = async (media: {id: string, __type: "movie"|"show"}[], authToken: string): Promise<undefined> => {
     const response = await fetch(
         `${endpoints.lambdaBase}/updateList`,
         {
@@ -10,7 +10,7 @@ export const updateList = async (mediaIds: string[], authToken: string): Promise
                 "Content-Type": "application/json"
             },
             body: JSON.stringify({
-                ids: mediaIds.map(id => `${id}`),
+                media,
             })
         }
     )
@@ -22,7 +22,7 @@ export const updateList = async (mediaIds: string[], authToken: string): Promise
     throw Error(await response.text())
 }
 
-export const getList = async (authToken: string): Promise<{data: {mediaIds: string[]}}> => {
+export const getList = async (authToken: string): Promise<{data: {media: {id: string, __type: "movie"|"show"}[]}}> => {
     const response = await fetch(
         `${endpoints.lambdaBase}/getList`,
         {
