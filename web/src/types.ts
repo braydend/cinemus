@@ -1,5 +1,5 @@
-export type Media = {
-    id: string,
-    title: string
-    __type: "movie" | "show"
+export interface Media {
+  id: string;
+  title: string;
+  __type: "movie" | "show";
 }

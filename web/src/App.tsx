@@ -1,14 +1,15 @@
-import './App.css'
-import {Profile} from "./components/Profile/Profile";
-import {MediaList} from "./components/MediaList/MediaList";
+import "./App.css";
+import { Profile } from "./components/Profile/Profile";
+import { MediaList } from "./components/MediaList/MediaList";
+import { type FC } from "react";
 
-function App() {
+const App: FC = () => {
   return (
     <div>
       <Profile />
       <MediaList />
     </div>
-  )
-}
+  );
+};
 
-export default App
+export default App;
