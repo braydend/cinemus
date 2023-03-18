@@ -1,2 +1,2 @@
-export {default as searchShows} from "./searchShows"
-export {default as getShow} from "./getShow"
+export { default as searchShows } from "./searchShows";
+export { default as getShow } from "./getShow";

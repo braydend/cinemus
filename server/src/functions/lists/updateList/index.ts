@@ -1,5 +1,5 @@
-import schema from './schema';
-import { handlerPath } from '../../../libs/handler-resolver';
+import schema from "./schema";
+import { handlerPath } from "../../../libs/handler-resolver";
 
 export default {
   handler: `${handlerPath(__dirname)}/handler.main`,
@@ -7,14 +7,14 @@ export default {
   events: [
     {
       httpApi: {
-        method: 'post',
-        path: '/updateList',
+        method: "post",
+        path: "/updateList",
         authorizer: {
-          name: "jwtAuth"
+          name: "jwtAuth",
         },
         request: {
           schemas: {
-            'application/json': schema,
+            "application/json": schema,
           },
         },
       },

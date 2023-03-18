@@ -1,7 +1,7 @@
 export default {
   type: "object",
   properties: {
-    query: { type: 'string' }
+    query: { type: "string" },
   },
-  required: ['query']
+  required: ["query"],
 } as const;
