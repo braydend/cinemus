@@ -5,7 +5,10 @@
   "main": "serverless.ts",
   "scripts": {
     "dev": "nodemon -e ts --exec serverless offline",
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "vitest",
+    "test:watch": "vitest watch",
+    "test:coverage": "vitest run --coverage",
+    "test:coverage:watch": "vitest watch --coverage",
     "lint": "eslint .",
     "lint:fix": "eslint --fix ."
   },
@@ -24,6 +27,7 @@
     "@types/aws-lambda": "^8.10.71",
     "@types/node": "^14.14.25",
     "@typescript-eslint/eslint-plugin": "^5.55.0",
+    "@vitest/coverage-c8": "^0.29.3",
     "esbuild": "^0.14.11",
     "eslint": "^8.36.0",
     "eslint-config-prettier": "^8.7.0",
@@ -39,7 +43,8 @@
     "serverless-offline": "^12.0.4",
     "ts-node": "^10.4.0",
     "tsconfig-paths": "^3.9.0",
-    "typescript": "^5.0.2"
+    "typescript": "^5.0.2",
+    "vitest": "^0.29.3"
   },
   "author": "The serverless webpack authors (https://github.com/elastic-coders/serverless-webpack)",
   "license": "MIT"
