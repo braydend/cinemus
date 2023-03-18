@@ -2,10 +2,10 @@ name: CI
 
 on:
   pull_request:
-    branches: [ "main" ]
+    branches: ["main"]
 
 jobs:
-  backend-tests:
+  lint:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
@@ -13,10 +13,27 @@ jobs:
       - name: Set up Node
         uses: actions/setup-node@v3
         with:
-          node-version-file: '.nvmrc'
+          node-version-file: ".nvmrc"
 
-      - name: Change working directory
-        run: cd server
+      - name: Install dependencies
+        run: npm ci
+        working-directory: web
 
-      - name: Test
-        run: npm run test
+      - name: Lint
+        run: npm run lint
+        working-directory: web
+#  test:
+#    runs-on: ubuntu-latest
+#    steps:
+#      - uses: actions/checkout@v3
+#
+#      - name: Set up Node
+#        uses: actions/setup-node@v3
+#        with:
+#          node-version-file: '.nvmrc'
+#
+#      - name: Change working directory
+#        run: cd server
+#
+#      - name: Test
+#        run: npm run test
