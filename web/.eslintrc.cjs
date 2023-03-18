@@ -5,6 +5,7 @@ module.exports = {
   },
   extends: [
     'plugin:react/recommended',
+    "plugin:react/jsx-runtime",
     'standard-with-typescript',
       'prettier'
   ],
@@ -20,6 +21,8 @@ module.exports = {
       'prettier'
   ],
   rules: {
-    'prettier/prettier': "error"
+    'prettier/prettier': "error",
+    "@typescript-eslint/naming-convention": "warn",
+    "@typescript-eslint/no-floating-promises": ["error", { "ignoreIIFE": true }]
   }
 }
