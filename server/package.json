@@ -37,6 +37,7 @@
     "eslint-plugin-prettier": "^4.2.1",
     "eslint-plugin-promise": "^6.1.1",
     "json-schema-to-ts": "^1.5.0",
+    "msw": "^1.1.0",
     "nodemon": "^2.0.21",
     "serverless": "^3.0.0",
     "serverless-esbuild": "^1.23.3",
