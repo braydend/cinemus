@@ -11,15 +11,12 @@
     "strict": true,
     "allowSyntheticDefaultImports": true
   },
-  "include": [
-    "src/**/*.ts",
-    "serverless.ts"
-  ],
+  "include": ["src/**/*.ts", ".eslintrc.js", "serverless.ts"],
   "exclude": [
     "node_modules/**/*",
     ".serverless/**/*",
     ".webpack/**/*",
     "_warmup/**/*",
     ".vscode/**/*"
-  ],
+  ]
 }
