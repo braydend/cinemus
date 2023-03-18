@@ -8,11 +8,20 @@ export const handlers = [
   rest.get(`${url.TMDB_URL}/movie/:id`, (req, res, ctx) => {
     const movie = buildStubMovie();
 
-    return res(
-      // Respond with a 200 status code
+    return res(ctx.status(200), ctx.json(movie));
+  }),
 
-      //   ctx.status(200),
-      ctx.json(movie)
+  rest.get(`${url.TMDB_URL}/search/movie`, (req, res, ctx) => {
+    const movie = buildStubMovie();
+
+    return res(
+      ctx.status(200),
+      ctx.json({
+        page: 1,
+        total_pages: 1,
+        total_results: 1,
+        results: [movie],
+      })
     );
   }),
 ];

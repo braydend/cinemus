@@ -1,15 +1,18 @@
 import { TmdbMovie, TmdbShow } from "../api/tmdb";
 import { Media, mapApiResponseToMedia } from "./media";
-import { buildStubMovie, buildStubShow } from "../../test";
+import { buildStubMovie, buildStubShow, dropAllCollections } from "../../test";
 
 describe("media domain", () => {
+  afterAll(async () => {
+    await dropAllCollections();
+  });
   describe("mapApiResponseToMedia", () => {
     it("correctly maps show to media", () => {
       const input: TmdbShow = buildStubShow();
       const expected: Media = {
         __type: "show",
         id: 12345,
-        title: "Test Show",
+        title: "Stub Show",
       };
 
       expect(mapApiResponseToMedia(input)).toEqual(expected);
@@ -20,7 +23,7 @@ describe("media domain", () => {
       const expected: Media = {
         __type: "movie",
         id: 12345,
-        title: "Test Movie",
+        title: "Stub Movie",
       };
 
       expect(mapApiResponseToMedia(input)).toEqual(expected);
