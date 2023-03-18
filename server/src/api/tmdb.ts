@@ -1,9 +1,9 @@
 import axios from "axios";
-import { secrets } from "../config";
+import { secrets, url } from "../config";
 
 type MediaCategory = "movie" | "tv";
 
-const tmdbBaseUrl = "https://api.themoviedb.org/3/";
+const tmdbBaseUrl = url.TMDB_URL;
 
 interface TmdbSearchResult<MediaType extends Media> {
   page: number;

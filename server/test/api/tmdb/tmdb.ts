@@ -5,14 +5,14 @@ export const buildStubShow = (
 ): TmdbShow => {
   const defaultData: TmdbShow = {
     __type: "show",
-    name: "Test Show",
+    name: "Stub Show",
     id: 12345,
     backdrop_path: "www.foo.bar",
     first_air_date: "mockdate",
     genre_ids: [1, 2, 3],
     origin_country: ["mockcountry"],
     original_language: "english",
-    original_name: "Test Show",
+    original_name: "Stub Show",
     overview: "mock overview",
     popularity: 10,
     poster_path: "www.foo.bar",
@@ -28,12 +28,12 @@ export const buildStubMovie = (
 ): TmdbMovie => {
   const defaultData: TmdbMovie = {
     __type: "movie",
-    title: "Test Movie",
+    title: "Stub Movie",
     id: 12345,
     backdrop_path: "www.foo.bar",
     genre_ids: [1, 2, 3],
     original_language: "english",
-    original_title: "Test Movie",
+    original_title: "Stub Movie",
     overview: "mock overview",
     popularity: 10,
     poster_path: "www.foo.bar",

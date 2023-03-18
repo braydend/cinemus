@@ -7,3 +7,7 @@ export const secrets = {
 export const db = {
   DATABASE_NAME: process.env.DATABASE_NAME ?? "",
 };
+
+export const url = {
+  TMDB_URL: process.env.TMDB_URL ?? "",
+};
