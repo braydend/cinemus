@@ -2,20 +2,20 @@ export default {
   type: "object",
   properties: {
     media: {
-      type: 'array',
+      type: "array",
       items: {
         type: "object",
         properties: {
           id: {
-            type: "string"
+            type: "string",
           },
           __type: {
             enum: ["movie", "show"],
-          }
+          },
         },
-        required: ["id", "__type"]
-      }
-    }
+        required: ["id", "__type"],
+      },
+    },
   },
-  required: ['media']
+  required: ["media"],
 } as const;
