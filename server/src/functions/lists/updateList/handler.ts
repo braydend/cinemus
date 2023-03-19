@@ -1,14 +1,10 @@
 import type { ValidatedEventAPIGatewayProxyEvent } from "../../../libs/api-gateway";
 import { formatJSONResponse } from "../../../libs/api-gateway";
 import { middyfy } from "../../../libs/lambda";
-
 import type schema from "./schema";
-import { upsert } from "../../../db/mongodb/upsert";
-import { getMovie } from "../../../domain/movie";
-import { getShow } from "../../../domain/show";
-import { type List } from "../../../domain/list";
+import { updateList, type List } from "../../../domain/list";
 
-const updateList: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (
+const handler: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (
   event
 ) => {
   const {
@@ -24,19 +20,11 @@ const updateList: ValidatedEventAPIGatewayProxyEvent<typeof schema> = async (
   const [_, userId] = sub.split("|");
   const data: List = { userId, media };
 
-  const result = await upsert<List>("lists", data, { userId });
-
-  const hydratedResults = await Promise.all(
-    result.media.map(async (media) =>
-      media.__type === "movie"
-        ? await getMovie(media.id)
-        : await getShow(media.id)
-    )
-  );
+  const result = await updateList(data, userId);
 
   return formatJSONResponse({
-    data: hydratedResults,
+    data: result,
   });
 };
 
-export const main = middyfy(updateList);
+export const main = middyfy(handler);
