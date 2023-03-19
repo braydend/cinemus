@@ -1,13 +1,19 @@
-import { afterAll, beforeAll, afterEach } from "vitest";
+import { afterAll, beforeAll, afterEach, vi } from "vitest";
 import { server } from "./mocks/server";
 import { dropAllCollections } from "./utils/db";
+import { MongoMemoryServer } from "mongodb-memory-server-core";
+import * as config from "../src/config";
+
+const mongo = await MongoMemoryServer.create();
+
+vi.spyOn(config, "db", "get").mockReturnValue({
+  DATABASE_NAME: "test",
+  MONGO_CONNECTION_STRING: mongo.getUri(),
+});
 
 beforeAll(() => {
   server.listen();
 });
-
-// Reset any request handlers that we may add during the tests,
-// so they don't affect other tests.
 
 afterEach(() => {
   server.resetHandlers();
@@ -15,5 +21,6 @@ afterEach(() => {
 
 afterAll(async () => {
   await dropAllCollections();
+  await mongo.stop();
   server.close();
 });

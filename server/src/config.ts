@@ -1,11 +1,11 @@
 export const secrets = {
   MOVIE_DB_API_KEY: process.env.MOVIE_DB_API_KEY ?? "",
-  MONGO_DB_USERNAME: process.env.MONGO_DB_USERNAME ?? "",
-  MONGO_DB_PASSWORD: process.env.MONGO_DB_PASSWORD ?? "",
 };
 
 export const db = {
   DATABASE_NAME: process.env.DATABASE_NAME ?? "",
+  MONGO_CONNECTION_STRING: process.env.MONGO_CONNECTION_STRING ?? "",
+  // mongodb+srv://${secrets.MONGO_DB_USERNAME}:${secrets.MONGO_DB_PASSWORD}@movielist.3cizhk9.mongodb.net/?retryWrites=true&w=majority
 };
 
 export const url = {
