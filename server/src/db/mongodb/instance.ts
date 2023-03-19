@@ -1,9 +1,14 @@
-import { type Db, MongoClient } from "mongodb";
-import { db, secrets } from "../../config";
+import { type Db, MongoClient, type MongoClient as ClientType } from "mongodb";
+import { db } from "../../config";
 
-const uri = `mongodb+srv://${secrets.MONGO_DB_USERNAME}:${secrets.MONGO_DB_PASSWORD}@movielist.3cizhk9.mongodb.net/?retryWrites=true&w=majority`;
-const client = new MongoClient(uri);
+let client: ClientType;
 
 export const getDatabase = (): Db => {
+  if (!client) {
+    const uri = db.MONGO_CONNECTION_STRING;
+    console.log(db);
+    client = new MongoClient(uri);
+  }
+
   return client.db(db.DATABASE_NAME);
 };
