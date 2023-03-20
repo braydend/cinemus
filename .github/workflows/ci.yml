@@ -19,24 +19,32 @@ jobs:
           node-version-file: ".nvmrc"
 
       - name: Install dependencies
-        run: npm ci
+        # Temporarily running with --force until MSW is updated: https://github.com/mswjs/msw/pull/1566
+        run: npm ci --force
         working-directory: ${{ matrix.stack }}
 
       - name: Lint
         run: npm run lint
         working-directory: ${{ matrix.stack }}
-#  test:
-#    runs-on: ubuntu-latest
-#    steps:
-#      - uses: actions/checkout@v3
-#
-#      - name: Set up Node
-#        uses: actions/setup-node@v3
-#        with:
-#          node-version-file: '.nvmrc'
-#
-#      - name: Change working directory
-#        run: cd server
-#
-#      - name: Test
-#        run: npm run test
+
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        stack: [server]
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Node
+        uses: actions/setup-node@v3
+        with:
+          node-version-file: ".nvmrc"
+
+      - name: Install dependencies
+        # Temporarily running with --force until MSW is updated: https://github.com/mswjs/msw/pull/1566
+        run: npm ci --force
+        working-directory: ${{ matrix.stack }}
+
+      - name: Test
+        run: npm run test
+        working-directory: ${{ matrix.stack }}
