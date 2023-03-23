@@ -29,5 +29,8 @@ jobs:
         run: npm i
         working-directory: ${{env.working-directory}}
 
+      - name: Install Serverless
+        run: npm i -g serverless
+
       - name: Deploy
         run: sls deploy --stage staging
