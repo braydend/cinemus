@@ -11,7 +11,8 @@ env:
 jobs:
   deploy-api:
     runs-on: ubuntu-latest
-    working-directory: ./server
+    env:
+      working-directory: ./server
     steps:
       - uses: actions/checkout@v3
 
@@ -24,5 +25,10 @@ jobs:
       - name: Install Serverless
         run: npm i -g serverless
 
+      - name: Install dependencies
+        run: npm i
+        working-directory: ${{env.working-directory}}
+
       - name: Deploy
         run: sls deploy --stage staging
+        working-directory: ${{env.working-directory}}
