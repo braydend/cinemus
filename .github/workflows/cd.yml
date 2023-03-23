@@ -18,12 +18,14 @@ jobs:
 
       - name: Use Node.js 16
         uses: actions/setup-node@v3
+        working-directory: ${{env.working-directory}}
         with:
           node-version-file: ".nvmrc"
           cache: "npm"
 
       - name: Install Serverless
         run: npm i -g serverless
+        working-directory: ${{env.working-directory}}
 
       - name: Install dependencies
         run: npm i
