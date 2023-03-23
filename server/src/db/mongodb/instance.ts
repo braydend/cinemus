@@ -6,7 +6,6 @@ let client: ClientType;
 export const getDatabase = (): Db => {
   if (!client) {
     const uri = db.MONGO_CONNECTION_STRING;
-    console.log(db);
     client = new MongoClient(uri);
   }
 

@@ -1,6 +1,6 @@
 import { retrieveOne } from "../db/mongodb/retrieveOne";
 import { upsert } from "../db/mongodb/upsert";
-import { Media } from "./media";
+import { type Media } from "./media";
 import { getMovie } from "./movie";
 import { getShow } from "./show";
 

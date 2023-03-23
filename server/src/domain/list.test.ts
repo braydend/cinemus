@@ -1,8 +1,11 @@
 import { it, expect, describe } from "vitest";
-import { Media } from "./media";
-import { getList, List, updateList } from "./list";
+import { type Media } from "./media";
+import { getList, type List, updateList } from "./list";
 
-const stubList = async (media: omit<Media, "title">[], userId: string) => {
+const stubList = async (
+  media: Array<omit<Media, "title">>,
+  userId: string
+): Promise<void> => {
   await updateList({ media, userId }, userId);
 };
 

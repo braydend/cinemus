@@ -16,5 +16,6 @@ module.exports = {
     "prettier/prettier": "error",
     "@typescript-eslint/no-unused-vars": ["error", { varsIgnorePattern: "_+" }],
     "@typescript-eslint/no-floating-promises": "warn",
+    "@typescript-eslint/strict-boolean-expressions": "warn",
   },
 };
