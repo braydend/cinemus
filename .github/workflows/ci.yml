@@ -41,8 +41,7 @@ jobs:
           node-version-file: ".nvmrc"
 
       - name: Install dependencies
-        # Temporarily running with --force until MSW is updated: https://github.com/mswjs/msw/pull/1566
-        run: npm ci --force
+        run: npm ci
         working-directory: ${{ matrix.stack }}
 
       - name: Test
