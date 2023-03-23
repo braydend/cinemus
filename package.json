@@ -1,0 +1,25 @@
+{
+  "name": "movie-list",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/braydend/movie-list.git"
+  },
+  "author": "braydend",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/braydend/movie-list/issues"
+  },
+  "homepage": "https://github.com/braydend/movie-list#readme",
+  "devDependencies": {
+    "@serverless/typescript": "^3.0.0",
+    "serverless": "^3.28.1",
+    "serverless-esbuild": "^1.23.3",
+    "serverless-offline": "^12.0.4"
+  }
+}
