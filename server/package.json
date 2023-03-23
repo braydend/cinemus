@@ -23,7 +23,6 @@
     "mongodb": "5.1"
   },
   "devDependencies": {
-    "@serverless/typescript": "^3.0.0",
     "@types/aws-lambda": "^8.10.71",
     "@types/node": "^14.14.25",
     "@typescript-eslint/eslint-plugin": "^5.55.0",
@@ -40,9 +39,6 @@
     "mongodb-memory-server-core": "^8.12.1",
     "msw": "^1.1.1",
     "nodemon": "^2.0.21",
-    "serverless": "^3.0.0",
-    "serverless-esbuild": "^1.23.3",
-    "serverless-offline": "^12.0.4",
     "ts-node": "^10.4.0",
     "tsconfig-paths": "^3.9.0",
     "typescript": "^5.0.2",
