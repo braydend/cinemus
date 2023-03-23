@@ -5,7 +5,6 @@ export const secrets = {
 export const db = {
   DATABASE_NAME: process.env.DATABASE_NAME ?? "",
   MONGO_CONNECTION_STRING: process.env.MONGO_CONNECTION_STRING ?? "",
-  // mongodb+srv://${secrets.MONGO_DB_USERNAME}:${secrets.MONGO_DB_PASSWORD}@movielist.3cizhk9.mongodb.net/?retryWrites=true&w=majority
 };
 
 export const url = {
