@@ -21,13 +21,11 @@ jobs:
         with:
           node-version-file: ".nvmrc"
           cache: "npm"
-          cache-dependency-path: ${{env.working-directory}}/package-lock.json
 
-      - name: Install Serverless
-        run: npm i -g serverless
-        working-directory: ${{env.working-directory}}
+      - name: Install Project dependencies
+        run: npm i
 
-      - name: Install dependencies
+      - name: Install Server dependencies
         run: npm i
         working-directory: ${{env.working-directory}}
 
