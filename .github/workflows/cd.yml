@@ -1,7 +1,7 @@
 name: CD
 
 on:
-  pul_request:
+  pull_request:
   # push:
   #   branches: ["main"]
 
