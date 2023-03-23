@@ -1,5 +1,5 @@
-import { TmdbMovie, TmdbShow } from "../api/tmdb";
-import { Media, mapApiResponseToMedia } from "./media";
+import { type TmdbMovie, type TmdbShow } from "../api/tmdb";
+import { type Media, mapApiResponseToMedia } from "./media";
 import { buildStubMovie, buildStubShow, dropAllCollections } from "../../test";
 
 describe("media domain", () => {

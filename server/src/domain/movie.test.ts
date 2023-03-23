@@ -1,5 +1,5 @@
 import { it, expect, describe, vi } from "vitest";
-import { Media } from "./media";
+import { type Media } from "./media";
 import { getMovie, searchMovies } from "./movie";
 import * as tmdb from "../../src/api/tmdb";
 

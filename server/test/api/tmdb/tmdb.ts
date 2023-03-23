@@ -1,4 +1,4 @@
-import { TmdbMovie, TmdbShow } from "../../../src/api/tmdb";
+import { type TmdbMovie, type TmdbShow } from "../../../src/api/tmdb";
 
 export const buildStubShow = (
   customData?: Partial<Omit<TmdbShow, "__type">>
