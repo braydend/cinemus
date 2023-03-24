@@ -11,7 +11,7 @@
     "strict": true,
     "allowSyntheticDefaultImports": true
   },
-  "include": ["src/**/*.ts", ".eslintrc.js"],
+  "include": ["src/**/*.ts", ".eslintrc.js", "serverless.ts"],
   "exclude": [
     "node_modules/**/*",
     ".serverless/**/*",
