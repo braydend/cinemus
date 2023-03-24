@@ -31,5 +31,5 @@ jobs:
         working-directory: ${{env.working-directory}}
 
       - name: Deploy
-        run: sls deploy --stage staging
+        run: sls deploy --stage production
         working-directory: ${{env.working-directory}}
