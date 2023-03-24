@@ -9,7 +9,7 @@ import {
   searchMovies,
   searchShows,
   updateList,
-} from "./server/src/functions";
+} from "./src/functions";
 
 const serverlessConfiguration: AWS = {
   service: "cinemus",
