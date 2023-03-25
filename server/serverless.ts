@@ -43,6 +43,7 @@ const serverlessConfiguration: AWS = {
       MONGO_CONNECTION_STRING: "${param:MONGO_CONNECTION_STRING}",
       DATABASE_NAME: "${param:DATABASE_NAME}",
       TMDB_URL: "${param:TMDB_URL}",
+      MOVIE_DB_API_KEY: "${param:MOVIE_DB_API_KEY}",
     },
   },
   // import the function via paths
