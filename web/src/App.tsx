@@ -6,6 +6,7 @@ import { type FC } from "react";
 const App: FC = () => {
   return (
     <div>
+      <h1>Cinemus</h1>
       <Profile />
       <MediaList />
     </div>
