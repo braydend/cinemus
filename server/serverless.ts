@@ -42,6 +42,7 @@ const serverlessConfiguration: AWS = {
       NODE_OPTIONS: "--enable-source-maps --stack-trace-limit=1000",
       MONGO_CONNECTION_STRING: "${param:MONGO_CONNECTION_STRING}",
       DATABASE_NAME: "${param:DATABASE_NAME}",
+      TMDB_URL: "${param:TMDB_URL}",
     },
   },
   // import the function via paths
