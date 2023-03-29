@@ -1,9 +1,9 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { type ChangeEventHandler, type FC, useState } from "react";
-import { type Media } from "../../types";
-import { searchMovies, searchShows } from "../../queries/search";
-import { useGetAuthToken } from "../../hooks/useGetAuthToken";
-import { getList, updateList } from "../../queries/list";
+import { type Media } from "../../../types";
+import { searchMovies, searchShows } from "../../../queries/search";
+import { useGetAuthToken } from "../../../hooks/useGetAuthToken";
+import { getList, updateList } from "../../../queries/list";
 import { useDebounce } from "use-debounce";
 
 export const MediaList: FC = () => {
