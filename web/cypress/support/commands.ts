@@ -1,6 +1,26 @@
 /// <reference types="cypress" />
+/// <reference types="@testing-library/cypress" />
 
 import "@testing-library/cypress/add-commands";
+
+Cypress.Commands.add(
+  "login",
+  (username: string, password: string, host: string, authUrl: string) => {
+    // Pass in dependencies via args option
+    const args = { username, password };
+    cy.origin(authUrl, { args }, ({ username, password }) => {
+      cy.findByRole("input", { name: "Email address" }).type(username);
+      cy.get("input").eq(2).type(password);
+      cy.get("button").last().click();
+      // This should be conditional
+      if (cy.get("button").contains("Accept").should("exist")) {
+        cy.get("button").first().click();
+      }
+    });
+    cy.url().should("contain", host);
+  }
+);
+
 // ***********************************************
 // This example commands.ts shows you how to
 // create various custom commands and overwrite
