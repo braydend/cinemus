@@ -5,6 +5,8 @@ import { searchMovies, searchShows } from "../../../queries/search";
 import { useGetAuthToken } from "../../../hooks/useGetAuthToken";
 import { getList, updateList } from "../../../queries/list";
 import { useDebounce } from "use-debounce";
+import { ListItem } from "../../atoms";
+import { List } from "@mui/material";
 
 export const MediaList: FC = () => {
   const { authToken } = useGetAuthToken();
@@ -39,7 +41,17 @@ export const MediaList: FC = () => {
       ) : (
         <>
           <Search onSelect={handleSelection} />
-          <List media={currentSelections} onSelect={handleRemoval} />
+          <List>
+            {currentSelections.map((media) => (
+              <ListItem
+                key={media.id}
+                media={media}
+                onRemove={() => {
+                  handleRemoval(media);
+                }}
+              />
+            ))}
+          </List>
         </>
       )}
     </div>
@@ -109,27 +121,5 @@ const Search: FC<SearchProps> = ({ onSelect }) => {
         ))}
       </ul>
     </div>
-  );
-};
-
-interface ListProps {
-  media: Media[];
-  onSelect: (selection: Media) => void;
-}
-
-const List: FC<ListProps> = ({ media, onSelect }) => {
-  return (
-    <ul>
-      {media.map((m) => (
-        <li
-          key={`${m.id}-${m.__type}`}
-          onClick={() => {
-            onSelect(m);
-          }}
-        >
-          {m.title}
-        </li>
-      ))}
-    </ul>
   );
 };
