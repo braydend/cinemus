@@ -1,3 +1,3 @@
 export * from "./Navigation";
 export * from "./UserMenu";
-export * from "./MediaList";
+export * from "./SearchBox";
