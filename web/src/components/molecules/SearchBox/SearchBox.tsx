@@ -9,15 +9,21 @@ import { searchMovies, searchShows } from "../../../queries/search";
 interface Props {
   mediaType: "movie" | "show";
   onSelect: (selection: Media) => void;
+  query: string;
+  onChange: (query: string) => void;
 }
 
-export const SearchBox: FC<Props> = ({ mediaType, onSelect }) => {
+export const SearchBox: FC<Props> = ({
+  mediaType,
+  onSelect,
+  query,
+  onChange,
+}) => {
   const [open, setOpen] = useState(false);
   const [options, setOptions] = useState<readonly Media[]>([]);
   const loading = open && options.length === 0;
 
   const { authToken } = useGetAuthToken();
-  const [query, setQuery] = useState("");
   const [debouncedQuery] = useDebounce(query, 500);
   const { data } = useQuery(
     [`search-${mediaType}-${query}`],
@@ -51,12 +57,13 @@ export const SearchBox: FC<Props> = ({ mediaType, onSelect }) => {
       onChange={(_, selection) => {
         selection !== null && onSelect(selection);
       }}
+      inputValue={query}
       renderInput={(params) => (
         <TextField
           {...params}
           label="Search"
           onChange={({ target: { value } }) => {
-            setQuery(value);
+            onChange(value);
           }}
           InputProps={{
             ...params.InputProps,
