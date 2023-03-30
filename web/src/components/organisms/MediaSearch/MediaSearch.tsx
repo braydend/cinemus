@@ -8,7 +8,8 @@ interface Props {
 }
 
 export const MediaSearch: FC<Props> = ({ onSelect }) => {
-  const [mediaType, setMediaType] = useState<MediaType>("movie");
+  const [mediaType, setMediaType] = useState<MediaType>("show");
+  const [query, setQuery] = useState("");
 
   const handleMediaTypeChange = (value: MediaType): void => {
     setMediaType(value);
@@ -17,7 +18,12 @@ export const MediaSearch: FC<Props> = ({ onSelect }) => {
   return (
     <div>
       <MediaTypeSelector onChange={handleMediaTypeChange} />
-      <SearchBox mediaType={mediaType} onSelect={onSelect} />
+      <SearchBox
+        mediaType={mediaType}
+        onSelect={onSelect}
+        query={query}
+        onChange={setQuery}
+      />
     </div>
   );
 };
