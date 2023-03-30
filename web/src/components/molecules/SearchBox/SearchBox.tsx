@@ -10,14 +10,14 @@ interface Props {
   mediaType: "movie" | "show";
   onSelect: (selection: Media) => void;
   query: string;
-  onChange: (query: string) => void;
+  setQuery: (query: string) => void;
 }
 
 export const SearchBox: FC<Props> = ({
   mediaType,
   onSelect,
   query,
-  onChange,
+  setQuery,
 }) => {
   const [open, setOpen] = useState(false);
   const [options, setOptions] = useState<readonly Media[]>([]);
@@ -39,6 +39,12 @@ export const SearchBox: FC<Props> = ({
       setOptions([]);
     }
   }, [open]);
+
+  const handleSelection = (selection: Media): void => {
+    onSelect(selection);
+    setQuery("");
+  };
+
   return (
     <Autocomplete
       filterOptions={(x) => x}
@@ -55,7 +61,7 @@ export const SearchBox: FC<Props> = ({
       options={data?.results ?? []}
       loading={loading}
       onChange={(_, selection) => {
-        selection !== null && onSelect(selection);
+        selection !== null && handleSelection(selection);
       }}
       inputValue={query}
       renderInput={(params) => (
@@ -63,7 +69,7 @@ export const SearchBox: FC<Props> = ({
           {...params}
           label="Search"
           onChange={({ target: { value } }) => {
-            onChange(value);
+            setQuery(value);
           }}
           InputProps={{
             ...params.InputProps,
