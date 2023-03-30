@@ -1,5 +1,7 @@
+export type MediaType = "movie" | "show";
+
 export interface Media {
   id: string;
   title: string;
-  __type: "movie" | "show";
+  __type: MediaType;
 }
