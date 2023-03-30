@@ -22,7 +22,7 @@ export const MediaSearch: FC<Props> = ({ onSelect }) => {
         mediaType={mediaType}
         onSelect={onSelect}
         query={query}
-        onChange={setQuery}
+        setQuery={setQuery}
       />
     </div>
   );
