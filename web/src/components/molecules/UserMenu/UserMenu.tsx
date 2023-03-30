@@ -1,4 +1,4 @@
-import { FC, MouseEvent, useState } from "react";
+import { type FC, type MouseEvent, useState } from "react";
 import Avatar from "@mui/material/Avatar";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
@@ -12,15 +12,15 @@ export const UserMenu: FC = () => {
   const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
   const { user, isAuthenticated, loginWithRedirect, logout } = useAuth0();
 
-  const handleOpenUserMenu = (event: MouseEvent<HTMLElement>) => {
+  const handleOpenUserMenu = (event: MouseEvent<HTMLElement>): void => {
     setAnchorElUser(event.currentTarget);
   };
 
-  const handleCloseUserMenu = () => {
+  const handleCloseUserMenu = (): void => {
     setAnchorElUser(null);
   };
 
-  const handleLogout = () => {
+  const handleLogout = (): void => {
     logout();
     handleCloseUserMenu();
   };
@@ -55,6 +55,7 @@ export const UserMenu: FC = () => {
   ) : (
     <Button
       onClick={() => {
+        // eslint-disable-next-line @typescript-eslint/no-floating-promises
         loginWithRedirect();
       }}
       variant="contained"

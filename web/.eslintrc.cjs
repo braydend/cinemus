@@ -11,6 +11,7 @@ module.exports = {
   ],
   overrides: [
   ],
+  ignorePatterns: ["node_modules", "dist"],
   parserOptions: {
     ecmaVersion: 'latest',
     sourceType: 'module',
