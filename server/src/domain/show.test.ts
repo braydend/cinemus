@@ -10,6 +10,7 @@ describe("show domain", () => {
       const expectedShow: Media = {
         __type: "show",
         title: "Stub Show",
+        posterPath: "www.foo.bar",
         id: 12345,
       };
       const result = await getShow("12345");
@@ -23,6 +24,7 @@ describe("show domain", () => {
       const expectedShow: Media = {
         __type: "show",
         title: "Stub Show",
+        posterPath: "www.foo.bar",
         id: 12345,
       };
       const result = await getShow("12345");
@@ -39,6 +41,7 @@ describe("show domain", () => {
         {
           __type: "show",
           title: "Stub Show",
+          posterPath: "www.foo.bar",
           id: 12345,
         },
       ];
@@ -54,6 +57,7 @@ describe("show domain", () => {
         {
           __type: "show",
           title: "Stub Show",
+          posterPath: "www.foo.bar",
           id: 12345,
         },
       ];

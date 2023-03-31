@@ -32,6 +32,7 @@ describe("list domain", () => {
         {
           __type: "show",
           title: "Stub Show",
+          posterPath: "www.foo.bar",
           id: 12345,
         },
       ];
@@ -56,6 +57,7 @@ describe("list domain", () => {
         {
           __type: "show",
           title: "Stub Show",
+          posterPath: "www.foo.bar",
           id: 12345,
         },
       ];

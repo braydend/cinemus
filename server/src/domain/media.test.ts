@@ -13,6 +13,7 @@ describe("media domain", () => {
         __type: "show",
         id: 12345,
         title: "Stub Show",
+        posterPath: "www.foo.bar",
       };
 
       expect(mapApiResponseToMedia(input)).toEqual(expected);
@@ -24,6 +25,7 @@ describe("media domain", () => {
         __type: "movie",
         id: 12345,
         title: "Stub Movie",
+        posterPath: "www.foo.bar",
       };
 
       expect(mapApiResponseToMedia(input)).toEqual(expected);
