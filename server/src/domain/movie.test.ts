@@ -10,6 +10,7 @@ describe("movie domain", () => {
       const expectedMovie: Media = {
         __type: "movie",
         title: "Stub Movie",
+        posterPath: "www.foo.bar",
         id: 12345,
       };
       const result = await getMovie("12345");
@@ -23,6 +24,7 @@ describe("movie domain", () => {
       const expectedMovie: Media = {
         __type: "movie",
         title: "Stub Movie",
+        posterPath: "www.foo.bar",
         id: 12345,
       };
       const result = await getMovie("12345");
@@ -39,6 +41,7 @@ describe("movie domain", () => {
         {
           __type: "movie",
           title: "Stub Movie",
+          posterPath: "www.foo.bar",
           id: 12345,
         },
       ];
@@ -54,6 +57,7 @@ describe("movie domain", () => {
         {
           __type: "movie",
           title: "Stub Movie",
+          posterPath: "www.foo.bar",
           id: 12345,
         },
       ];
