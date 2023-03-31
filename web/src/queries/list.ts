@@ -1,10 +1,11 @@
 import { endpoints } from "../utils/config";
+import { type Media } from "../types";
 
 export const updateList = async (
-  media: Array<{ id: string; __type: "movie" | "show" }>,
+  media: Array<Pick<Media, "id" | "__type">>,
   authToken: string
 ): Promise<{
-  data: Array<{ id: string; __type: "movie" | "show"; title: string }>;
+  data: Media[];
 }> => {
   const response = await fetch(`${endpoints.lambdaBase}/updateList`, {
     method: "POST",
@@ -27,7 +28,7 @@ export const updateList = async (
 export const getList = async (
   authToken: string
 ): Promise<{
-  data: Array<{ id: string; __type: "movie" | "show"; title: string }>;
+  data: Media[];
 }> => {
   const response = await fetch(`${endpoints.lambdaBase}/getList`, {
     method: "GET",
@@ -61,10 +62,6 @@ export const getMovie = async (
   throw Error(await response.text());
 };
 
-interface Media {
-  id: string;
-  title: string;
-}
 export interface Movie {
   movie: Media;
 }

@@ -7,8 +7,6 @@ import {
 } from "@mui/material";
 import { type FC } from "react";
 import { type Media } from "../../../types";
-import TvIcon from "@mui/icons-material/Tv";
-import MovieIcon from "@mui/icons-material/Movie";
 import DeleteIcon from "@mui/icons-material/Delete";
 
 interface Props {
@@ -17,11 +15,15 @@ interface Props {
 }
 export const ListItem: FC<Props> = ({ media, onRemove }) => {
   return (
-    <Box flex={"auto"} flexDirection={"row"}>
+    <Box flex={"auto"} flexDirection={"row"} padding={"0.5rem"}>
       <MuiListItem disablePadding>
-        <ListItemIcon>
-          {media.__type === "show" ? <TvIcon /> : <MovieIcon />}
-        </ListItemIcon>
+        <Box paddingRight={"0.5rem"} justifyItems={"center"} display={"flex"}>
+          <img
+            src={media.images.logo.small}
+            alt={`${media.title}-image`}
+            width={64}
+          />
+        </Box>
         <ListItemText>{media.title}</ListItemText>
         <ListItemButton sx={{ flexGrow: 0 }} disableGutters onClick={onRemove}>
           <ListItemIcon sx={{ minWidth: "auto" }}>
