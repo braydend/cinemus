@@ -1,5 +1,5 @@
 import axios from "axios";
-import { secrets, url } from "../config";
+import { secrets, url } from "../../config";
 
 type MediaCategory = "movie" | "tv";
 

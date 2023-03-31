@@ -11,9 +11,10 @@ interface Cacheable<Data> {
 
 export const addToCache = async <Data>(
   key: string,
-  data: Data
+  data: Data,
+  daysToCache?: number = 3
 ): Promise<Cacheable<Data>> => {
-  const expiry = dayjs().add(3, "days").unix();
+  const expiry = dayjs().add(daysToCache, "days").unix();
   const dataToCache: Cacheable<Data> = { key, data, expiry };
   const filter = { key };
 
