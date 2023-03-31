@@ -1,12 +1,9 @@
 import { endpoints } from "../utils/config";
+import { type Media } from "../types";
 
 type SearchType = "movie" | "show";
 
-export interface MediaResponse {
-  id: string;
-  title: string;
-  __type: "movie" | "show";
-}
+export type MediaResponse = Pick<Media, "id" | "title" | "__type" | "images">;
 
 interface SearchResults {
   results: MediaResponse[];

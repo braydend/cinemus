@@ -4,8 +4,9 @@ import { type Media } from "../../../types";
 import { useGetAuthToken } from "../../../hooks/useGetAuthToken";
 import { getList, updateList } from "../../../queries/list";
 import { ListItem } from "../../atoms";
-import { List } from "@mui/material";
-import { MediaSearch } from "../../organisms/MediaSearch";
+import { Divider, List } from "@mui/material";
+import { MediaSearch } from "../../organisms";
+import { type MediaResponse } from "../../../queries/search";
 
 export const MediaList: FC = () => {
   const { authToken } = useGetAuthToken();
@@ -16,7 +17,7 @@ export const MediaList: FC = () => {
   );
   const { mutate, data: selections } = useMutation(
     ["updateList"],
-    async (media: Array<Omit<Media, "title">>) =>
+    async (media: MediaResponse[]) =>
       await updateList(
         media.map(({ id, __type }) => ({ id: `${id}`, __type })),
         authToken
@@ -24,7 +25,7 @@ export const MediaList: FC = () => {
   );
 
   const currentSelections = selections?.data ?? initialList?.data ?? [];
-  const handleSelection = (media: Media): void => {
+  const handleSelection = (media: MediaResponse): void => {
     mutate([...currentSelections, media]);
   };
 
@@ -41,14 +42,17 @@ export const MediaList: FC = () => {
         <>
           <MediaSearch onSelect={handleSelection} />
           <List>
-            {currentSelections.map((media) => (
-              <ListItem
-                key={media.id}
-                media={media}
-                onRemove={() => {
-                  handleRemoval(media);
-                }}
-              />
+            {currentSelections.map((media, index) => (
+              <>
+                <ListItem
+                  key={media.id}
+                  media={media}
+                  onRemove={() => {
+                    handleRemoval(media);
+                  }}
+                />
+                {index < currentSelections.length - 1 && <Divider />}
+              </>
             ))}
           </List>
         </>

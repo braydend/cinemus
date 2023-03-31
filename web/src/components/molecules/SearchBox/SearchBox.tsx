@@ -1,14 +1,18 @@
-import { useEffect, type FC, useState } from "react";
-import { Autocomplete, CircularProgress, TextField } from "@mui/material";
-import { type Media } from "../../../types";
+import { useEffect, type FC, useState, type HTMLAttributes } from "react";
+import { Autocomplete, Box, CircularProgress, TextField } from "@mui/material";
+import { type Media, type MediaType } from "../../../types";
 import { useGetAuthToken } from "../../../hooks/useGetAuthToken";
 import { useDebounce } from "use-debounce";
 import { useQuery } from "@tanstack/react-query";
-import { searchMovies, searchShows } from "../../../queries/search";
+import {
+  type MediaResponse,
+  searchMovies,
+  searchShows,
+} from "../../../queries/search";
 
 interface Props {
-  mediaType: "movie" | "show";
-  onSelect: (selection: Media) => void;
+  mediaType: MediaType;
+  onSelect: (selection: MediaResponse) => void;
   query: string;
   setQuery: (query: string) => void;
 }
@@ -40,9 +44,38 @@ export const SearchBox: FC<Props> = ({
     }
   }, [open]);
 
-  const handleSelection = (selection: Media): void => {
+  const handleSelection = (selection: MediaResponse): void => {
     onSelect(selection);
     setQuery("");
+  };
+
+  const renderOption = (
+    props: HTMLAttributes<HTMLLIElement>,
+    option: MediaResponse
+  ): JSX.Element => {
+    const hasImage = Boolean(option.images.logo?.xsmall);
+    return (
+      <li {...props}>
+        <Box
+          minWidth={"32px"}
+          height={"48px"}
+          marginRight={"0.5rem"}
+          sx={{ backgroundColor: "black" }}
+          display={"block"}
+        >
+          {hasImage ? (
+            <img
+              src={option.images.logo.xsmall}
+              width={32}
+              alt={`${option.title} poster`}
+            />
+          ) : (
+            <>&nbsp;</>
+          )}
+        </Box>
+        {option.title}
+      </li>
+    );
   };
 
   return (
@@ -64,6 +97,7 @@ export const SearchBox: FC<Props> = ({
         selection !== null && handleSelection(selection);
       }}
       inputValue={query}
+      renderOption={renderOption}
       renderInput={(params) => (
         <TextField
           {...params}
