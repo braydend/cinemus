@@ -3,7 +3,6 @@
 import type { AWS } from "@serverless/typescript";
 
 import {
-  getConfiguration,
   getList,
   getMovie,
   getShow,
@@ -55,7 +54,6 @@ const serverlessConfiguration: AWS = {
     updateList,
     getMovie,
     getShow,
-    getConfiguration,
   },
   package: { individually: true },
   custom: {

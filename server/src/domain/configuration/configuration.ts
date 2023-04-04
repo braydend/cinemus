@@ -8,6 +8,7 @@ export const getConfiguration =
   async (): Promise<TmdbConfigurationResponse> => {
     const cachedConfiguration =
       await retrieveFromCache<TmdbConfigurationResponse>("configuration");
+
     if (cachedConfiguration != null) {
       return cachedConfiguration.data;
     }

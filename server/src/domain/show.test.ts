@@ -2,6 +2,7 @@ import { it, expect, describe, vi } from "vitest";
 import { type Media } from "./media";
 import { getShow, searchShows } from "./show";
 import * as tmdb from "../../src/api/tmdb";
+import { getImages } from "./image";
 
 describe("show domain", () => {
   describe("getShow", () => {
@@ -10,7 +11,7 @@ describe("show domain", () => {
       const expectedShow: Media = {
         __type: "show",
         title: "Stub Show",
-        posterPath: "www.foo.bar",
+        images: await getImages("/posterPath.jpg"),
         id: 12345,
       };
       const result = await getShow("12345");
@@ -24,7 +25,7 @@ describe("show domain", () => {
       const expectedShow: Media = {
         __type: "show",
         title: "Stub Show",
-        posterPath: "www.foo.bar",
+        images: await getImages("/posterPath.jpg"),
         id: 12345,
       };
       const result = await getShow("12345");
@@ -41,7 +42,7 @@ describe("show domain", () => {
         {
           __type: "show",
           title: "Stub Show",
-          posterPath: "www.foo.bar",
+          images: await getImages("/posterPath.jpg"),
           id: 12345,
         },
       ];
@@ -57,7 +58,7 @@ describe("show domain", () => {
         {
           __type: "show",
           title: "Stub Show",
-          posterPath: "www.foo.bar",
+          images: await getImages("/posterPath.jpg"),
           id: 12345,
         },
       ];

@@ -4,10 +4,8 @@ import { secrets, url } from "../../config";
 const tmdbBaseUrl = url.TMDB_URL;
 
 export interface TmdbConfigurationResponse {
-  configuration: {
-    images: Images;
-    change_keys: string[];
-  };
+  images: Images;
+  change_keys: string[];
 }
 
 export interface Images {

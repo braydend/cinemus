@@ -15,7 +15,7 @@ export const buildStubShow = (
     original_name: "Stub Show",
     overview: "mock overview",
     popularity: 10,
-    poster_path: "www.foo.bar",
+    poster_path: "/posterPath.jpg",
     vote_average: 5,
     vote_count: 200,
   };
@@ -36,7 +36,7 @@ export const buildStubMovie = (
     original_title: "Stub Movie",
     overview: "mock overview",
     popularity: 10,
-    poster_path: "www.foo.bar",
+    poster_path: "/posterPath.jpg",
     vote_average: 5,
     vote_count: 200,
     adult: false,
@@ -45,4 +45,21 @@ export const buildStubMovie = (
   };
 
   return { ...defaultData, ...customData };
+};
+
+export const buildStubConfiguration = () => {
+  const imageSizes = ["w100", "w300", "w500", "w700", "w1000", "original"];
+
+  return {
+    images: {
+      base_url: "http://image.tmdb.org/t/p/",
+      secure_base_url: "https://image.tmdb.org/t/p/",
+      backdrop_sizes: imageSizes,
+      logo_sizes: imageSizes,
+      poster_sizes: imageSizes,
+      profile_sizes: imageSizes,
+      still_sizes: imageSizes,
+    },
+    change_keys: [],
+  };
 };
