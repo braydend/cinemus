@@ -11,13 +11,13 @@ export const getMovie = async (id: string): Promise<Media> => {
     "data.__type": "movie",
   });
   if (cachedMovie != null) {
-    return mapApiResponseToMedia(cachedMovie.data);
+    return await mapApiResponseToMedia(cachedMovie.data);
   }
 
   const movie = await fetchMovie(id);
   addToCache(id, movie);
 
-  return mapApiResponseToMedia(movie);
+  return await mapApiResponseToMedia(movie);
 };
 
 export const searchMovies = async (query: string): Promise<Media[]> => {
@@ -27,5 +27,5 @@ export const searchMovies = async (query: string): Promise<Media[]> => {
     addToCache(movie.id.toString(10), movie);
   }
 
-  return results.map(mapApiResponseToMedia);
+  return await Promise.all(results.map(mapApiResponseToMedia));
 };

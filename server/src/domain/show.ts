@@ -11,21 +11,21 @@ export const getShow = async (id: string): Promise<Media> => {
     "data.__type": "show",
   });
   if (cachedShow != null) {
-    return mapApiResponseToMedia(cachedShow.data);
+    return await mapApiResponseToMedia(cachedShow.data);
   }
 
   const movie = await fetchShow(id);
   addToCache(id, movie);
 
-  return mapApiResponseToMedia(movie);
+  return await mapApiResponseToMedia(movie);
 };
 
 export const searchShows = async (query: string): Promise<Media[]> => {
   const { results } = await searchShowRequest(query);
-  for (const movie of results) {
+  for (const show of results) {
     // Don't await caching of data returned from API
-    addToCache(movie.id.toString(10), movie);
+    addToCache(show.id.toString(10), show);
   }
 
-  return results.map(mapApiResponseToMedia);
+  return await Promise.all(results.map(mapApiResponseToMedia));
 };

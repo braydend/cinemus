@@ -1,6 +1,7 @@
 import { it, expect, describe } from "vitest";
 import { type Media } from "./media";
 import { getList, type List, updateList } from "./list";
+import { getImages } from "./image";
 
 const stubList = async (
   media: Array<omit<Media, "title">>,
@@ -32,7 +33,7 @@ describe("list domain", () => {
         {
           __type: "show",
           title: "Stub Show",
-          posterPath: "www.foo.bar",
+          images: await getImages("/posterPath.jpg"),
           id: 12345,
         },
       ];
@@ -57,7 +58,7 @@ describe("list domain", () => {
         {
           __type: "show",
           title: "Stub Show",
-          posterPath: "www.foo.bar",
+          images: await getImages("/posterPath.jpg"),
           id: 12345,
         },
       ];

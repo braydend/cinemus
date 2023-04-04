@@ -2,7 +2,7 @@ import { getConfiguration } from "../configuration";
 
 type ImageMap = Record<string, string>;
 
-interface Images {
+export interface Images {
   backdrop: ImageMap;
   logo: ImageMap;
   poster: ImageMap;
@@ -36,44 +36,47 @@ const constructImageMap = (
   const sizeCount = sizes.length;
 
   return sizes.reduce((acc, size, index) => {
+    const imageUrl = `${baseUrl}${size}${mediaId}`;
     if (size === "original") {
       return {
         ...acc,
-        original: new URL(`/${size}/${mediaId}`, baseUrl).toString(),
+        original: imageUrl,
       };
     }
     const key = buildImageMapKey(sizeCount, index + 1);
     return {
       ...acc,
-      [key]: new URL(`/${size}/${mediaId}`, baseUrl).toString(),
+      [key]: imageUrl,
     };
   }, {});
 };
-export const getImages = async (mediaId: string): Promise<Images> => {
+export const getImages = async (slug: string | null): Promise<Images> => {
   const {
-    configuration: {
-      images: {
-        // eslint-disable-next-line @typescript-eslint/naming-convention
-        secure_base_url,
-        // eslint-disable-next-line @typescript-eslint/naming-convention
-        backdrop_sizes,
-        // eslint-disable-next-line @typescript-eslint/naming-convention
-        poster_sizes,
-        // eslint-disable-next-line @typescript-eslint/naming-convention
-        profile_sizes,
-        // eslint-disable-next-line @typescript-eslint/naming-convention
-        still_sizes,
-        // eslint-disable-next-line @typescript-eslint/naming-convention
-        logo_sizes,
-      },
+    images: {
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      secure_base_url,
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      backdrop_sizes,
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      poster_sizes,
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      profile_sizes,
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      still_sizes,
+      // eslint-disable-next-line @typescript-eslint/naming-convention
+      logo_sizes,
     },
   } = await getConfiguration();
 
   return {
-    backdrop: constructImageMap(mediaId, secure_base_url, backdrop_sizes),
-    poster: constructImageMap(mediaId, secure_base_url, poster_sizes),
-    profile: constructImageMap(mediaId, secure_base_url, profile_sizes),
-    still: constructImageMap(mediaId, secure_base_url, still_sizes),
-    logo: constructImageMap(mediaId, secure_base_url, logo_sizes),
+    backdrop: slug
+      ? constructImageMap(slug, secure_base_url, backdrop_sizes)
+      : {},
+    poster: slug ? constructImageMap(slug, secure_base_url, poster_sizes) : {},
+    profile: slug
+      ? constructImageMap(slug, secure_base_url, profile_sizes)
+      : {},
+    still: slug ? constructImageMap(slug, secure_base_url, still_sizes) : {},
+    logo: slug ? constructImageMap(slug, secure_base_url, logo_sizes) : {},
   };
 };
