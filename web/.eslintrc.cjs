@@ -24,6 +24,7 @@ module.exports = {
   rules: {
     'prettier/prettier': "error",
     "@typescript-eslint/naming-convention": "warn",
-    "@typescript-eslint/no-floating-promises": ["error", { "ignoreIIFE": true }]
+    "@typescript-eslint/no-floating-promises": ["error", { "ignoreIIFE": true }],
+    "no-extra-boolean-cast": "off"
   }
 }
