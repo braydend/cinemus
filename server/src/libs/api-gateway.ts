@@ -39,11 +39,26 @@ type ValidatedGetAPIGatewayProxyEvent<S extends JSONSchema> = Omit<
 export type ValidatedGetEventAPIGatewayProxyEvent<S extends JSONSchema> =
   Handler<ValidatedGetAPIGatewayProxyEvent<S>, APIGatewayProxyResult>;
 
+interface JSONResponse {
+  statusCode: number;
+  body: string;
+}
+
 export const formatJSONResponse = (
   response: Record<string, unknown>
-): { statusCode: number; body: string } => {
+): JSONResponse => {
   return {
     statusCode: 200,
     body: JSON.stringify(response),
+  };
+};
+
+export const formatErrorResponse = (
+  error: Error,
+  statusCode: number = 500
+): JSONResponse => {
+  return {
+    statusCode,
+    body: JSON.stringify({ error: error.message }),
   };
 };
