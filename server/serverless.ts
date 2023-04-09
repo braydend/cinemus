@@ -16,7 +16,7 @@ const serverlessConfiguration: AWS = {
   app: "cinemus",
   org: "braydend",
   frameworkVersion: "3",
-  plugins: ["serverless-esbuild", "serverless-offline"],
+  plugins: ["serverless-esbuild", "serverless-offline", "serverless-sentry"],
   provider: {
     name: "aws",
     runtime: "nodejs16.x",
@@ -57,6 +57,9 @@ const serverlessConfiguration: AWS = {
   },
   package: { individually: true },
   custom: {
+    sentry: {
+      dsn: "${param:SENTRY_DSN}",
+    },
     esbuild: {
       bundle: true,
       minify: false,
