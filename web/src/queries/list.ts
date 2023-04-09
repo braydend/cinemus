@@ -2,7 +2,7 @@ import { endpoints } from "../utils/config";
 import { type Media } from "../types";
 
 export const updateList = async (
-  media: Array<Pick<Media, "id" | "__type">>,
+  media: Array<Pick<Media, "id" | "__type" | "isWatched">>,
   authToken: string
 ): Promise<{
   data: Media[];

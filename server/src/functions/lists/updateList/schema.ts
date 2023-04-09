@@ -12,6 +12,9 @@ export default {
           __type: {
             enum: ["movie", "show"],
           },
+          isWatched: {
+            type: "boolean",
+          },
         },
         required: ["id", "__type"],
       },

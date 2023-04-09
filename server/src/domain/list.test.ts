@@ -4,7 +4,7 @@ import { getList, type List, updateList } from "./list";
 import { getImages } from "./image";
 
 const stubList = async (
-  media: Array<omit<Media, "title">>,
+  media: List["media"],
   userId: string
 ): Promise<void> => {
   await updateList({ media, userId }, userId);
@@ -24,7 +24,8 @@ describe("list domain", () => {
         [
           {
             __type: "show",
-            id: 12345,
+            id: "12345",
+            isWatched: false,
           },
         ],
         "foo"
@@ -35,6 +36,7 @@ describe("list domain", () => {
           title: "Stub Show",
           images: await getImages("/posterPath.jpg"),
           id: 12345,
+          isWatched: false,
         },
       ];
       const result = await getList("foo");
@@ -51,6 +53,7 @@ describe("list domain", () => {
           {
             __type: "show",
             id: "12345",
+            isWatched: false,
           },
         ],
       };
@@ -60,6 +63,7 @@ describe("list domain", () => {
           title: "Stub Show",
           images: await getImages("/posterPath.jpg"),
           id: 12345,
+          isWatched: false,
         },
       ];
       const result = await updateList(newData, "foo");

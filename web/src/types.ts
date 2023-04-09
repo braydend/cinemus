@@ -16,4 +16,5 @@ export interface Media {
 
   images: Images;
   __type: MediaType;
+  isWatched?: boolean;
 }

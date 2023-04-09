@@ -1,11 +1,13 @@
-import { type TmdbMovie, type TmdbShow } from "../api/tmdb";
+import { type TmdbMovie, type TmdbShow } from "../api";
 import { getImages, type Images } from "./image";
 
+// TODO: remove this and replace with common typing
 export interface Media {
   id: number;
   title: string;
   images: Images;
   __type: "movie" | "show";
+  isWatched?: boolean;
 }
 
 export const mapApiResponseToMedia = async (

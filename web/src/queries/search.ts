@@ -3,7 +3,10 @@ import { type Media } from "../types";
 
 type SearchType = "movie" | "show";
 
-export type MediaResponse = Pick<Media, "id" | "title" | "__type" | "images">;
+export type MediaResponse = Pick<
+  Media,
+  "id" | "title" | "__type" | "images" | "isWatched"
+>;
 
 interface SearchResults {
   results: MediaResponse[];

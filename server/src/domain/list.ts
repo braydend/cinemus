@@ -7,6 +7,7 @@ import { getShow } from "./show";
 interface ListedMedia {
   id: string;
   __type: "movie" | "show";
+  isWatched: boolean;
 }
 
 export interface List {
@@ -22,11 +23,12 @@ export const getList = async (userId: string): Promise<Media[]> => {
   }
 
   const hydratedData = await Promise.all(
-    data.media.map(async (media) =>
-      media.__type === "movie"
+    data.media.map(async (media) => ({
+      ...(media.__type === "movie"
         ? await getMovie(media.id)
-        : await getShow(media.id)
-    )
+        : await getShow(media.id)),
+      isWatched: media.isWatched ?? false,
+    }))
   );
 
   return hydratedData;
@@ -39,11 +41,12 @@ export const updateList = async (
   const result = await upsert<List>("lists", data, { userId });
 
   const hydratedResults = await Promise.all(
-    result.media.map(async (media) =>
-      media.__type === "movie"
+    result.media.map(async (media) => ({
+      ...(media.__type === "movie"
         ? await getMovie(media.id)
-        : await getShow(media.id)
-    )
+        : await getShow(media.id)),
+      isWatched: media.isWatched ?? false,
+    }))
   );
 
   return hydratedResults;

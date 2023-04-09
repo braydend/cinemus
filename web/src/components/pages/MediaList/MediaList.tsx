@@ -19,18 +19,33 @@ export const MediaList: FC = () => {
     ["updateList"],
     async (media: MediaResponse[]) =>
       await updateList(
-        media.map(({ id, __type }) => ({ id: `${id}`, __type })),
+        media.map(({ id, __type, isWatched }) => ({
+          id: `${id}`,
+          __type,
+          isWatched,
+        })),
         authToken
       )
   );
 
-  const currentSelections = selections?.data ?? initialList?.data ?? [];
+  const currentSelections = (selections?.data ?? initialList?.data ?? []).sort(
+    ({ isWatched }) => (Boolean(isWatched) ? 1 : 0)
+  );
   const handleSelection = (media: MediaResponse): void => {
     mutate([...currentSelections, media]);
   };
 
   const handleRemoval = (media: Media): void => {
     mutate(currentSelections.filter((selection) => selection !== media));
+  };
+
+  const handleWatchedChange = (updatedMedia: Media): void => {
+    const updatedList = [
+      ...currentSelections.filter(({ id }) => id !== updatedMedia.id),
+      updatedMedia,
+    ];
+
+    mutate(updatedList);
   };
 
   return (
@@ -49,6 +64,9 @@ export const MediaList: FC = () => {
                   media={media}
                   onRemove={() => {
                     handleRemoval(media);
+                  }}
+                  onWatchedChange={(updatedMedia) => {
+                    handleWatchedChange(updatedMedia);
                   }}
                 />
                 {index < currentSelections.length - 1 && <Divider />}
