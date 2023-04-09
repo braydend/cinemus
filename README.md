@@ -24,3 +24,4 @@ npm run dev -- --param="MOVIE_DB_API_KEY={YOUR_API_KEY}" --param="JWT_ISSUER={AU
 | MONGO_DB_USERNAME | MongoDB username                                                       |
 | MONGO_DB_PASSWORD | MongoDB password                                                       |
 | DATABASE_NAME     | MongoDB database to use                                                |
+| SENTRY_DSN        | Sentry DSN for the backend                                             |
