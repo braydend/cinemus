@@ -5,19 +5,19 @@ import {
 import { middyfy } from "../../../libs/lambda";
 import type schema from "./schema";
 import { searchShows } from "../../../domain/show";
+import withSentry from "serverless-sentry-lib";
 
-const handler: ValidatedGetEventAPIGatewayProxyEvent<typeof schema> = async (
-  event
-) => {
-  const {
-    queryStringParameters: { query },
-  } = event;
+const handler: ValidatedGetEventAPIGatewayProxyEvent<typeof schema> =
+  withSentry(async (event) => {
+    const {
+      queryStringParameters: { query },
+    } = event;
 
-  const results = await searchShows(query);
+    const results = await searchShows(query);
 
-  return formatJSONResponse({
-    results,
+    return formatJSONResponse({
+      results,
+    });
   });
-};
 
 export const main = middyfy(handler);
