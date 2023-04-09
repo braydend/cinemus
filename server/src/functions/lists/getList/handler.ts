@@ -4,8 +4,9 @@ import {
 } from "../../../libs/api-gateway";
 import { middyfy } from "../../../libs/lambda";
 import { getList } from "../../../domain/list";
+import withSentry from "serverless-sentry-lib";
 
-const handler: AuthorisedAPIGatewayProxyEvent = async (event) => {
+const handler: AuthorisedAPIGatewayProxyEvent = withSentry(async (event) => {
   const {
     requestContext: {
       authorizer: {
@@ -22,6 +23,6 @@ const handler: AuthorisedAPIGatewayProxyEvent = async (event) => {
   return formatJSONResponse({
     data,
   });
-};
+});
 
 export const main = middyfy(handler);
