@@ -1,5 +1,10 @@
 import { test, type Page } from "@playwright/test";
 
+test.beforeEach(async ({ page }) => {
+  await page.goto("/");
+  await login(page);
+});
+
 test.afterEach(async ({ page }) => {
   const deleteButtons = await page
     .getByRole("button", { name: "Delete" })
@@ -20,7 +25,6 @@ const login = async (page: Page): Promise<void> => {
 };
 
 test("successfully adds TV show to list", async ({ page }) => {
-  await login(page);
   await page.getByLabel("Search").click();
   await page.getByLabel("Search").fill("always sunny");
   await page
@@ -31,7 +35,6 @@ test("successfully adds TV show to list", async ({ page }) => {
 });
 
 test("successfully adds movie to list", async ({ page }) => {
-  await login(page);
   await page.getByRole("checkbox").check();
   await page.getByLabel("Search").click();
   await page.getByRole("combobox", { name: "Search" }).fill("the matrix");
@@ -41,7 +44,6 @@ test("successfully adds movie to list", async ({ page }) => {
 });
 
 test("successfully marks media as watched", async ({ page }) => {
-  await login(page);
   await page.getByLabel("Search").click();
   await page.getByLabel("Search").fill("brooklyn");
   await page
