@@ -36,6 +36,7 @@ jobs:
         working-directory: ${{env.working-directory}}
 
   e2e-test:
+    needs: ["deploy-api"]
     timeout-minutes: 60
     runs-on: ubuntu-latest
     steps:
