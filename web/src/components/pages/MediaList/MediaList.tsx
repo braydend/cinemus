@@ -29,7 +29,8 @@ export const MediaList: FC = () => {
   );
 
   const currentSelections = (selections?.data ?? initialList?.data ?? []).sort(
-    ({ isWatched }) => (Boolean(isWatched) ? 1 : 0)
+    ({ title: firstTitle }, { title: secondTitle }) =>
+      firstTitle > secondTitle ? 1 : 0
   );
   const handleSelection = (media: MediaResponse): void => {
     mutate([...currentSelections, media]);
