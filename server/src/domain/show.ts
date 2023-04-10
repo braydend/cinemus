@@ -14,8 +14,6 @@ export const getShow = async (id: string): Promise<Media> => {
     return await mapApiResponseToMedia(cachedShow.data);
   }
 
-  console.log(`Cache miss for show #${id}`);
-
   const movie = await fetchShow(id);
   addToCache(id, movie);
 

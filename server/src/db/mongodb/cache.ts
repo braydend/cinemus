@@ -18,7 +18,17 @@ export const addToCache = async <Data>(
   const dataToCache: Cacheable<Data> = { key, data, expiry };
   const filter = { key };
 
-  return await upsert("cache", dataToCache, filter);
+  console.log(
+    `Adding to cache with key "${key}" and data: ${JSON.stringify(dataToCache)}`
+  );
+
+  const result = await upsert("cache", dataToCache, filter);
+
+  console.log(
+    `Added to cache with key "${key}" and data: ${JSON.stringify(dataToCache)}`
+  );
+
+  return result;
 };
 
 export const retrieveFromCache = async <Data>(
@@ -32,5 +42,17 @@ export const retrieveFromCache = async <Data>(
     ...additionalFilter,
   };
 
-  return await retrieveOne<Cacheable<Data>>("cache", filter);
+  console.log(
+    `Search cache for key "${key}" with filter: ${JSON.stringify(filter)}`
+  );
+
+  const result = await retrieveOne<Cacheable<Data>>("cache", filter);
+
+  console.log(
+    `Cache ${
+      result != null ? "hit" : "miss"
+    } for key "${key}" with filter: ${JSON.stringify(filter)}`
+  );
+
+  return result;
 };
