@@ -4,6 +4,7 @@ import {
   ListItemButton,
   ListItemIcon,
   ListItemText,
+  Tooltip,
 } from "@mui/material";
 import { type FC } from "react";
 import { type Media } from "../../../types";
@@ -27,30 +28,33 @@ export const ListItem: FC<Props> = ({ media, onRemove, onWatchedChange }) => {
           />
         </Box>
         <ListItemText>{media.title}</ListItemText>
-        <ListItemButton
-          sx={{ flexGrow: 0 }}
-          disableGutters
-          onClick={() => {
-            onWatchedChange({ ...media, isWatched: !Boolean(media.isWatched) });
-          }}
-        >
-          <ListItemIcon
-            sx={{ minWidth: "auto" }}
-            aria-label={isWatched ? "Unmark as watched" : "Mark as watched"}
+        <Tooltip title={isWatched ? "Unmark as watched" : "Mark as watched"}>
+          <ListItemButton
+            sx={{ flexGrow: 0 }}
+            disableGutters
+            onClick={() => {
+              onWatchedChange({
+                ...media,
+                isWatched: !Boolean(media.isWatched),
+              });
+            }}
           >
-            {isWatched ? <VisibilityOff /> : <Visibility />}
-          </ListItemIcon>
-        </ListItemButton>
-        <ListItemButton
-          sx={{ flexGrow: 0 }}
-          disableGutters
-          onClick={onRemove}
-          aria-label={"Delete"}
-        >
-          <ListItemIcon sx={{ minWidth: "auto" }}>
-            <Delete />
-          </ListItemIcon>
-        </ListItemButton>
+            <ListItemIcon sx={{ minWidth: "auto" }}>
+              {isWatched ? <VisibilityOff /> : <Visibility />}
+            </ListItemIcon>
+          </ListItemButton>
+        </Tooltip>
+        <Tooltip title={"Delete"}>
+          <ListItemButton
+            sx={{ flexGrow: 0 }}
+            disableGutters
+            onClick={onRemove}
+          >
+            <ListItemIcon sx={{ minWidth: "auto" }}>
+              <Delete />
+            </ListItemIcon>
+          </ListItemButton>
+        </Tooltip>
       </MuiListItem>
     </Box>
   );
