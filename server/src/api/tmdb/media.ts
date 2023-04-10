@@ -67,6 +67,7 @@ const get = async <MediaType extends Media>(
   id: string,
   type: MediaCategory
 ): Promise<MediaType> => {
+  console.log(`Getting ${type} #${id} from TMDB`);
   try {
     const response = await axios.get<MediaType>(
       `${tmdbBaseUrl}/${type}/${id}?api_key=${secrets.MOVIE_DB_API_KEY}`
@@ -84,6 +85,7 @@ const search = async <MediaType extends Media>(
   mediaType: MediaCategory,
   query: string
 ): Promise<SearchResponse<MediaType>> => {
+  console.log(`Searching for ${mediaType} "${query}" from TMDB`);
   try {
     const response = await axios.get<SearchResponse<MediaType>>(
       `${tmdbBaseUrl}/search/${mediaType}?api_key=${secrets.MOVIE_DB_API_KEY}&query=${query}`
