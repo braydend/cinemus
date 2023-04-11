@@ -68,13 +68,16 @@ const get = async <MediaType extends Media>(
   id: string,
   type: MediaCategory
 ): Promise<MediaType> => {
-  logger.info(`Getting ${type} #${id} from TMDB`);
+  logger.profile(`TMDB search ${type} #${id}`);
   try {
     const response = await axios.get<MediaType>(
       `${tmdbBaseUrl}/${type}/${id}?api_key=${secrets.MOVIE_DB_API_KEY}`
     );
 
-    return markMediaType(response.data, type);
+    const markedMedia = markMediaType(response.data, type);
+    logger.profile(`TMDB search ${type} #${id}`);
+
+    return markedMedia;
   } catch (e) {
     throw Error(
       `Failed to find ${type} with id ${id}: ${(e as Error).message}`
@@ -86,15 +89,18 @@ const search = async <MediaType extends Media>(
   mediaType: MediaCategory,
   query: string
 ): Promise<SearchResponse<MediaType>> => {
-  logger.info(`Searching for ${mediaType} "${query}" from TMDB`);
+  logger.profile(`TMDB search ${mediaType} "${query}"`);
   try {
     const response = await axios.get<SearchResponse<MediaType>>(
       `${tmdbBaseUrl}/search/${mediaType}?api_key=${secrets.MOVIE_DB_API_KEY}&query=${query}`
     );
 
+    const markedMedia = markMediaTypes(response.data.results, mediaType);
+
+    logger.profile(`TMDB search ${mediaType} "${query}"`);
     return {
       ...response.data,
-      results: markMediaTypes(response.data.results, mediaType),
+      results: markedMedia,
     };
   } catch (e) {
     throw Error(
