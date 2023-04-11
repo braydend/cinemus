@@ -2,6 +2,7 @@ import { upsert } from "./upsert";
 import dayjs from "dayjs";
 import { retrieveOne } from "./retrieveOne";
 import { type Document, type Filter } from "mongodb";
+import { logger } from "../../libs/logger";
 
 interface Cacheable<Data> {
   key: string;
@@ -18,13 +19,13 @@ export const addToCache = async <Data>(
   const dataToCache: Cacheable<Data> = { key, data, expiry };
   const filter = { key };
 
-  console.log(
+  logger.info(
     `Adding to cache with key "${key}" and data: ${JSON.stringify(dataToCache)}`
   );
 
   const result = await upsert("cache", dataToCache, filter);
 
-  console.log(
+  logger.info(
     `Added to cache with key "${key}" and data: ${JSON.stringify(dataToCache)}`
   );
 
@@ -42,13 +43,13 @@ export const retrieveFromCache = async <Data>(
     ...additionalFilter,
   };
 
-  console.log(
+  logger.info(
     `Search cache for key "${key}" with filter: ${JSON.stringify(filter)}`
   );
 
   const result = await retrieveOne<Cacheable<Data>>("cache", filter);
 
-  console.log(
+  logger.info(
     `Cache ${
       result != null ? "hit" : "miss"
     } for key "${key}" with filter: ${JSON.stringify(filter)}`
