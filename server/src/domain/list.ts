@@ -3,6 +3,7 @@ import { upsert } from "../db/mongodb/upsert";
 import { type Media } from "./media";
 import { getMovie } from "./movie";
 import { getShow } from "./show";
+import { logger } from "../libs/logger";
 
 interface ListedMedia {
   id: string;
@@ -16,6 +17,7 @@ export interface List {
 }
 
 export const getList = async (userId: string): Promise<Media[]> => {
+  logger.profile(`getList #${userId}`);
   const data = await retrieveOne<List>("lists", { userId });
 
   if (data === null) {
@@ -31,6 +33,8 @@ export const getList = async (userId: string): Promise<Media[]> => {
     }))
   );
 
+  logger.profile(`getList #${userId}`);
+
   return hydratedData;
 };
 
@@ -38,6 +42,7 @@ export const updateList = async (
   data: List,
   userId: string
 ): Promise<Media[]> => {
+  logger.profile(`updateList #${userId} data=${JSON.stringify(data)}`);
   const result = await upsert<List>("lists", data, { userId });
 
   const hydratedResults = await Promise.all(
@@ -48,6 +53,8 @@ export const updateList = async (
       isWatched: media.isWatched ?? false,
     }))
   );
+
+  logger.profile(`updateList #${userId} data=${JSON.stringify(data)}`);
 
   return hydratedResults;
 };

@@ -43,12 +43,11 @@ export const retrieveFromCache = async <Data>(
     ...additionalFilter,
   };
 
-  logger.info(
-    `Search cache for key "${key}" with filter: ${JSON.stringify(filter)}`
-  );
+  logger.profile(`Cache lookup: key="${key}" filter=${JSON.stringify(filter)}`);
 
   const result = await retrieveOne<Cacheable<Data>>("cache", filter);
 
+  logger.profile(`Cache lookup: key="${key}" filter=${JSON.stringify(filter)}`);
   logger.info(
     `Cache ${
       result != null ? "hit" : "miss"
