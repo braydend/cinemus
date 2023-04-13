@@ -2,6 +2,7 @@ import { it, expect, describe } from "vitest";
 import { type Media } from "./media";
 import { getList, type List, updateList } from "./list";
 import { getImages } from "./image";
+import { buildStubConfiguration } from "../../test";
 
 const stubList = async (
   media: List["media"],
@@ -11,6 +12,8 @@ const stubList = async (
 };
 
 describe("list domain", () => {
+  const configuration = buildStubConfiguration();
+
   describe("getList", () => {
     it("returns empty array if user does not have a list", async () => {
       const expectedList: Media[] = [];
@@ -34,7 +37,7 @@ describe("list domain", () => {
         {
           __type: "show",
           title: "Stub Show",
-          images: await getImages("/posterPath.jpg"),
+          images: await getImages("/posterPath.jpg", configuration),
           id: 12345,
           isWatched: false,
         },
@@ -61,7 +64,7 @@ describe("list domain", () => {
         {
           __type: "show",
           title: "Stub Show",
-          images: await getImages("/posterPath.jpg"),
+          images: await getImages("/posterPath.jpg", configuration),
           id: 12345,
           isWatched: false,
         },
