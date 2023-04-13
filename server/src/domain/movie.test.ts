@@ -3,15 +3,18 @@ import { type Media } from "./media";
 import { getMovie, searchMovies } from "./movie";
 import * as tmdb from "../../src/api/tmdb";
 import { getImages } from "./image";
+import { buildStubConfiguration } from "../../test";
 
 describe("movie domain", () => {
+  const configuration = buildStubConfiguration();
+
   describe("getMovie", () => {
     it("hits API if not in cache", async () => {
       const apiSpy = vi.spyOn(tmdb, "getMovie");
       const expectedMovie: Media = {
         __type: "movie",
         title: "Stub Movie",
-        images: await getImages("/posterPath.jpg"),
+        images: await getImages("/posterPath.jpg", configuration),
         id: 12345,
       };
       const result = await getMovie("12345");
@@ -25,7 +28,7 @@ describe("movie domain", () => {
       const expectedMovie: Media = {
         __type: "movie",
         title: "Stub Movie",
-        images: await getImages("/posterPath.jpg"),
+        images: await getImages("/posterPath.jpg", configuration),
         id: 12345,
       };
       const result = await getMovie("12345");
@@ -42,7 +45,7 @@ describe("movie domain", () => {
         {
           __type: "movie",
           title: "Stub Movie",
-          images: await getImages("/posterPath.jpg"),
+          images: await getImages("/posterPath.jpg", configuration),
           id: 12345,
         },
       ];
@@ -59,7 +62,7 @@ describe("movie domain", () => {
           __type: "movie",
           title: "Stub Movie",
           id: 12345,
-          images: await getImages("/posterPath.jpg"),
+          images: await getImages("/posterPath.jpg", configuration),
         },
       ];
       const result = await searchMovies("Stub");

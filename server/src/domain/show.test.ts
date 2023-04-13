@@ -3,15 +3,18 @@ import { type Media } from "./media";
 import { getShow, searchShows } from "./show";
 import * as tmdb from "../../src/api/tmdb";
 import { getImages } from "./image";
+import { buildStubConfiguration } from "../../test";
 
 describe("show domain", () => {
+  const configuration = buildStubConfiguration();
+
   describe("getShow", () => {
     it("hits API if not in cache", async () => {
       const apiSpy = vi.spyOn(tmdb, "getShow");
       const expectedShow: Media = {
         __type: "show",
         title: "Stub Show",
-        images: await getImages("/posterPath.jpg"),
+        images: await getImages("/posterPath.jpg", configuration),
         id: 12345,
       };
       const result = await getShow("12345");
@@ -25,7 +28,7 @@ describe("show domain", () => {
       const expectedShow: Media = {
         __type: "show",
         title: "Stub Show",
-        images: await getImages("/posterPath.jpg"),
+        images: await getImages("/posterPath.jpg", configuration),
         id: 12345,
       };
       const result = await getShow("12345");
@@ -42,7 +45,7 @@ describe("show domain", () => {
         {
           __type: "show",
           title: "Stub Show",
-          images: await getImages("/posterPath.jpg"),
+          images: await getImages("/posterPath.jpg", configuration),
           id: 12345,
         },
       ];
@@ -58,7 +61,7 @@ describe("show domain", () => {
         {
           __type: "show",
           title: "Stub Show",
-          images: await getImages("/posterPath.jpg"),
+          images: await getImages("/posterPath.jpg", configuration),
           id: 12345,
         },
       ];

@@ -1,4 +1,8 @@
-import { type TmdbMovie, type TmdbShow } from "../../../src/api/tmdb";
+import {
+  type TmdbConfigurationResponse,
+  type TmdbMovie,
+  type TmdbShow,
+} from "../../../src/api/tmdb";
 
 export const buildStubShow = (
   customData?: Partial<Omit<TmdbShow, "__type">>
@@ -47,7 +51,7 @@ export const buildStubMovie = (
   return { ...defaultData, ...customData };
 };
 
-export const buildStubConfiguration = () => {
+export const buildStubConfiguration = (): TmdbConfigurationResponse => {
   const imageSizes = ["w100", "w300", "w500", "w700", "w1000", "original"];
 
   return {

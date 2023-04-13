@@ -1,9 +1,11 @@
 import { describe, expect, it } from "vitest";
 import { getImages } from "./image";
+import { buildStubConfiguration } from "../../../test";
 
 describe("image domain", () => {
   it("returns a correctly constructed image map", async () => {
-    const result = await getImages("/foo");
+    const configuration = buildStubConfiguration();
+    const result = await getImages("/foo", configuration);
 
     expect(result).toEqual({
       backdrop: {

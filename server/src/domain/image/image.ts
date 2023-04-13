@@ -1,4 +1,4 @@
-import { getConfiguration } from "../configuration";
+import { type TmdbConfigurationResponse } from "../../api";
 
 type ImageMap = Record<string, string>;
 
@@ -50,7 +50,10 @@ const constructImageMap = (
     };
   }, {});
 };
-export const getImages = async (slug: string | null): Promise<Images> => {
+export const getImages = async (
+  slug: string | null,
+  configuration: TmdbConfigurationResponse
+): Promise<Images> => {
   const {
     images: {
       // eslint-disable-next-line @typescript-eslint/naming-convention
@@ -66,7 +69,7 @@ export const getImages = async (slug: string | null): Promise<Images> => {
       // eslint-disable-next-line @typescript-eslint/naming-convention
       logo_sizes,
     },
-  } = await getConfiguration();
+  } = configuration;
 
   return {
     backdrop: slug

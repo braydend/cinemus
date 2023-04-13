@@ -1,4 +1,8 @@
-import { type TmdbMovie, type TmdbShow } from "../api";
+import {
+  type TmdbConfigurationResponse,
+  type TmdbMovie,
+  type TmdbShow,
+} from "../api";
 import { getImages, type Images } from "./image";
 
 // TODO: remove this and replace with common typing
@@ -11,10 +15,11 @@ export interface Media {
 }
 
 export const mapApiResponseToMedia = async (
-  response: TmdbMovie | TmdbShow
+  response: TmdbMovie | TmdbShow,
+  configuration: TmdbConfigurationResponse
 ): Promise<Media> => {
   const isMovie = response.__type === "movie";
-  const images = await getImages(response.poster_path);
+  const images = await getImages(response.poster_path, configuration);
 
   return {
     id: response.id,
