@@ -10,6 +10,12 @@ export default defineConfig(({ command, mode }) => {
     build: {
       sourcemap: true,
     },
+    test: {
+      include: ["src/**/*.test.ts", "src/**/*.test.tsx"],
+      setupFiles: ["tests/setup.ts"],
+      environment: "jsdom",
+      globals: true,
+    },
     plugins: [
       react(),
       sentryVitePlugin({
