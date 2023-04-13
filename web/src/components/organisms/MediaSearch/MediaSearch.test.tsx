@@ -1,11 +1,11 @@
 import { describe, expect, it, vi } from "vitest";
-import { act, render, screen } from "@testing-library/react";
+import { render, type RenderResult, screen } from "@testing-library/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { type ComponentProps } from "react";
 import userEvent from "@testing-library/user-event";
 import { MediaSearch } from "./MediaSearch";
 import * as searchQueries from "../../../queries/search";
-import { sleep } from "../../../../tests/sleep";
+import { sleep } from "../../../../test/sleep";
 
 type Props = ComponentProps<typeof MediaSearch>;
 
@@ -15,7 +15,7 @@ vi.mock("../../../hooks/useGetAuthToken", () => ({
   }),
 }));
 describe("<MediaSearch />", () => {
-  const setup = (customProps?: Partial<Props>) => {
+  const setup = (customProps?: Partial<Props>): RenderResult => {
     const queryClient = new QueryClient();
 
     const defaultProps: Props = {
