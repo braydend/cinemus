@@ -5,6 +5,8 @@ import ReactDOM from "react-dom/client";
 import * as Sentry from "@sentry/react";
 import App from "./App";
 import { auth, sentry } from "./utils/config";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { routes } from "./router";
 
 const queryClient = new QueryClient();
 Sentry.init({
@@ -15,6 +17,8 @@ Sentry.init({
   replaysSessionSampleRate: sentry.sessionSampleRate,
   replaysOnErrorSampleRate: sentry.errorSampleRate,
 });
+
+const router = createBrowserRouter(routes);
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
@@ -27,7 +31,7 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
       }}
     >
       <QueryClientProvider client={queryClient}>
-        <App />
+        <RouterProvider router={router} />
       </QueryClientProvider>
     </Auth0Provider>
   </React.StrictMode>
