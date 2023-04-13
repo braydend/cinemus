@@ -31,7 +31,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        stack: [server]
+        stack: [server, web]
     steps:
       - uses: actions/checkout@v3
 
