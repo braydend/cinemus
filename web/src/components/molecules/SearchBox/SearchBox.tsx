@@ -30,7 +30,7 @@ export const SearchBox: FC<Props> = ({
   const { authToken } = useGetAuthToken();
   const [debouncedQuery] = useDebounce(query, 500);
   const { data } = useQuery(
-    [`search-${mediaType}-${query}`],
+    [`search-${mediaType}-${debouncedQuery}`],
     async () =>
       mediaType === "movie"
         ? await searchMovies(debouncedQuery, authToken)
