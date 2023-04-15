@@ -3,7 +3,6 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import React from "react";
 import ReactDOM from "react-dom/client";
 import * as Sentry from "@sentry/react";
-import App from "./App";
 import { auth, sentry } from "./utils/config";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { routes } from "./router";
