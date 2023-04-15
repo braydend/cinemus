@@ -3,6 +3,7 @@ import { test, type Page } from "@playwright/test";
 test.beforeEach(async ({ page }) => {
   await page.goto("/");
   await login(page);
+  await navigateToList(page);
 });
 
 test.afterEach(async ({ page }) => {
@@ -15,6 +16,13 @@ test.afterEach(async ({ page }) => {
   }
 });
 
+const navigateToList = async (page: Page): Promise<void> => {
+  if (await page.getByRole("button", { name: "navigation menu" }).isVisible()) {
+    await page.getByRole("button", { name: "navigation menu" }).click();
+  }
+  await page.getByRole("link", { name: "List" }).click();
+};
+
 const login = async (page: Page): Promise<void> => {
   await page.getByRole("button", { name: "Login" }).click();
   await page.getByLabel("Email address").click();
@@ -22,6 +30,7 @@ const login = async (page: Page): Promise<void> => {
   await page.getByLabel("Password").click();
   await page.getByLabel("Password").fill("testpass");
   await page.getByRole("button", { name: "Continue" }).click();
+  await page.getByRole("button", { name: "test@email.com" }).waitFor();
 };
 
 test("successfully adds TV show to list", async ({ page }) => {
