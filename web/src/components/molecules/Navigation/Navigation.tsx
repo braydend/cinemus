@@ -12,9 +12,8 @@ import MenuItem from "@mui/material/MenuItem";
 import AdbIcon from "@mui/icons-material/Adb";
 import { UserMenu } from "../UserMenu";
 import { Link } from "react-router-dom";
-import { type route } from "../../../router";
 
-const pages: Array<{ label: string; route: route }> = [
+const pages: Array<{ label: string; route: string }> = [
   { label: "List", route: "/list" },
   { label: "About", route: "/about" },
 ];
