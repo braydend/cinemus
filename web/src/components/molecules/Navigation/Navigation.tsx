@@ -1,4 +1,4 @@
-import { type FC, useState, type MouseEvent } from "react";
+import { type FC, type MouseEvent, useState } from "react";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
@@ -11,8 +11,13 @@ import Button from "@mui/material/Button";
 import MenuItem from "@mui/material/MenuItem";
 import AdbIcon from "@mui/icons-material/Adb";
 import { UserMenu } from "../UserMenu";
+import { Link } from "react-router-dom";
+import { type route } from "../../../router";
 
-const pages = ["List"];
+const pages: Array<{ label: string; route: route }> = [
+  { label: "List", route: "/list" },
+  { label: "About", route: "/about" },
+];
 
 export const Navigation: FC = () => {
   const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
@@ -33,8 +38,7 @@ export const Navigation: FC = () => {
           <Typography
             variant="h6"
             noWrap
-            component="a"
-            href="/"
+            component="h1"
             sx={{
               mr: 2,
               display: { xs: "none", md: "flex" },
@@ -77,9 +81,11 @@ export const Navigation: FC = () => {
                 display: { xs: "block", md: "none" },
               }}
             >
-              {pages.map((page) => (
-                <MenuItem key={page} onClick={handleCloseNavMenu}>
-                  <Typography textAlign="center">{page}</Typography>
+              {pages.map(({ label, route }) => (
+                <MenuItem key={label} onClick={handleCloseNavMenu}>
+                  <Link to={route}>
+                    <Typography textAlign="center">{label}</Typography>
+                  </Link>
                 </MenuItem>
               ))}
             </Menu>
@@ -104,14 +110,16 @@ export const Navigation: FC = () => {
             Cinemus
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
-            {pages.map((page) => (
-              <Button
-                key={page}
-                onClick={handleCloseNavMenu}
-                sx={{ my: 2, color: "white", display: "block" }}
-              >
-                {page}
-              </Button>
+            {pages.map(({ label, route }) => (
+              <Link key={label} to={route}>
+                <Button
+                  key={label}
+                  onClick={handleCloseNavMenu}
+                  sx={{ my: 2, color: "white", display: "block" }}
+                >
+                  {label}
+                </Button>
+              </Link>
             ))}
           </Box>
 
