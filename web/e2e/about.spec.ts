@@ -49,4 +49,22 @@ test("about page", async ({ page }) => {
       "At Cinemus, we understand the struggle of constantly being told about new TV shows and movies to watch by friends and family, only to forget them later. We've been there too! That's why we created Cinemus to solve this common problem. Our team is passionate about movies and TV shows, and we know how important it is to keep track of the ones you want to watch. Cinemus was born out of our love for entertainment and our desire to create a web app that makes managing your watchlist simple, fun, and convenient."
     )
   ).toBeVisible();
+
+  // TMDB info
+  await expect(
+    page.getByRole("heading", { name: "Powered by TMDB" })
+  ).toBeVisible();
+  await expect(
+    page.getByText(
+      "Cinemus relies on The Movie Database (TMDB), a comprehensive and community-driven source for TV show and movie information, to provide the data used in our app. TMDB's extensive database, which is constantly updated by a large community of contributors, allows us to deliver a seamless and user-friendly experience to our app users. We are grateful for the valuable contribution of TMDB and its community, which enables us to offer a robust and reliable service to our Cinemus users."
+    )
+  ).toBeVisible();
+  await expect(
+    page.getByText(
+      "Please note that Cinemus is not affiliated with or endorsed by TMDB. We utilize their publicly available data in compliance with their API terms of use. For more information about TMDB, including their data usage policies and terms of service, please visit their official website at https://www.themoviedb.org."
+    )
+  ).toBeVisible();
+  await expect(
+    page.getByRole("link", { name: "https://www.themoviedb.org" })
+  ).toBeVisible();
 });
