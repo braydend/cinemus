@@ -12,6 +12,7 @@ Sentry.init({
   dsn: sentry.dsn,
   environment: sentry.environment,
   integrations: [new Sentry.BrowserTracing(), new Sentry.Replay()],
+  release: sentry.release,
   tracesSampleRate: sentry.tracesSampleRate,
   replaysSessionSampleRate: sentry.sessionSampleRate,
   replaysOnErrorSampleRate: sentry.errorSampleRate,

@@ -21,4 +21,5 @@ export const sentry = {
     import.meta.env.VITE_SENTRY_REPLAY_SESSION_SAMPLE_RATE ?? 0.1,
   errorSampleRate: import.meta.env.VITE_SENTRY_REPLAY_ERROR_SAMPLE_RATE ?? 1.0,
   environment: import.meta.env.VITE_SENTRY_ENVIRONMENT ?? environment ?? "prod",
+  release: import.meta.env.VITE_SENTRY_RELEASE,
 };
