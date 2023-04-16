@@ -1,0 +1,48 @@
+/* non-mobile */
+@media screen and (min-width: 750px) {
+    .description:nth-of-type(odd) {
+        grid-column-start: 1;
+    }
+
+    .icon:nth-of-type(odd) {
+        grid-column-start: 2;
+    }
+
+    .description:nth-of-type(even) {
+        grid-column-start: 2;
+    }
+
+    .icon:nth-of-type(even) {
+        grid-column-start: 1;
+    }
+
+    .icon {
+        justify-self: center;
+        align-self: center;
+    }
+
+    .container {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        grid-auto-rows: auto;
+        gap: 1rem;
+        grid-auto-flow: dense;
+    }
+}
+
+/* mobile */
+@media screen and (max-width: 750px) {
+    .container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .description {
+        margin-bottom: 2rem;
+    }
+}
+
+.icon {
+    font-size: 4rem;
+}

@@ -1,9 +1,9 @@
-import { type FC, Fragment } from "react";
+import { type FC } from "react";
 import Typography from "@mui/material/Typography";
 import styles from "./about.module.css";
 import { Divider } from "@mui/material";
-import { features } from "../../../content";
-import { Inspiration, TmdbInfo, Feature } from "../../atoms";
+import { Inspiration, TmdbInfo } from "../../atoms";
+import { FeatureList } from "../../molecules";
 
 export const About: FC = () => {
   return (
@@ -11,12 +11,8 @@ export const About: FC = () => {
       <Typography noWrap variant="h2" paddingBottom="0.5rem">
         Features
       </Typography>
-      {features.map(({ icon, title, body }) => (
-        <Fragment key={title}>
-          <Feature title={title} body={body} icon={icon} />
-          <Divider sx={{ margin: "1rem 0" }} />
-        </Fragment>
-      ))}
+      <FeatureList />
+      <Divider sx={{ margin: "1rem 0" }} />
       <Inspiration />
       <Divider sx={{ margin: "1rem 0" }} />
       <TmdbInfo />
