@@ -1,0 +1,12 @@
+.main {
+    padding-top: 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.tagline {
+    display: inline;
+    flex-shrink: 1;
+    text-align: center;
+}
