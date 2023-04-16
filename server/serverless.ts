@@ -60,6 +60,7 @@ const serverlessConfiguration: AWS = {
     sentry: {
       dsn: "${param:SENTRY_DSN}",
       filterLocal: false,
+      release: "git",
     },
     esbuild: {
       bundle: true,
