@@ -11,6 +11,7 @@ interface ImportMetaEnv {
   readonly VITE_SENTRY_REPLAY_SESSION_SAMPLE_RATE?: number;
   readonly VITE_SENTRY_REPLAY_ERROR_SAMPLE_RATE?: number;
   readonly VITE_SENTRY_ENVIRONMENT?: string;
+  readonly VITE_SENTRY_RELEASE?: string;
 }
 
 interface ImportMeta {
