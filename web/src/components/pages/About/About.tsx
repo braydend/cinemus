@@ -3,8 +3,7 @@ import Typography from "@mui/material/Typography";
 import styles from "./about.module.css";
 import { Divider } from "@mui/material";
 import { features } from "../../../content";
-import { Feature } from "../../atoms/Feature";
-import { Inspiration } from "../../atoms";
+import { Inspiration, TmdbInfo, Feature } from "../../atoms";
 
 export const About: FC = () => {
   return (
@@ -19,6 +18,8 @@ export const About: FC = () => {
         </Fragment>
       ))}
       <Inspiration />
+      <Divider sx={{ margin: "1rem 0" }} />
+      <TmdbInfo />
     </main>
   );
 };
