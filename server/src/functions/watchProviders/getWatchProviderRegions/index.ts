@@ -6,7 +6,7 @@ export default {
     {
       httpApi: {
         method: "get",
-        path: "/getWatchProviders",
+        path: "/getWatchProviderRegions",
         authorizer: {
           name: "jwtAuth",
         },
