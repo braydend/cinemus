@@ -7,7 +7,7 @@ import { auth, sentry } from "./utils/config";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { routes } from "./router";
 
-const queryClient = new QueryClient();
+export const queryClient = new QueryClient();
 Sentry.init({
   dsn: sentry.dsn,
   environment: sentry.environment,

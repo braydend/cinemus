@@ -1,6 +1,6 @@
 import { Navigate, type RouteObject } from "react-router-dom";
 import { BaseLayout } from "../components/layouts";
-import { MediaList } from "../components/pages";
+import { MediaList, UserPage } from "../components/pages";
 import { type FC } from "react";
 import { useAuth0 } from "@auth0/auth0-react";
 import { About } from "../components/pages/About";
@@ -36,6 +36,14 @@ export const routes: RouteObject[] = [
       {
         path: availableRoutes.about,
         element: <About />,
+      },
+      {
+        path: availableRoutes.user,
+        element: (
+          <ProtectedRoute>
+            <UserPage />
+          </ProtectedRoute>
+        ),
       },
     ],
   },

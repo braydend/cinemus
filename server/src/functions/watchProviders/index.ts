@@ -1,1 +1,1 @@
-export { default as getWatchProviders } from "./getWatchProviders";
+export { default as getWatchProviderRegions } from "./getWatchProviderRegions";

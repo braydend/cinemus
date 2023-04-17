@@ -7,6 +7,8 @@ import Typography from "@mui/material/Typography";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import { useAuth0 } from "@auth0/auth0-react";
+import { Link } from "react-router-dom";
+import { availableRoutes } from "../../../router";
 
 export const UserMenu: FC = () => {
   const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
@@ -46,6 +48,11 @@ export const UserMenu: FC = () => {
           open={Boolean(anchorElUser)}
           onClose={handleCloseUserMenu}
         >
+          <MenuItem onClick={handleCloseUserMenu}>
+            <Link to={availableRoutes.user}>
+              <Typography textAlign="center">Preferences</Typography>
+            </Link>
+          </MenuItem>
           <MenuItem onClick={handleLogout}>
             <Typography textAlign="center">Logout</Typography>
           </MenuItem>
