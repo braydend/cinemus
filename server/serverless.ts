@@ -9,6 +9,7 @@ import {
   searchMovies,
   searchShows,
   updateList,
+  getWatchProviders,
 } from "./src/functions";
 
 const serverlessConfiguration: AWS = {
@@ -54,6 +55,7 @@ const serverlessConfiguration: AWS = {
     updateList,
     getMovie,
     getShow,
+    getWatchProviders,
   },
   package: { individually: true },
   custom: {

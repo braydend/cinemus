@@ -2,6 +2,7 @@ import {
   type TmdbConfigurationResponse,
   type TmdbMovie,
   type TmdbShow,
+  type TmdbWatchProviderRegionsResponse,
 } from "../../../src/api/tmdb";
 
 export const buildStubShow = (
@@ -67,3 +68,26 @@ export const buildStubConfiguration = (): TmdbConfigurationResponse => {
     change_keys: [],
   };
 };
+
+export const buildStubWatchProviderRegions =
+  (): TmdbWatchProviderRegionsResponse => {
+    return {
+      results: [
+        {
+          english_name: "Australia",
+          native_name: "Australia",
+          iso_3166_1: "AU",
+        },
+        {
+          english_name: "Italy",
+          native_name: "Italia",
+          iso_3166_1: "IT",
+        },
+        {
+          english_name: "New Zealand",
+          native_name: "New Zealand",
+          iso_3166_1: "NZ",
+        },
+      ],
+    };
+  };
