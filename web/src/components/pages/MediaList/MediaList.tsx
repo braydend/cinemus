@@ -7,6 +7,7 @@ import { ListItem } from "../../atoms";
 import { Divider, List } from "@mui/material";
 import { MediaSearch } from "../../organisms";
 import { type MediaResponse } from "../../../queries/search";
+import Typography from "@mui/material/Typography";
 
 export const MediaList: FC = () => {
   const { authToken } = useGetAuthToken();
@@ -50,8 +51,8 @@ export const MediaList: FC = () => {
   };
 
   return (
-    <div>
-      <h1>List</h1>
+    <main>
+      <Typography variant={"h2"}>List</Typography>
       {isLoading ? (
         <>Loading list...</>
       ) : (
@@ -76,6 +77,6 @@ export const MediaList: FC = () => {
           </List>
         </>
       )}
-    </div>
+    </main>
   );
 };
