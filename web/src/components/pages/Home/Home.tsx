@@ -7,7 +7,7 @@ import { FeatureList } from "../../molecules";
 export const Home: FC = () => {
   return (
     <main className={styles.main}>
-      <Typography noWrap variant="h1" paddingBottom="0.5rem">
+      <Typography variant="h1" paddingBottom="0.5rem">
         Cinemus
       </Typography>
       <Typography variant="h2" className={styles.tagline}>
