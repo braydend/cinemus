@@ -8,10 +8,10 @@ import { Select } from "../../atoms";
 import { getWatchProviderRegions } from "../../../queries/watchProviders";
 import { useGetAuthToken } from "../../../hooks/useGetAuthToken";
 import Button from "@mui/material/Button";
-import { queryClient } from "../../../main";
 import styles from "./userPreferences.module.css";
 import { TextField } from "@mui/material";
 import { useAuth0 } from "@auth0/auth0-react";
+import { queryClient } from "../../../queries/queryClient";
 
 interface Props {
   initialPreferences: UserPreferencesType;
