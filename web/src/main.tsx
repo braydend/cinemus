@@ -1,13 +1,13 @@
 import { Auth0Provider } from "@auth0/auth0-react";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { QueryClientProvider } from "@tanstack/react-query";
 import React from "react";
 import ReactDOM from "react-dom/client";
 import * as Sentry from "@sentry/react";
 import { auth, sentry } from "./utils/config";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { routes } from "./router";
+import { queryClient } from "./queries/queryClient";
 
-export const queryClient = new QueryClient();
 Sentry.init({
   dsn: sentry.dsn,
   environment: sentry.environment,
