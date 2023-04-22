@@ -11,7 +11,6 @@ export const retrieveOne = async <Data extends object>(
   try {
     return await mongoCollection.findOne<Data>(filter);
   } catch (e) {
-    console.error("retrieveOne", (e as Error).message);
     throw Error(
       `Failed to retrieve from collection "${collection}" with filter: ${JSON.stringify(
         filter

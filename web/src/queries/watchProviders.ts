@@ -16,7 +16,6 @@ export const getWatchProviderRegions = async (
       method: "GET",
       headers: {
         Authorization: `Bearer ${authToken}`,
-        "Content-Type": "application/json",
       },
     }
   );
