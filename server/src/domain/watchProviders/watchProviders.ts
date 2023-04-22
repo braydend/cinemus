@@ -3,6 +3,7 @@ import {
   type TmdbWatchProviderRegionsResponse,
 } from "../../api";
 import { addToCache, retrieveFromCache } from "../../db/mongodb/cache";
+import { logger } from "../../libs/logger";
 
 export interface WatchProviderRegion {
   countryId: string;
@@ -24,6 +25,7 @@ const mapResponseToRegion = (
 export const getWatchProviderRegions = async (): Promise<
   WatchProviderRegion[]
 > => {
+  logger.profile("getWatchProviderRegions");
   const cachedProviders =
     await retrieveFromCache<TmdbWatchProviderRegionsResponse>(CACHE_KEY);
 
@@ -35,6 +37,8 @@ export const getWatchProviderRegions = async (): Promise<
 
   addToCache(CACHE_KEY, response);
 
-  // eslint-disable-next-line @typescript-eslint/naming-convention
-  return mapResponseToRegion(response);
+  const mappedRegions = mapResponseToRegion(response);
+  logger.profile("getWatchProviderRegions");
+
+  return mappedRegions;
 };
