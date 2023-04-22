@@ -16,10 +16,9 @@ export const getUserPreferences = async (
     userId,
   });
 
-  return (
-    { watchProviderRegion: userPreferences?.watchProviderRegion } ??
-    EMPTY_PREFERENCES
-  );
+  return userPreferences !== null
+    ? { watchProviderRegion: userPreferences.watchProviderRegion }
+    : EMPTY_PREFERENCES;
 };
 
 export const updateUserPreferences = async (
