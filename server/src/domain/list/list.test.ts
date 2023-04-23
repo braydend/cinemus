@@ -1,8 +1,8 @@
 import { it, expect, describe } from "vitest";
-import { type Media } from "./media";
+import { type Media } from "../media";
 import { getList, type List, updateList } from "./list";
-import { getImages } from "./image";
-import { buildStubConfiguration } from "../../test";
+import { getImages } from "../image";
+import { buildStubConfiguration } from "../../../test";
 
 const stubList = async (
   media: List["media"],

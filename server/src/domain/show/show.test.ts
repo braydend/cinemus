@@ -1,9 +1,9 @@
 import { it, expect, describe, vi } from "vitest";
-import { type Media } from "./media";
+import { type Media } from "../media";
 import { getShow, searchShows } from "./show";
-import * as tmdb from "../../src/api/tmdb";
-import { getImages } from "./image";
-import { buildStubConfiguration, dropAllCollections } from "../../test";
+import * as tmdb from "../../../src/api/tmdb";
+import { getImages } from "../image";
+import { buildStubConfiguration, dropAllCollections } from "../../../test";
 
 describe("show domain", () => {
   const configuration = buildStubConfiguration();

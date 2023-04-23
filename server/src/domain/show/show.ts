@@ -2,17 +2,17 @@ import {
   getShow as fetchShow,
   searchShows as searchShowRequest,
   type TmdbShow,
-} from "../api/tmdb";
-import { addToCache, retrieveFromCache } from "../db/mongodb/cache";
-import { logger } from "../libs/logger";
+} from "../../api/tmdb";
+import { addToCache, retrieveFromCache } from "../../db/mongodb/cache";
+import { logger } from "../../libs/logger";
 import {
   mapApiResponseToMedia,
   mapApiResponseToMediaList,
   type Media,
   type MediaList,
-} from "./media";
-import { getConfiguration } from "./configuration";
-import { getShowWatchProviders } from "./watchProviders";
+} from "../media";
+import { getConfiguration } from "../configuration";
+import { getShowWatchProviders } from "../watchProviders";
 
 export const getShow = async (id: string, region?: string): Promise<Media> => {
   logger.profile(`getShow #${id}`);
