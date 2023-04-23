@@ -38,21 +38,21 @@ export const mapApiResponseToMediaWithWatchProviders = (
 export const mapApiResponseToMedia = (
   response: TmdbMovie | TmdbShow,
   configuration: TmdbConfigurationResponse,
-  watchProviders?: TmdbShowWatchProviderResponse
+  watchProviders?: WatchProvider[]
 ): Media => {
   const isMovie = response.__type === "movie";
   const images = getImages(response.poster_path, configuration);
-  const watchProviderData =
-    watchProviders != null
-      ? mapResponseToWatchProvider(watchProviders, configuration)
-      : undefined;
+  // const watchProviderData =
+  //   watchProviders != null
+  //     ? mapResponseToWatchProvider(watchProviders, configuration)
+  //     : undefined;
 
   return {
     id: response.id,
     title: isMovie ? response.title : response.name,
     images,
     __type: response.__type,
-    watchProviders: watchProviderData,
+    watchProviders,
   };
 };
 

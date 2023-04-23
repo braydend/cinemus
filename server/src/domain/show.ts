@@ -1,6 +1,5 @@
 import {
   getShow as fetchShow,
-  getShowWatchProviders,
   searchShows as searchShowRequest,
   type TmdbShow,
 } from "../api/tmdb";
@@ -13,6 +12,7 @@ import {
   type MediaList,
 } from "./media";
 import { getConfiguration } from "./configuration";
+import { getShowWatchProviders } from "./watchProviders";
 
 export const getShow = async (id: string, region?: string): Promise<Media> => {
   logger.profile(`getShow #${id}`);
@@ -21,7 +21,9 @@ export const getShow = async (id: string, region?: string): Promise<Media> => {
   });
   const configuration = await getConfiguration();
   const watchProviders =
-    region != null ? await getShowWatchProviders(id) : undefined;
+    region != null
+      ? await getShowWatchProviders(id, configuration, region)
+      : undefined;
 
   if (cachedShow != null) {
     return mapApiResponseToMedia(

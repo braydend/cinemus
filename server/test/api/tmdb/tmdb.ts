@@ -108,7 +108,18 @@ export const buildStubShowWatchProviders = (
             display_priority: 1,
           },
         ],
-        link: "www.foo.bar",
+        link: "www.netflix.com",
+      },
+      NZ: {
+        flatrate: [
+          {
+            provider_name: "Paramount Plus",
+            provider_id: 1,
+            logo_path: "/paramount.jpg",
+            display_priority: 1,
+          },
+        ],
+        link: "www.paramountplus.com",
       },
     },
   };
