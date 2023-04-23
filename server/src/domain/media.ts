@@ -20,7 +20,7 @@ export interface Media {
   watchProviders?: WatchProvider[];
 }
 
-export type MediaList = Array<Omit<Media, "watchProviders">>;
+export type MediaList = Media[];
 
 export const mapApiResponseToMediaWithWatchProviders = (
   response: TmdbMovie | TmdbShow,
@@ -37,16 +37,22 @@ export const mapApiResponseToMediaWithWatchProviders = (
 
 export const mapApiResponseToMedia = (
   response: TmdbMovie | TmdbShow,
-  configuration: TmdbConfigurationResponse
-): Omit<Media, "watchProviders"> => {
+  configuration: TmdbConfigurationResponse,
+  watchProviders?: TmdbShowWatchProviderResponse
+): Media => {
   const isMovie = response.__type === "movie";
   const images = getImages(response.poster_path, configuration);
+  const watchProviderData =
+    watchProviders != null
+      ? mapResponseToWatchProvider(watchProviders, configuration)
+      : undefined;
 
   return {
     id: response.id,
     title: isMovie ? response.title : response.name,
     images,
     __type: response.__type,
+    watchProviders: watchProviderData,
   };
 };
 

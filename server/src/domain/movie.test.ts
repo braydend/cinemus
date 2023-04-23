@@ -14,13 +14,13 @@ describe("movie domain", () => {
       const expectedMovie: Media = {
         __type: "movie",
         title: "Stub Movie",
-        images: await getImages("/posterPath.jpg", configuration),
+        images: getImages("/posterPath.jpg", configuration),
         id: 12345,
       };
       const result = await getMovie("12345");
 
       expect(apiSpy).toHaveBeenCalledOnce();
-      expect(result).toStrictEqual(expectedMovie);
+      expect(result).toEqual(expectedMovie);
     });
 
     it("retrieves from cache if it exists", async () => {
@@ -28,13 +28,13 @@ describe("movie domain", () => {
       const expectedMovie: Media = {
         __type: "movie",
         title: "Stub Movie",
-        images: await getImages("/posterPath.jpg", configuration),
+        images: getImages("/posterPath.jpg", configuration),
         id: 12345,
       };
       const result = await getMovie("12345");
 
       expect(apiSpy).not.toHaveBeenCalled();
-      expect(result).toStrictEqual(expectedMovie);
+      expect(result).toEqual(expectedMovie);
     });
   });
 
@@ -45,14 +45,14 @@ describe("movie domain", () => {
         {
           __type: "movie",
           title: "Stub Movie",
-          images: await getImages("/posterPath.jpg", configuration),
+          images: getImages("/posterPath.jpg", configuration),
           id: 12345,
         },
       ];
       const result = await searchMovies("Stub");
 
       expect(apiSpy).toHaveBeenCalledOnce();
-      expect(result).toStrictEqual(expectedMovies);
+      expect(result).toEqual(expectedMovies);
     });
 
     it("retrieves from cache if it exists", async () => {
@@ -62,13 +62,13 @@ describe("movie domain", () => {
           __type: "movie",
           title: "Stub Movie",
           id: 12345,
-          images: await getImages("/posterPath.jpg", configuration),
+          images: getImages("/posterPath.jpg", configuration),
         },
       ];
       const result = await searchMovies("Stub");
 
       expect(apiSpy).not.toHaveBeenCalled();
-      expect(result).toStrictEqual(expectedMovies);
+      expect(result).toEqual(expectedMovies);
     });
   });
 });

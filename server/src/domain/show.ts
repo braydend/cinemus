@@ -7,23 +7,24 @@ import {
 import { addToCache, retrieveFromCache } from "../db/mongodb/cache";
 import { logger } from "../libs/logger";
 import {
+  mapApiResponseToMedia,
   mapApiResponseToMediaList,
-  mapApiResponseToMediaWithWatchProviders,
   type Media,
   type MediaList,
 } from "./media";
 import { getConfiguration } from "./configuration";
 
-export const getShow = async (id: string): Promise<Media> => {
+export const getShow = async (id: string, region?: string): Promise<Media> => {
   logger.profile(`getShow #${id}`);
   const cachedShow = await retrieveFromCache<TmdbShow>(id, {
     "data.__type": "show",
   });
   const configuration = await getConfiguration();
-  const watchProviders = await getShowWatchProviders(id);
+  const watchProviders =
+    region != null ? await getShowWatchProviders(id) : undefined;
 
   if (cachedShow != null) {
-    return mapApiResponseToMediaWithWatchProviders(
+    return mapApiResponseToMedia(
       cachedShow.data,
       configuration,
       watchProviders
@@ -33,7 +34,7 @@ export const getShow = async (id: string): Promise<Media> => {
   const show = await fetchShow(id);
   addToCache(id, show);
 
-  const mappedMedia = mapApiResponseToMediaWithWatchProviders(
+  const mappedMedia = mapApiResponseToMedia(
     show,
     configuration,
     watchProviders

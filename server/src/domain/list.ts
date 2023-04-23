@@ -16,7 +16,10 @@ export interface List {
   media: ListedMedia[];
 }
 
-export const getList = async (userId: string): Promise<Media[]> => {
+export const getList = async (
+  userId: string,
+  region?: string
+): Promise<Media[]> => {
   logger.profile(`getList #${userId}`);
   const data = await retrieveOne<List>("lists", { userId });
 
@@ -28,7 +31,7 @@ export const getList = async (userId: string): Promise<Media[]> => {
     data.media.map(async (media) => ({
       ...(media.__type === "movie"
         ? await getMovie(media.id)
-        : await getShow(media.id)),
+        : await getShow(media.id, region)),
       isWatched: media.isWatched ?? false,
     }))
   );
@@ -40,7 +43,8 @@ export const getList = async (userId: string): Promise<Media[]> => {
 
 export const updateList = async (
   data: List,
-  userId: string
+  userId: string,
+  region?: string
 ): Promise<Media[]> => {
   logger.profile(`updateList #${userId} data=${JSON.stringify(data)}`);
   const result = await upsert<List>("lists", data, { userId });
@@ -49,7 +53,7 @@ export const updateList = async (
     result.media.map(async (media) => ({
       ...(media.__type === "movie"
         ? await getMovie(media.id)
-        : await getShow(media.id)),
+        : await getShow(media.id, region)),
       isWatched: media.isWatched ?? false,
     }))
   );
