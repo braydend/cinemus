@@ -68,14 +68,14 @@ const get = async <MediaType extends Media>(
   id: string,
   type: MediaCategory
 ): Promise<MediaType> => {
-  logger.profile(`TMDB search ${type} #${id}`);
+  logger.profile(`TMDB get ${type} #${id}`);
   try {
     const response = await axios.get<MediaType>(
       `${tmdbBaseUrl}/${type}/${id}?api_key=${secrets.MOVIE_DB_API_KEY}`
     );
 
     const markedMedia = markMediaType(response.data, type);
-    logger.profile(`TMDB search ${type} #${id}`);
+    logger.profile(`TMDB get ${type} #${id}`);
 
     return markedMedia;
   } catch (e) {
