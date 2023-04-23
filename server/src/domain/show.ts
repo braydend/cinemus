@@ -1,11 +1,17 @@
 import {
   getShow as fetchShow,
+  getShowWatchProviders,
   searchShows as searchShowRequest,
   type TmdbShow,
 } from "../api/tmdb";
 import { addToCache, retrieveFromCache } from "../db/mongodb/cache";
 import { logger } from "../libs/logger";
-import { mapApiResponseToMedia, type Media } from "./media";
+import {
+  mapApiResponseToMediaList,
+  mapApiResponseToMediaWithWatchProviders,
+  type Media,
+  type MediaList,
+} from "./media";
 import { getConfiguration } from "./configuration";
 
 export const getShow = async (id: string): Promise<Media> => {
@@ -14,22 +20,31 @@ export const getShow = async (id: string): Promise<Media> => {
     "data.__type": "show",
   });
   const configuration = await getConfiguration();
+  const watchProviders = await getShowWatchProviders(id);
 
   if (cachedShow != null) {
-    return await mapApiResponseToMedia(cachedShow.data, configuration);
+    return mapApiResponseToMediaWithWatchProviders(
+      cachedShow.data,
+      configuration,
+      watchProviders
+    );
   }
 
-  const movie = await fetchShow(id);
-  addToCache(id, movie);
+  const show = await fetchShow(id);
+  addToCache(id, show);
 
-  const mappedMedia = await mapApiResponseToMedia(movie, configuration);
+  const mappedMedia = mapApiResponseToMediaWithWatchProviders(
+    show,
+    configuration,
+    watchProviders
+  );
 
   logger.profile(`getShow #${id}`);
 
   return mappedMedia;
 };
 
-export const searchShows = async (query: string): Promise<Media[]> => {
+export const searchShows = async (query: string): Promise<MediaList> => {
   logger.profile(`searchShows: ${query}`);
   const { results } = await searchShowRequest(query);
   const configuration = await getConfiguration();
@@ -39,11 +54,7 @@ export const searchShows = async (query: string): Promise<Media[]> => {
     addToCache(show.id.toString(10), show);
   }
 
-  const mappedMedia = await Promise.all(
-    results.map(
-      async (media) => await mapApiResponseToMedia(media, configuration)
-    )
-  );
+  const mappedMedia = mapApiResponseToMediaList(results, configuration);
   logger.profile(`searchShows: ${query}`);
 
   return mappedMedia;
