@@ -50,10 +50,10 @@ const constructImageMap = (
     };
   }, {});
 };
-export const getImages = async (
+export const getImages = (
   slug: string | null,
   configuration: TmdbConfigurationResponse
-): Promise<Images> => {
+): Images => {
   const {
     images: {
       // eslint-disable-next-line @typescript-eslint/naming-convention
