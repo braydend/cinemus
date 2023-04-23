@@ -4,6 +4,7 @@ import {
   type TmdbShowWatchProviderResponse,
   type TmdbWatchProviderRegionsResponse,
   type WatchProviderDetails,
+  getShowWatchProviders as fetchShowWatchProviders,
 } from "../../api";
 import { addToCache, retrieveFromCache } from "../../db/mongodb/cache";
 import { logger } from "../../libs/logger";
@@ -15,7 +16,6 @@ export interface WatchProviderRegion {
 }
 
 export interface PricedWatchProviders {
-  // pricingType: "flatrate" | "buy" | "ads" | "rent" | "free";
   name: string;
   logoUrl: string;
 }
@@ -41,13 +41,23 @@ const buildPricedWatchProvider = (
   }));
 };
 
+const filterWatchProvidersByRegion = (
+  region: string,
+  providers: WatchProvider[]
+) => {
+  return providers.filter(
+    ({ region: providerRegion }) => region === providerRegion
+  );
+};
+
 export const mapResponseToWatchProvider = (
   response: TmdbShowWatchProviderResponse,
-  configuration: TmdbConfigurationResponse
+  configuration: TmdbConfigurationResponse,
+  region?: string
 ): WatchProvider[] => {
   const providers = Object.entries(response.results);
 
-  return providers.map(([region, providerData]) => {
+  const mappedProviders = providers.map(([region, providerData]) => {
     return {
       region,
       free:
@@ -72,6 +82,10 @@ export const mapResponseToWatchProvider = (
           : undefined,
     };
   });
+
+  return region != null
+    ? filterWatchProvidersByRegion(region, mappedProviders)
+    : mappedProviders;
 };
 
 const mapResponseToRegion = (
@@ -106,8 +120,10 @@ export const getWatchProviderRegions = async (): Promise<
 };
 
 export const getShowWatchProviders = async (
-  id: string
-): Promise<TmdbShowWatchProviderResponse> => {
+  id: string,
+  configuration: TmdbConfigurationResponse,
+  region?: string
+): Promise<WatchProvider[]> => {
   logger.profile("getShowWatchProviders");
   const cachedWatchProviders =
     await retrieveFromCache<TmdbShowWatchProviderResponse>(id, {
@@ -115,14 +131,18 @@ export const getShowWatchProviders = async (
     });
 
   if (cachedWatchProviders != null) {
-    return cachedWatchProviders.data;
+    return mapResponseToWatchProvider(
+      cachedWatchProviders.data,
+      configuration,
+      region
+    );
   }
 
-  const result = await getShowWatchProviders(id);
+  const result = await fetchShowWatchProviders(id);
 
   addToCache(id, { ...result, __type: "showWatchProviders" });
 
   logger.profile("getShowWatchProviders");
 
-  return result;
+  return mapResponseToWatchProvider(result, configuration, region);
 };
