@@ -2,6 +2,7 @@ import {
   type TmdbConfigurationResponse,
   type TmdbMovie,
   type TmdbShow,
+  type TmdbShowWatchProviderResponse,
   type TmdbWatchProviderRegionsResponse,
 } from "../../../src/api/tmdb";
 
@@ -91,3 +92,24 @@ export const buildStubWatchProviderRegions =
       ],
     };
   };
+
+export const buildStubShowWatchProviders = (
+  id: number
+): TmdbShowWatchProviderResponse => {
+  return {
+    id,
+    results: {
+      AU: {
+        flatrate: [
+          {
+            provider_name: "Netflix",
+            provider_id: 1,
+            logo_path: "/netflix.jpg",
+            display_priority: 1,
+          },
+        ],
+        link: "www.foo.bar",
+      },
+    },
+  };
+};

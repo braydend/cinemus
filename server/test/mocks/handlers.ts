@@ -1,6 +1,12 @@
 import { rest } from "msw";
 import { url } from "../../src/config";
-import {buildStubConfiguration, buildStubMovie, buildStubShow, buildStubWatchProviderRegions} from "../api";
+import {
+    buildStubConfiguration,
+    buildStubMovie,
+    buildStubShow,
+    buildStubShowWatchProviders,
+    buildStubWatchProviderRegions
+} from "../api";
 
 export const handlers = [
   rest.get(`${url.TMDB_URL}/movie/:id`, (req, res, ctx) => {
@@ -54,6 +60,14 @@ export const handlers = [
         return res(
             ctx.status(200),
             ctx.json(buildStubWatchProviderRegions())
+        );
+    }),
+
+    rest.get(`${url.TMDB_URL}/tv/:id/watch/providers`, (req, res, ctx) => {
+        const {id} = req.params
+        return res(
+            ctx.status(200),
+            ctx.json(buildStubShowWatchProviders(Number(id)))
         );
     }),
 ];

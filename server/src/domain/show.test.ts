@@ -14,13 +14,24 @@ describe("show domain", () => {
       const expectedShow: Media = {
         __type: "show",
         title: "Stub Show",
-        images: await getImages("/posterPath.jpg", configuration),
+        images: getImages("/posterPath.jpg", configuration),
         id: 12345,
+        watchProviders: [
+          {
+            region: "AU",
+            flatrate: [
+              {
+                logoUrl: "https://image.tmdb.org/t/p/original/netflix.jpg",
+                name: "Netflix",
+              },
+            ],
+          },
+        ],
       };
       const result = await getShow("12345");
 
       expect(apiSpy).toHaveBeenCalledOnce();
-      expect(result).toStrictEqual(expectedShow);
+      expect(result).toEqual(expectedShow);
     });
 
     it("retrieves from cache if it exists", async () => {
@@ -28,13 +39,24 @@ describe("show domain", () => {
       const expectedShow: Media = {
         __type: "show",
         title: "Stub Show",
-        images: await getImages("/posterPath.jpg", configuration),
+        images: getImages("/posterPath.jpg", configuration),
         id: 12345,
+        watchProviders: [
+          {
+            region: "AU",
+            flatrate: [
+              {
+                logoUrl: "https://image.tmdb.org/t/p/original/netflix.jpg",
+                name: "Netflix",
+              },
+            ],
+          },
+        ],
       };
       const result = await getShow("12345");
 
       expect(apiSpy).not.toHaveBeenCalled();
-      expect(result).toStrictEqual(expectedShow);
+      expect(result).toEqual(expectedShow);
     });
   });
 
@@ -45,7 +67,7 @@ describe("show domain", () => {
         {
           __type: "show",
           title: "Stub Show",
-          images: await getImages("/posterPath.jpg", configuration),
+          images: getImages("/posterPath.jpg", configuration),
           id: 12345,
         },
       ];
@@ -61,7 +83,7 @@ describe("show domain", () => {
         {
           __type: "show",
           title: "Stub Show",
-          images: await getImages("/posterPath.jpg", configuration),
+          images: getImages("/posterPath.jpg", configuration),
           id: 12345,
         },
       ];

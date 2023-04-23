@@ -37,14 +37,25 @@ describe("list domain", () => {
         {
           __type: "show",
           title: "Stub Show",
-          images: await getImages("/posterPath.jpg", configuration),
+          images: getImages("/posterPath.jpg", configuration),
           id: 12345,
           isWatched: false,
+          watchProviders: [
+            {
+              region: "AU",
+              flatrate: [
+                {
+                  logoUrl: "https://image.tmdb.org/t/p/original/netflix.jpg",
+                  name: "Netflix",
+                },
+              ],
+            },
+          ],
         },
       ];
       const result = await getList("foo");
 
-      expect(result).toStrictEqual(expectedList);
+      expect(result).toEqual(expectedList);
     });
   });
 
@@ -64,14 +75,25 @@ describe("list domain", () => {
         {
           __type: "show",
           title: "Stub Show",
-          images: await getImages("/posterPath.jpg", configuration),
+          images: getImages("/posterPath.jpg", configuration),
           id: 12345,
           isWatched: false,
+          watchProviders: [
+            {
+              region: "AU",
+              flatrate: [
+                {
+                  logoUrl: "https://image.tmdb.org/t/p/original/netflix.jpg",
+                  name: "Netflix",
+                },
+              ],
+            },
+          ],
         },
       ];
       const result = await updateList(newData, "foo");
 
-      expect(result).toStrictEqual(expectedList);
+      expect(result).toEqual(expectedList);
     });
   });
 });
