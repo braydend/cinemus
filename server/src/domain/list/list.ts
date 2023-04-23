@@ -1,9 +1,9 @@
-import { retrieveOne } from "../db/mongodb/retrieveOne";
-import { upsert } from "../db/mongodb/upsert";
-import { type Media } from "./media";
-import { getMovie } from "./movie";
-import { getShow } from "./show";
-import { logger } from "../libs/logger";
+import { retrieveOne } from "../../db/mongodb/retrieveOne";
+import { upsert } from "../../db/mongodb/upsert";
+import { type Media } from "../media";
+import { getMovie } from "../movie";
+import { getShow } from "../show";
+import { logger } from "../../libs/logger";
 
 interface ListedMedia {
   id: string;
