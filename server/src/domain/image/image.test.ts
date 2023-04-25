@@ -3,9 +3,9 @@ import { getImages } from "./image";
 import { buildStubConfiguration } from "../../../test";
 
 describe("image domain", () => {
-  it("returns a correctly constructed image map", async () => {
+  it("returns a correctly constructed image map", () => {
     const configuration = buildStubConfiguration();
-    const result = await getImages("/foo", configuration);
+    const result = getImages("/foo", configuration);
 
     expect(result).toEqual({
       backdrop: {

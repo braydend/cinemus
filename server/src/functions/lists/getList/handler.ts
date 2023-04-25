@@ -17,8 +17,11 @@ const handler: ValidatedGetEventAPIGatewayProxyEvent<typeof schema> =
           },
         },
       },
-      queryStringParameters: { region },
+      queryStringParameters,
     } = event;
+    const region = queryStringParameters
+      ? queryStringParameters.region
+      : undefined;
     const [_, userId] = sub.split("|");
 
     const data = await getList(userId, region);
