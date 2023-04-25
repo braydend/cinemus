@@ -1,4 +1,4 @@
-import schema from "./schema";
+import { bodySchema } from "./schema";
 import { handlerPath } from "../../../libs/handler-resolver";
 
 export default {
@@ -14,7 +14,7 @@ export default {
         },
         request: {
           schemas: {
-            "application/json": schema,
+            "application/json": bodySchema,
           },
         },
       },

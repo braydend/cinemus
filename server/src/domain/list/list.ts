@@ -8,7 +8,7 @@ import { logger } from "../../libs/logger";
 interface ListedMedia {
   id: string;
   __type: "movie" | "show";
-  isWatched: boolean;
+  isWatched?: boolean;
 }
 
 export interface List {

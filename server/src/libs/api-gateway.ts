@@ -23,12 +23,18 @@ export type AuthorisedAPIGatewayProxyEvent = Handler<
   APIGatewayProxyResult
 >;
 
-type ValidatedAPIGatewayProxyEvent<S extends JSONSchema> = Omit<
-  AuthorisedApiGatewayEvent,
-  "body"
-> & { body: FromSchema<S> };
-export type ValidatedEventAPIGatewayProxyEvent<S extends JSONSchema> = Handler<
-  ValidatedAPIGatewayProxyEvent<S>,
+type ValidatedAPIGatewayProxyEvent<
+  Body extends JSONSchema,
+  QueryParams extends JSONSchema = Record<string, never>
+> = Omit<AuthorisedApiGatewayEvent, "body" | "queryStringParameters"> & {
+  body: FromSchema<Body>;
+  queryStringParameters: FromSchema<QueryParams>;
+};
+export type ValidatedEventAPIGatewayProxyEvent<
+  Body extends JSONSchema,
+  QueryParams extends JSONSchema = Record<string, never>
+> = Handler<
+  ValidatedAPIGatewayProxyEvent<Body, QueryParams>,
   APIGatewayProxyResult
 >;
 
