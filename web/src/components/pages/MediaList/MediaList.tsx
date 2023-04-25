@@ -8,13 +8,23 @@ import { Divider, List } from "@mui/material";
 import { MediaSearch } from "../../organisms";
 import { type MediaResponse } from "../../../queries/search";
 import Typography from "@mui/material/Typography";
+import { getUserPreferences } from "../../../queries/userPreferences";
 
 export const MediaList: FC = () => {
   const { authToken } = useGetAuthToken();
+  const { data: userPreferences, isFetched: isUserPreferencesFetched } =
+    useQuery(
+      ["userPreferences"],
+      async () => await getUserPreferences(authToken),
+      { enabled: Boolean(authToken) }
+    );
+
+  const region = userPreferences?.data.watchProviderRegion;
+
   const { data: initialList, isLoading } = useQuery(
     ["getList"],
-    async () => await getList(authToken),
-    { enabled: Boolean(authToken) }
+    async () => await getList(authToken, region),
+    { enabled: Boolean(authToken) && Boolean(isUserPreferencesFetched) }
   );
   const { mutate, data: selections } = useMutation(
     ["updateList"],
@@ -25,7 +35,8 @@ export const MediaList: FC = () => {
           __type,
           isWatched,
         })),
-        authToken
+        authToken,
+        region
       )
   );
 
