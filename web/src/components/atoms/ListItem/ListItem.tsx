@@ -9,6 +9,7 @@ import {
 import { type FC } from "react";
 import { type Media } from "../../../types";
 import { Delete, Visibility, VisibilityOff } from "@mui/icons-material";
+import styles from "./ListItem.module.css";
 
 interface Props {
   media: Media;
@@ -28,6 +29,17 @@ export const ListItem: FC<Props> = ({ media, onRemove, onWatchedChange }) => {
           />
         </Box>
         <ListItemText>{media.title}</ListItemText>
+        {media.watchProviders?.flatMap(({ flatrate }) =>
+          flatrate?.map(({ logoUrl, name }) => (
+            <img
+              key={name}
+              className={styles.watchProviderLogo}
+              width={32}
+              src={logoUrl}
+              alt={name}
+            />
+          ))
+        )}
         <Tooltip title={isWatched ? "Unmark as watched" : "Mark as watched"}>
           <ListItemButton
             sx={{ flexGrow: 0 }}

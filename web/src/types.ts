@@ -10,6 +10,19 @@ interface Images {
   still: ImageMap;
 }
 
+type PricingOption = "flatrate" | "buy" | "ads" | "rent" | "free";
+
+export interface PricedWatchProviders {
+  name: string;
+  logoUrl: string;
+}
+
+export type WatchProvider = {
+  [pricingOption in PricingOption]?: PricedWatchProviders[];
+} & {
+  region: string;
+};
+
 export interface Media {
   id: string;
   title: string;
@@ -17,4 +30,5 @@ export interface Media {
   images: Images;
   __type: MediaType;
   isWatched?: boolean;
+  watchProviders?: WatchProvider[];
 }

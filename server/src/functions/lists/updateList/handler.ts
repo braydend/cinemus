@@ -18,10 +18,14 @@ const handler: ValidatedEventAPIGatewayProxyEvent<
       },
     },
     body: { media },
-    queryStringParameters: { region },
+    queryStringParameters,
   } = event;
+
   const [_, userId] = sub.split("|");
   const data: List = { userId, media };
+  const region = queryStringParameters
+    ? queryStringParameters.region
+    : undefined;
 
   const result = await updateList(data, userId, region);
 
