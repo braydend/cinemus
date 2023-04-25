@@ -30,7 +30,7 @@ export const getList = async (
   const hydratedData = await Promise.all(
     data.media.map(async (media) => ({
       ...(media.__type === "movie"
-        ? await getMovie(media.id)
+        ? await getMovie(media.id, region)
         : await getShow(media.id, region)),
       isWatched: media.isWatched ?? false,
     }))
@@ -52,7 +52,7 @@ export const updateList = async (
   const hydratedResults = await Promise.all(
     result.media.map(async (media) => ({
       ...(media.__type === "movie"
-        ? await getMovie(media.id)
+        ? await getMovie(media.id, region)
         : await getShow(media.id, region)),
       isWatched: media.isWatched ?? false,
     }))

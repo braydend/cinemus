@@ -1,14 +1,17 @@
 import {
   getWatchProviderRegions as getWatchProviderRegionsQuery,
   type TmdbConfigurationResponse,
-  type TmdbShowWatchProviderResponse,
+  type TmdbWatchProviderResponse,
   type TmdbWatchProviderRegionsResponse,
   type WatchProviderDetails,
   getShowWatchProviders as fetchShowWatchProviders,
+  getMovieWatchProviders as fetchMovieWatchProviders,
 } from "../../api";
 import { addToCache, retrieveFromCache } from "../../db/mongodb/cache";
 import { logger } from "../../libs/logger";
 import { getImages } from "../image";
+
+type MediaCategory = "movie" | "tv";
 
 export interface WatchProviderRegion {
   countryId: string;
@@ -51,7 +54,7 @@ const filterWatchProvidersByRegion = (
 };
 
 export const mapResponseToWatchProvider = (
-  response: TmdbShowWatchProviderResponse,
+  response: TmdbWatchProviderResponse,
   configuration: TmdbConfigurationResponse,
   region?: string
 ): WatchProvider[] => {
@@ -119,15 +122,18 @@ export const getWatchProviderRegions = async (): Promise<
   return mappedRegions;
 };
 
-export const getShowWatchProviders = async (
+const getWatchProviders = async (
   id: string,
+  type: MediaCategory,
   configuration: TmdbConfigurationResponse,
   region?: string
 ): Promise<WatchProvider[]> => {
-  logger.profile("getShowWatchProviders");
+  const isMovie = type === "movie";
+  const mediaType = isMovie ? "movie" : "show";
+
   const cachedWatchProviders =
-    await retrieveFromCache<TmdbShowWatchProviderResponse>(id, {
-      "data.__type": "showWatchProviders",
+    await retrieveFromCache<TmdbWatchProviderResponse>(id, {
+      "data.__type": `${mediaType}WatchProviders`,
     });
 
   if (cachedWatchProviders != null) {
@@ -138,11 +144,39 @@ export const getShowWatchProviders = async (
     );
   }
 
-  const result = await fetchShowWatchProviders(id);
+  const result = isMovie
+    ? await fetchMovieWatchProviders(id)
+    : await fetchShowWatchProviders(id);
 
-  addToCache(id, { ...result, __type: "showWatchProviders" });
+  addToCache(id, { ...result, __type: `${mediaType}WatchProviders` });
+
+  return mapResponseToWatchProvider(result, configuration, region);
+};
+
+export const getShowWatchProviders = async (
+  id: string,
+  configuration: TmdbConfigurationResponse,
+  region?: string
+): Promise<WatchProvider[]> => {
+  logger.profile("getShowWatchProviders");
+
+  const data = await getWatchProviders(id, "tv", configuration, region);
 
   logger.profile("getShowWatchProviders");
 
-  return mapResponseToWatchProvider(result, configuration, region);
+  return data;
+};
+
+export const getMovieWatchProviders = async (
+  id: string,
+  configuration: TmdbConfigurationResponse,
+  region?: string
+): Promise<WatchProvider[]> => {
+  logger.profile("getMovieWatchProviders");
+
+  const data = await getWatchProviders(id, "movie", configuration, region);
+
+  logger.profile("getMovieWatchProviders");
+
+  return data;
 };

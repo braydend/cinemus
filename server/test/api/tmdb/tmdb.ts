@@ -2,7 +2,7 @@ import {
   type TmdbConfigurationResponse,
   type TmdbMovie,
   type TmdbShow,
-  type TmdbShowWatchProviderResponse,
+  type TmdbWatchProviderResponse,
   type TmdbWatchProviderRegionsResponse,
 } from "../../../src/api/tmdb";
 
@@ -93,9 +93,9 @@ export const buildStubWatchProviderRegions =
     };
   };
 
-export const buildStubShowWatchProviders = (
+export const buildStubWatchProviders = (
   id: number
-): TmdbShowWatchProviderResponse => {
+): TmdbWatchProviderResponse => {
   return {
     id,
     results: {

@@ -13,7 +13,7 @@ export interface TmdbWatchProviderRegion {
   native_name: string;
 }
 
-export interface TmdbShowWatchProviderResponse {
+export interface TmdbWatchProviderResponse {
   id: number;
   results: Results;
 }
@@ -53,16 +53,32 @@ export const getWatchProviderRegions =
 
 export const getShowWatchProviders = async (
   id: string
-): Promise<TmdbShowWatchProviderResponse> => {
+): Promise<TmdbWatchProviderResponse> => {
   try {
-    const response = await axios.get<TmdbShowWatchProviderResponse>(
+    const response = await axios.get<TmdbWatchProviderResponse>(
       `${tmdbBaseUrl}/tv/${id}/watch/providers?api_key=${secrets.MOVIE_DB_API_KEY}`
     );
 
     return response.data;
   } catch (e) {
     throw Error(
-      `Failed to get TMDB  show watch providers: ${(e as Error).message}`
+      `Failed to get TMDB show watch providers: ${(e as Error).message}`
+    );
+  }
+};
+
+export const getMovieWatchProviders = async (
+  id: string
+): Promise<TmdbWatchProviderResponse> => {
+  try {
+    const response = await axios.get<TmdbWatchProviderResponse>(
+      `${tmdbBaseUrl}/movie/${id}/watch/providers?api_key=${secrets.MOVIE_DB_API_KEY}`
+    );
+
+    return response.data;
+  } catch (e) {
+    throw Error(
+      `Failed to get TMDB movie watch providers: ${(e as Error).message}`
     );
   }
 };

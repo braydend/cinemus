@@ -9,11 +9,13 @@ import withSentry from "serverless-sentry-lib";
 
 const getMovieHandler: ValidatedGetEventAPIGatewayProxyEvent<typeof schema> =
   withSentry(async (event) => {
-    const {
-      queryStringParameters: { id },
-    } = event;
+    const { queryStringParameters } = event;
+    const { id } = queryStringParameters;
+    const region = queryStringParameters
+      ? queryStringParameters.region
+      : undefined;
 
-    const movie = await getMovie(id);
+    const movie = await getMovie(id, region);
 
     return formatJSONResponse({
       movie,

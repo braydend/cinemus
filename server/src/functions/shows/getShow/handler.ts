@@ -9,9 +9,11 @@ import withSentry from "serverless-sentry-lib";
 
 const handler: ValidatedGetEventAPIGatewayProxyEvent<typeof schema> =
   withSentry(async (event) => {
-    const {
-      queryStringParameters: { id, region },
-    } = event;
+    const { queryStringParameters } = event;
+    const { id } = queryStringParameters;
+    const region = queryStringParameters
+      ? queryStringParameters.region
+      : undefined;
 
     const show = await getShow(id, region);
 

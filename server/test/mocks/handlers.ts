@@ -4,7 +4,7 @@ import {
     buildStubConfiguration,
     buildStubMovie,
     buildStubShow,
-    buildStubShowWatchProviders,
+    buildStubWatchProviders,
     buildStubWatchProviderRegions
 } from "../api";
 
@@ -67,7 +67,15 @@ export const handlers = [
         const {id} = req.params
         return res(
             ctx.status(200),
-            ctx.json(buildStubShowWatchProviders(Number(id)))
+            ctx.json(buildStubWatchProviders(Number(id)))
+        );
+    }),
+
+    rest.get(`${url.TMDB_URL}/movie/:id/watch/providers`, (req, res, ctx) => {
+        const {id} = req.params
+        return res(
+            ctx.status(200),
+            ctx.json(buildStubWatchProviders(Number(id)))
         );
     }),
 ];
