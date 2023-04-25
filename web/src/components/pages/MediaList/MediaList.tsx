@@ -1,5 +1,5 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { type FC } from "react";
+import { type FC, useMemo } from "react";
 import { type Media } from "../../../types";
 import { useGetAuthToken } from "../../../hooks/useGetAuthToken";
 import { getList, updateList } from "../../../queries/list";
@@ -12,20 +12,24 @@ import { getUserPreferences } from "../../../queries/userPreferences";
 
 export const MediaList: FC = () => {
   const { authToken } = useGetAuthToken();
-  const { data: userPreferences, isFetched: isUserPreferencesFetched } =
+  const { data: userPreferences, isLoading: isUserPreferencesLoading } =
     useQuery(
       ["userPreferences"],
       async () => await getUserPreferences(authToken),
       { enabled: Boolean(authToken) }
     );
 
-  const region = userPreferences?.data.watchProviderRegion;
+  const region = useMemo(
+    () => userPreferences?.data.watchProviderRegion,
+    [userPreferences]
+  );
 
   const { data: initialList, isLoading } = useQuery(
-    ["getList"],
+    [`getList(${region ?? ""})`],
     async () => await getList(authToken, region),
-    { enabled: Boolean(authToken) && Boolean(isUserPreferencesFetched) }
+    { enabled: Boolean(authToken) && !isUserPreferencesLoading }
   );
+
   const { mutate, data: selections } = useMutation(
     ["updateList"],
     async (media: MediaResponse[]) =>

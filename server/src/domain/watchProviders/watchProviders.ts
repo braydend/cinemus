@@ -47,7 +47,7 @@ const buildPricedWatchProvider = (
 const filterWatchProvidersByRegion = (
   region: string,
   providers: WatchProvider[]
-) => {
+): WatchProvider[] => {
   return providers.filter(
     ({ region: providerRegion }) => region === providerRegion
   );

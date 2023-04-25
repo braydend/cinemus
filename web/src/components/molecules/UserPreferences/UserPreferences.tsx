@@ -34,7 +34,9 @@ export const UserPreferences: FC<Props> = ({ initialPreferences }) => {
     {
       onSuccess: async ({ data: updatedPreferences }) => {
         setPreferences(updatedPreferences);
-        await queryClient.invalidateQueries({ queryKey: ["userPreferences"] });
+        await queryClient.invalidateQueries({
+          queryKey: ["userPreferences", "getList"],
+        });
       },
     }
   );
