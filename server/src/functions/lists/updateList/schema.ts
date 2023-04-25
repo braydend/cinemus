@@ -1,4 +1,4 @@
-export default {
+export const bodySchema = {
   type: "object",
   properties: {
     media: {
@@ -21,4 +21,11 @@ export default {
     },
   },
   required: ["media"],
+} as const;
+
+export const queryParamsSchema = {
+  type: "object",
+  properties: {
+    region: { type: "string" },
+  },
 } as const;
