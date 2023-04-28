@@ -9,3 +9,17 @@
     flex-shrink: 1;
     text-align: center;
 }
+
+/* non-mobile */
+@media screen and (min-width: 750px) {
+    .textLogo {
+        width: 75%
+    }
+}
+
+/* mobile */
+@media screen and (max-width: 750px) {
+    .textLogo {
+        width: 100%
+    }
+}

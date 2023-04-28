@@ -7,7 +7,7 @@ test.beforeEach(async ({ page }) => {
 test("home page", async ({ page }) => {
   // Features
   await expect(
-    page.getByRole("main").getByRole("heading", { name: "Cinemus" })
+    page.getByRole("main").getByRole("img", { name: "Cinemus" })
   ).toBeVisible();
   await expect(
     page.getByRole("heading", { name: "Showtime Simplified" })
