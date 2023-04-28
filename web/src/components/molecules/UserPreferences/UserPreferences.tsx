@@ -9,7 +9,7 @@ import { getWatchProviderRegions } from "../../../queries/watchProviders";
 import { useGetAuthToken } from "../../../hooks/useGetAuthToken";
 import Button from "@mui/material/Button";
 import styles from "./userPreferences.module.css";
-import { TextField } from "@mui/material";
+import { Alert, Snackbar, TextField } from "@mui/material";
 import { useAuth0 } from "@auth0/auth0-react";
 import { queryClient } from "../../../queries/queryClient";
 
@@ -21,6 +21,7 @@ export const UserPreferences: FC<Props> = ({ initialPreferences }) => {
   const { authToken } = useGetAuthToken();
   const { user } = useAuth0();
   const [preferences, setPreferences] = useState(initialPreferences);
+  const [showSuccessMessage, setShowSuccessMessage] = useState(false);
   const { data, isLoading, error } = useQuery(
     ["getWatchProviderRegions"],
     async () => await getWatchProviderRegions(authToken),
@@ -37,6 +38,7 @@ export const UserPreferences: FC<Props> = ({ initialPreferences }) => {
         await queryClient.invalidateQueries({
           queryKey: ["userPreferences", "getList"],
         });
+        setShowSuccessMessage(true);
       },
     }
   );
@@ -67,30 +69,50 @@ export const UserPreferences: FC<Props> = ({ initialPreferences }) => {
   };
 
   return (
-    <div className={styles.container}>
-      <TextField
-        required
-        label="Email"
-        defaultValue={user?.email}
-        sx={{ marginBottom: "1rem" }}
-        disabled
-        fullWidth
-      />
-      <Select
-        options={watchRegionOptions}
-        onChange={handleRegionChange}
-        label={"Region"}
-        value={preferences.watchProviderRegion}
-        includeBlank
-      />
-      <div className={styles.actions}>
-        <Button color={"primary"} onClick={handleSaveChanges}>
-          Save Changes
-        </Button>
-        <Button color={"error"} onClick={handleResetChanges}>
-          Reset Changes
-        </Button>
+    <>
+      <div className={styles.container}>
+        <TextField
+          required
+          label="Email"
+          defaultValue={user?.email}
+          sx={{ marginBottom: "1rem" }}
+          disabled
+          fullWidth
+        />
+        <Select
+          options={watchRegionOptions}
+          onChange={handleRegionChange}
+          label={"Region"}
+          value={preferences.watchProviderRegion}
+          includeBlank
+        />
+        <div className={styles.actions}>
+          <Button color={"primary"} onClick={handleSaveChanges}>
+            Save Changes
+          </Button>
+          <Button color={"error"} onClick={handleResetChanges}>
+            Reset Changes
+          </Button>
+        </div>
       </div>
-    </div>
+      <Snackbar
+        open={showSuccessMessage}
+        autoHideDuration={6000}
+        onClose={() => {
+          setShowSuccessMessage(false);
+        }}
+        anchorOrigin={{ vertical: "bottom", horizontal: "center" }}
+      >
+        <Alert
+          onClose={() => {
+            setShowSuccessMessage(false);
+          }}
+          severity="success"
+          sx={{ width: "100%" }}
+        >
+          Preferences updated successfully!
+        </Alert>
+      </Snackbar>
+    </>
   );
 };

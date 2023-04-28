@@ -39,6 +39,9 @@ test("User preferences page", async ({ page }) => {
   await page.getByRole("button", { name: "Region ​" }).click();
   await page.getByRole("option", { name: "Australia" }).click();
   await page.getByRole("button", { name: "Save Changes" }).click();
-  await page.getByRole("button", { name: "Reset Changes" }).click();
+  await page.getByRole("button", { name: "Save Changes" }).click();
+  await expect(
+    page.getByText("Preferences updated successfully")
+  ).toBeVisible();
   await expect(page.getByRole("button", { name: "Australia" })).toBeVisible();
 });
