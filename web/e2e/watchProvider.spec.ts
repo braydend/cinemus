@@ -60,6 +60,14 @@ test("Watch providers", async ({ page }) => {
   await expect(
     page.getByRole("img", { name: "Disney Plus", exact: true })
   ).not.toBeVisible();
+  await expect(
+    page.getByText(
+      "Ready to find out where to watch everything on your list? Select your region"
+    )
+  ).toBeVisible();
+  await expect(
+    page.getByRole("link", { name: "Select your region" })
+  ).toBeVisible();
 
   // Region selection
   await navigateToUserPreferences(page);
@@ -72,4 +80,12 @@ test("Watch providers", async ({ page }) => {
   await expect(
     page.getByRole("img", { name: "Disney Plus", exact: true })
   ).toBeVisible();
+  await expect(
+    page.getByText(
+      "Ready to find out where to watch everything on your list? Select your region"
+    )
+  ).not.toBeVisible();
+  await expect(
+    page.getByRole("link", { name: "Select your region" })
+  ).not.toBeVisible();
 });

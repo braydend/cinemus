@@ -4,11 +4,13 @@ import { type Media } from "../../../types";
 import { useGetAuthToken } from "../../../hooks/useGetAuthToken";
 import { getList, updateList } from "../../../queries/list";
 import { ListItem } from "../../atoms";
-import { Divider, List } from "@mui/material";
+import { Alert, Divider, List } from "@mui/material";
 import { MediaSearch } from "../../organisms";
 import { type MediaResponse } from "../../../queries/search";
 import Typography from "@mui/material/Typography";
 import { getUserPreferences } from "../../../queries/userPreferences";
+import { Link } from "react-router-dom";
+import { availableRoutes } from "../../../router";
 
 export const MediaList: FC = () => {
   const { authToken } = useGetAuthToken();
@@ -23,6 +25,8 @@ export const MediaList: FC = () => {
     () => userPreferences?.data.watchProviderRegion,
     [userPreferences]
   );
+
+  const isRegionSelected = !(region === "" || region === undefined);
 
   const { data: initialList, isLoading } = useQuery(
     [`getList(${region ?? ""})`],
@@ -73,6 +77,12 @@ export const MediaList: FC = () => {
       ) : (
         <>
           <MediaSearch onSelect={handleSelection} />
+          {!isRegionSelected && (
+            <Alert severity="info" sx={{ marginTop: "1rem" }}>
+              Ready to find out where to watch everything on your list?{" "}
+              <Link to={availableRoutes.user}>Select your region</Link>
+            </Alert>
+          )}
           <List>
             {currentSelections.map((media, index) => (
               <>
