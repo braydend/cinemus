@@ -9,10 +9,11 @@ import MenuIcon from "@mui/icons-material/Menu";
 import Container from "@mui/material/Container";
 import Button from "@mui/material/Button";
 import MenuItem from "@mui/material/MenuItem";
-import AdbIcon from "@mui/icons-material/Adb";
 import { UserMenu } from "../UserMenu";
 import { Link } from "react-router-dom";
 import { availableRoutes } from "../../../router";
+import couchLogo from "../../../assets/couchLogo.png";
+import styles from "./Navigation.module.css";
 
 const pages: Array<{ label: string; route: string }> = [
   { label: "List", route: "/list" },
@@ -33,28 +34,49 @@ export const Navigation: FC = () => {
   return (
     <AppBar position="static">
       <Container maxWidth="xl">
-        <Toolbar disableGutters>
-          <AdbIcon sx={{ display: { xs: "none", md: "flex" }, mr: 1 }} />
-          <Link to={availableRoutes.root}>
-            <Typography
-              variant="h6"
-              noWrap
-              component="h1"
-              sx={{
-                mr: 2,
-                display: { xs: "none", md: "flex" },
-                fontFamily: "monospace",
-                fontWeight: 700,
-                letterSpacing: ".3rem",
-                color: "inherit",
-                textDecoration: "none",
-              }}
-            >
-              Cinemus
-            </Typography>
-          </Link>
-
-          <Box sx={{ flexGrow: 1, display: { xs: "flex", md: "none" } }}>
+        <Toolbar
+          disableGutters
+          sx={{
+            display: { xs: "grid", md: "flex" },
+            gridTemplateColumns: { xs: "1fr 2fr 1fr" },
+            placeItems: { xs: "center" },
+          }}
+        >
+          {/* Desktop */}
+          <Box
+            sx={{
+              display: { xs: "none", md: "flex" },
+            }}
+          >
+            <Link to={availableRoutes.root}>
+              <img
+                src={couchLogo}
+                alt="Cinemus logo"
+                className={styles.couchLogo}
+              />
+            </Link>
+          </Box>
+          <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
+            {pages.map(({ label, route }) => (
+              <Link key={label} to={route}>
+                <Button
+                  key={label}
+                  onClick={handleCloseNavMenu}
+                  sx={{ my: 2, color: "white", display: "block" }}
+                >
+                  {label}
+                </Button>
+              </Link>
+            ))}
+          </Box>
+          {/* Mobile */}
+          <Box
+            sx={{
+              display: { md: "none" },
+              placeSelf: "start",
+              alignSelf: "center",
+            }}
+          >
             <IconButton
               size="large"
               aria-label="navigation menu"
@@ -92,40 +114,18 @@ export const Navigation: FC = () => {
               ))}
             </Menu>
           </Box>
-          <AdbIcon sx={{ display: { xs: "flex", md: "none" }, mr: 1 }} />
-          <Link to={availableRoutes.root}>
-            <Typography
-              variant="h5"
-              noWrap
-              component="h1"
-              sx={{
-                mr: 2,
-                display: { xs: "flex", md: "none" },
-                flexGrow: 1,
-                fontFamily: "monospace",
-                fontWeight: 700,
-                letterSpacing: ".3rem",
-                color: "inherit",
-                textDecoration: "none",
-              }}
-            >
-              Cinemus
-            </Typography>
-          </Link>
-          <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
-            {pages.map(({ label, route }) => (
-              <Link key={label} to={route}>
-                <Button
-                  key={label}
-                  onClick={handleCloseNavMenu}
-                  sx={{ my: 2, color: "white", display: "block" }}
-                >
-                  {label}
-                </Button>
-              </Link>
-            ))}
+          <Box sx={{ display: { xs: "flex", md: "none" }, mr: 2 }}>
+            <Link to={availableRoutes.root}>
+              <img
+                src={couchLogo}
+                alt="Cinemus logo"
+                className={styles.couchLogo}
+              />
+            </Link>
           </Box>
-          <UserMenu />
+          <Box sx={{ placeSelf: "end", alignSelf: "center" }}>
+            <UserMenu />
+          </Box>
         </Toolbar>
       </Container>
     </AppBar>
