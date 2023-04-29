@@ -10,3 +10,7 @@ export const db = {
 export const url = {
   TMDB_URL: process.env.TMDB_URL ?? "",
 };
+
+export const sentry = {
+  DSN: process.env.SENTRY_DSN ?? "",
+};
