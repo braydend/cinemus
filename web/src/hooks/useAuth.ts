@@ -51,6 +51,13 @@ export const useAuth = (): Auth => {
     }
   }, [authToken, user]);
 
+  useEffect(() => {
+    if (user !== undefined) {
+      const id = user.sub?.split("|")[1];
+      Sentry.setUser({ id, email: user.email });
+    }
+  });
+
   return {
     isLoading,
     jwt: authToken,
