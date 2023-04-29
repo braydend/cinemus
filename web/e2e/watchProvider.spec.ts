@@ -77,6 +77,13 @@ test("Watch providers", async ({ page }) => {
 
   // Watchlist
   await navigateToList(page);
+  if (
+    await page
+      .getByLabel("Expand It's Always Sunny in Philadelphia")
+      .isVisible()
+  ) {
+    await page.getByLabel("Expand It's Always Sunny in Philadelphia").click();
+  }
   await expect(
     page.getByRole("img", { name: "Disney Plus", exact: true })
   ).toBeVisible();

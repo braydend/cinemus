@@ -60,6 +60,9 @@ test("successfully marks media as watched", async ({ page }) => {
       name: "Brooklyn Nine-Nine poster Brooklyn Nine-Nine",
     })
     .click();
-  await page.getByRole("button", { name: "Mark as watched" }).click();
-  await page.getByRole("button", { name: "Unmark as watched" }).click();
+  if (await page.getByLabel("Expand Brooklyn Nine-Nine").isVisible()) {
+    await page.getByLabel("Expand Brooklyn Nine-Nine").click();
+  }
+  await page.getByRole("button", { name: "Mark as seen" }).click();
+  await page.getByRole("button", { name: "Mark as unseen" }).click();
 });

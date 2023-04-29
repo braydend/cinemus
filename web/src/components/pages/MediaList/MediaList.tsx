@@ -1,5 +1,5 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
-import { type FC, useMemo } from "react";
+import { type FC, useMemo, useState } from "react";
 import { type Media } from "../../../types";
 import { getList, updateList } from "../../../queries/list";
 import { ListItem } from "../../atoms";
@@ -14,6 +14,7 @@ import { useAuth } from "../../../hooks/useAuth";
 
 export const MediaList: FC = () => {
   const { jwt } = useAuth();
+  const [selectedMedia, setSelectedMedia] = useState<string>();
   const { data: userPreferences, isLoading: isUserPreferencesLoading } =
     useQuery(["userPreferences"], async () => await getUserPreferences(jwt), {
       enabled: Boolean(jwt),
@@ -93,6 +94,8 @@ export const MediaList: FC = () => {
                   onWatchedChange={(updatedMedia) => {
                     handleWatchedChange(updatedMedia);
                   }}
+                  onSelect={setSelectedMedia}
+                  isSelected={selectedMedia === media.id}
                 />
                 {index < currentSelections.length - 1 && <Divider />}
               </>
