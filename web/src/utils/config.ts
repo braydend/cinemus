@@ -8,11 +8,16 @@ export const endpoints = {
   lambdaBase: import.meta.env.VITE_API_HOST,
 };
 
-const environment = import.meta.env.DEV
+const env = import.meta.env.DEV
   ? "dev"
   : import.meta.env.PROD
   ? "prod"
   : undefined;
+
+export const environment = {
+  isDev: env === "dev",
+  name: env,
+};
 
 export const sentry = {
   dsn: import.meta.env.VITE_SENTRY_DSN,
@@ -20,6 +25,6 @@ export const sentry = {
   sessionSampleRate:
     import.meta.env.VITE_SENTRY_REPLAY_SESSION_SAMPLE_RATE ?? 0.1,
   errorSampleRate: import.meta.env.VITE_SENTRY_REPLAY_ERROR_SAMPLE_RATE ?? 1.0,
-  environment: import.meta.env.VITE_SENTRY_ENVIRONMENT ?? environment ?? "prod",
+  environment: import.meta.env.VITE_SENTRY_ENVIRONMENT ?? env ?? "prod",
   release: import.meta.env.VITE_SENTRY_RELEASE,
 };
