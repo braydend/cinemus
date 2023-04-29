@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { auth } from "../utils/config";
 
 interface GetAuthTokenResponse {
-  authToken: string;
+  jwt: string;
   isLoading: boolean;
 }
 
@@ -32,7 +32,7 @@ export const useGetAuthToken = (): GetAuthTokenResponse => {
   }, [isAuthenticated]);
 
   return {
-    authToken,
+    jwt: authToken,
     isLoading,
   };
 };

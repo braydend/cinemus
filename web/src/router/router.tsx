@@ -1,14 +1,12 @@
 import { Navigate, type RouteObject } from "react-router-dom";
 import { BaseLayout } from "../components/layouts";
-import { MediaList, UserPage } from "../components/pages";
+import { About, Home, MediaList, UserPage } from "../components/pages";
 import { type FC } from "react";
-import { useAuth0 } from "@auth0/auth0-react";
-import { About } from "../components/pages/About";
 import { availableRoutes } from "./routes";
-import { Home } from "../components/pages/Home";
+import { useAuth } from "../hooks/useAuth";
 
 const ProtectedRoute: FC<{ children: JSX.Element }> = ({ children }) => {
-  const { isAuthenticated } = useAuth0();
+  const { isAuthenticated } = useAuth();
   if (!isAuthenticated) {
     return <Navigate to="/" replace />;
   }

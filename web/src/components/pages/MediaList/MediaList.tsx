@@ -1,7 +1,6 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { type FC, useMemo } from "react";
 import { type Media } from "../../../types";
-import { useGetAuthToken } from "../../../hooks/useGetAuthToken";
 import { getList, updateList } from "../../../queries/list";
 import { ListItem } from "../../atoms";
 import { Alert, Divider, List } from "@mui/material";
@@ -11,15 +10,14 @@ import Typography from "@mui/material/Typography";
 import { getUserPreferences } from "../../../queries/userPreferences";
 import { Link } from "react-router-dom";
 import { availableRoutes } from "../../../router";
+import { useAuth } from "../../../hooks/useAuth";
 
 export const MediaList: FC = () => {
-  const { authToken } = useGetAuthToken();
+  const { jwt } = useAuth();
   const { data: userPreferences, isLoading: isUserPreferencesLoading } =
-    useQuery(
-      ["userPreferences"],
-      async () => await getUserPreferences(authToken),
-      { enabled: Boolean(authToken) }
-    );
+    useQuery(["userPreferences"], async () => await getUserPreferences(jwt), {
+      enabled: Boolean(jwt),
+    });
 
   const region = useMemo(
     () => userPreferences?.data.watchProviderRegion,
@@ -30,8 +28,8 @@ export const MediaList: FC = () => {
 
   const { data: initialList, isLoading } = useQuery(
     [`getList(${region ?? ""})`],
-    async () => await getList(authToken, region),
-    { enabled: Boolean(authToken) && !isUserPreferencesLoading }
+    async () => await getList(jwt, region),
+    { enabled: Boolean(jwt) && !isUserPreferencesLoading }
   );
 
   const { mutate, data: selections } = useMutation(
@@ -43,7 +41,7 @@ export const MediaList: FC = () => {
           __type,
           isWatched,
         })),
-        authToken,
+        jwt,
         region
       )
   );

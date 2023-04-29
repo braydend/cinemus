@@ -9,9 +9,9 @@ import { sleep } from "../../../../test/sleep";
 
 type Props = ComponentProps<typeof MediaSearch>;
 
-vi.mock("../../../hooks/useGetAuthToken", () => ({
-  useGetAuthToken: () => ({
-    authToken: "mock-token",
+vi.mock("../../../hooks/useAuth", () => ({
+  useAuth: () => ({
+    jwt: "mock-token",
   }),
 }));
 describe("<MediaSearch />", () => {

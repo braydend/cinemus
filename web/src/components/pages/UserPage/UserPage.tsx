@@ -1,20 +1,18 @@
 import { type FC } from "react";
 import Avatar from "@mui/material/Avatar";
-import { useAuth0 } from "@auth0/auth0-react";
 import styles from "./userPage.module.css";
 import Typography from "@mui/material/Typography";
 import { useQuery } from "@tanstack/react-query";
 import { getUserPreferences } from "../../../queries/userPreferences";
-import { useGetAuthToken } from "../../../hooks/useGetAuthToken";
 import { UserPreferences } from "../../molecules";
+import { useAuth } from "../../../hooks/useAuth";
 
 export const UserPage: FC = () => {
-  const { user } = useAuth0();
-  const { authToken } = useGetAuthToken();
+  const { user, jwt } = useAuth();
   const { data, error, isLoading } = useQuery(
     ["userPreferences"],
-    async () => await getUserPreferences(authToken),
-    { enabled: Boolean(authToken) }
+    async () => await getUserPreferences(jwt),
+    { enabled: Boolean(jwt) }
   );
 
   if (isLoading) {

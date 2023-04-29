@@ -6,13 +6,13 @@ import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
-import { useAuth0 } from "@auth0/auth0-react";
 import { Link } from "react-router-dom";
 import { availableRoutes } from "../../../router";
+import { useAuth } from "../../../hooks/useAuth";
 
 export const UserMenu: FC = () => {
   const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
-  const { user, isAuthenticated, loginWithRedirect, logout } = useAuth0();
+  const { user, isAuthenticated, loginWithRedirect, logout } = useAuth();
 
   const handleOpenUserMenu = (event: MouseEvent<HTMLElement>): void => {
     setAnchorElUser(event.currentTarget);
