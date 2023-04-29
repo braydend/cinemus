@@ -44,6 +44,13 @@ export const useAuth = (): Auth => {
     }
   }, [isAuthenticated]);
 
+  useEffect(() => {
+    if (environment.isDev) {
+      console.log("user", user);
+      console.log("jwt", authToken);
+    }
+  }, [authToken, user]);
+
   return {
     isLoading,
     jwt: authToken,
