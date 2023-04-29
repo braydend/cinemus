@@ -1,7 +1,6 @@
 import { useEffect, type FC, useState, type HTMLAttributes } from "react";
 import { Autocomplete, Box, CircularProgress, TextField } from "@mui/material";
 import { type Media, type MediaType } from "../../../types";
-import { useGetAuthToken } from "../../../hooks/useGetAuthToken";
 import { useDebounce } from "use-debounce";
 import { useQuery } from "@tanstack/react-query";
 import {
@@ -9,6 +8,7 @@ import {
   searchMovies,
   searchShows,
 } from "../../../queries/search";
+import { useAuth } from "../../../hooks/useAuth";
 
 interface Props {
   mediaType: MediaType;
@@ -27,15 +27,15 @@ export const SearchBox: FC<Props> = ({
   const [options, setOptions] = useState<readonly Media[]>([]);
   const loading = open && options.length === 0;
 
-  const { authToken } = useGetAuthToken();
+  const { jwt } = useAuth();
   const [debouncedQuery] = useDebounce(query, 500);
   const { data } = useQuery(
     [`search-${mediaType}-${debouncedQuery}`],
     async () =>
       mediaType === "movie"
-        ? await searchMovies(debouncedQuery, authToken)
-        : await searchShows(debouncedQuery, authToken),
-    { enabled: Boolean(authToken) && Boolean(debouncedQuery) }
+        ? await searchMovies(debouncedQuery, jwt)
+        : await searchShows(debouncedQuery, jwt),
+    { enabled: Boolean(jwt) && Boolean(debouncedQuery) }
   );
 
   useEffect(() => {

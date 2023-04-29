@@ -6,32 +6,30 @@ import {
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { Select } from "../../atoms";
 import { getWatchProviderRegions } from "../../../queries/watchProviders";
-import { useGetAuthToken } from "../../../hooks/useGetAuthToken";
 import Button from "@mui/material/Button";
 import styles from "./userPreferences.module.css";
 import { Alert, Snackbar, TextField } from "@mui/material";
-import { useAuth0 } from "@auth0/auth0-react";
 import { queryClient } from "../../../queries/queryClient";
+import { useAuth } from "../../../hooks/useAuth";
 
 interface Props {
   initialPreferences: UserPreferencesType;
 }
 
 export const UserPreferences: FC<Props> = ({ initialPreferences }) => {
-  const { authToken } = useGetAuthToken();
-  const { user } = useAuth0();
+  const { user, jwt } = useAuth();
   const [preferences, setPreferences] = useState(initialPreferences);
   const [showSuccessMessage, setShowSuccessMessage] = useState(false);
   const { data, isLoading, error } = useQuery(
     ["getWatchProviderRegions"],
-    async () => await getWatchProviderRegions(authToken),
-    { enabled: Boolean(authToken) }
+    async () => await getWatchProviderRegions(jwt),
+    { enabled: Boolean(jwt) }
   );
 
   const { mutate } = useMutation(
     ["updateUserPreferences"],
     async (newPreferences: UserPreferencesType) =>
-      await updateUserPreferences(newPreferences, authToken),
+      await updateUserPreferences(newPreferences, jwt),
     {
       onSuccess: async ({ data: updatedPreferences }) => {
         setPreferences(updatedPreferences);
