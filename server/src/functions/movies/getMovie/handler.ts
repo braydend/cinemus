@@ -5,12 +5,23 @@ import {
 import { middyfy } from "../../../libs/lambda";
 import type schema from "./schema";
 import { getMovie } from "../../../domain/movie";
-import withSentry from "serverless-sentry-lib";
+import Sentry, { withSentry } from "../../../libs/sentry";
 
 const getMovieHandler: ValidatedGetEventAPIGatewayProxyEvent<typeof schema> =
   withSentry(async (event) => {
-    const { queryStringParameters } = event;
+    const {
+      requestContext: {
+        authorizer: {
+          jwt: {
+            claims: { sub },
+          },
+        },
+      },
+      queryStringParameters,
+    } = event;
     const { id } = queryStringParameters;
+    const [_, userId] = sub.split("|");
+    Sentry.setUser({ id: userId });
     const region = queryStringParameters
       ? queryStringParameters.region
       : undefined;

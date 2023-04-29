@@ -5,13 +5,22 @@ import {
 import { middyfy } from "../../../libs/lambda";
 import type schema from "./schema";
 import { searchMovies } from "../../../domain/movie";
-import withSentry from "serverless-sentry-lib";
+import Sentry, { withSentry } from "../../../libs/sentry";
 
 const handler: ValidatedGetEventAPIGatewayProxyEvent<typeof schema> =
   withSentry(async (event) => {
     const {
       queryStringParameters: { query },
+      requestContext: {
+        authorizer: {
+          jwt: {
+            claims: { sub },
+          },
+        },
+      },
     } = event;
+    const [_, userId] = sub.split("|");
+    Sentry.setUser({ id: userId });
 
     const results = await searchMovies(query);
 

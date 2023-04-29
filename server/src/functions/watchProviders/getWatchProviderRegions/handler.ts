@@ -3,10 +3,21 @@ import {
   formatJSONResponse,
 } from "../../../libs/api-gateway";
 import { middyfy } from "../../../libs/lambda";
-import withSentry from "serverless-sentry-lib";
 import { getWatchProviderRegions } from "../../../domain/watchProviders";
+import Sentry, { withSentry } from "../../../libs/sentry";
 
-const getRequest: AuthorisedAPIGatewayProxyEvent = withSentry(async () => {
+const getRequest: AuthorisedAPIGatewayProxyEvent = withSentry(async (event) => {
+  const {
+    requestContext: {
+      authorizer: {
+        jwt: {
+          claims: { sub },
+        },
+      },
+    },
+  } = event;
+  const [_, userId] = sub.split("|");
+  Sentry.setUser({ id: userId });
   const data = await getWatchProviderRegions();
 
   return formatJSONResponse({

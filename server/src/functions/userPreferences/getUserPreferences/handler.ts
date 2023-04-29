@@ -3,8 +3,8 @@ import {
   formatJSONResponse,
 } from "../../../libs/api-gateway";
 import { middyfy } from "../../../libs/lambda";
-import withSentry from "serverless-sentry-lib";
 import { getUserPreferences as getUserPreferencesQuery } from "../../../domain/userPreferences";
+import Sentry, { withSentry } from "../../../libs/sentry";
 
 const getRequest: AuthorisedAPIGatewayProxyEvent = withSentry(async (event) => {
   const {
@@ -17,6 +17,8 @@ const getRequest: AuthorisedAPIGatewayProxyEvent = withSentry(async (event) => {
     },
   } = event;
   const [_, userId] = sub.split("|");
+  Sentry.setUser({ id: userId });
+
   const userPreferences = await getUserPreferencesQuery(userId);
   return formatJSONResponse({
     data: userPreferences,

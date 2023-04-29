@@ -4,8 +4,8 @@ import {
 } from "../../../libs/api-gateway";
 import { middyfy } from "../../../libs/lambda";
 import { getList } from "../../../domain/list";
-import withSentry from "serverless-sentry-lib";
 import type schema from "./schema";
+import Sentry, { withSentry } from "../../../libs/sentry";
 
 const handler: ValidatedGetEventAPIGatewayProxyEvent<typeof schema> =
   withSentry(async (event) => {
@@ -19,10 +19,11 @@ const handler: ValidatedGetEventAPIGatewayProxyEvent<typeof schema> =
       },
       queryStringParameters,
     } = event;
+    const [_, userId] = sub.split("|");
+    Sentry.setUser({ id: userId });
     const region = queryStringParameters
       ? queryStringParameters.region
       : undefined;
-    const [_, userId] = sub.split("|");
 
     const data = await getList(userId, region);
 
