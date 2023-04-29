@@ -3,8 +3,8 @@ import { formatJSONResponse } from "../../../libs/api-gateway";
 import { middyfy } from "../../../libs/lambda";
 
 import type schema from "./schema";
-import withSentry from "serverless-sentry-lib";
 import { updateUserPreferences } from "../../../domain/userPreferences";
+import Sentry, { withSentry } from "../../../libs/sentry";
 
 const postRequest: ValidatedEventAPIGatewayProxyEvent<typeof schema> =
   withSentry(async (event) => {
@@ -20,6 +20,7 @@ const postRequest: ValidatedEventAPIGatewayProxyEvent<typeof schema> =
     } = event;
 
     const [_, userId] = sub.split("|");
+    Sentry.setUser({ id: userId });
 
     const updatedPreferences = await updateUserPreferences(
       userId,

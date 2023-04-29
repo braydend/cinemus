@@ -3,7 +3,7 @@ import { formatJSONResponse } from "../../../libs/api-gateway";
 import { middyfy } from "../../../libs/lambda";
 import { type bodySchema, type queryParamsSchema } from "./schema";
 import { updateList, type List } from "../../../domain/list";
-import withSentry from "serverless-sentry-lib";
+import Sentry, { withSentry } from "../../../libs/sentry";
 
 const handler: ValidatedEventAPIGatewayProxyEvent<
   typeof bodySchema,
@@ -22,6 +22,7 @@ const handler: ValidatedEventAPIGatewayProxyEvent<
   } = event;
 
   const [_, userId] = sub.split("|");
+  Sentry.setUser({ id: userId });
   const data: List = { userId, media };
   const region = queryStringParameters
     ? queryStringParameters.region

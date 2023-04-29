@@ -19,7 +19,7 @@ const serverlessConfiguration: AWS = {
   app: "cinemus",
   org: "braydend",
   frameworkVersion: "3",
-  plugins: ["serverless-esbuild", "serverless-offline", "serverless-sentry"],
+  plugins: ["serverless-esbuild", "serverless-offline"],
   provider: {
     name: "aws",
     runtime: "nodejs16.x",
@@ -47,6 +47,8 @@ const serverlessConfiguration: AWS = {
       DATABASE_NAME: "${param:DATABASE_NAME}",
       TMDB_URL: "${param:TMDB_URL}",
       MOVIE_DB_API_KEY: "${param:MOVIE_DB_API_KEY}",
+      SENTRY_DSN: "${param:SENTRY_DSN}",
+      SENTRY_RELEASE: "${env:GITHUB_SHA}",
     },
   },
   // import the function via paths
@@ -63,11 +65,6 @@ const serverlessConfiguration: AWS = {
   },
   package: { individually: true },
   custom: {
-    sentry: {
-      dsn: "${param:SENTRY_DSN}",
-      filterLocal: false,
-      release: "git",
-    },
     esbuild: {
       bundle: true,
       minify: false,
