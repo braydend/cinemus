@@ -13,10 +13,6 @@
     transition: all 0.3s ease;
 }
 
-.poster:hover{
-    width: 100%;
-}
-
 .watchProviders {
     display: flex;
     flex-direction: row;
@@ -38,6 +34,12 @@
     flex-direction: row;
     align-items: center;
 }
+
+/* Desktop styles */
+@media screen and (min-width: 900px) {
+.poster:hover{
+    width: 100%;
+}}
 
 /* Mobile styles */
 @media screen and (max-width: 900px) {
