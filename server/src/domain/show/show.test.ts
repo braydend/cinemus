@@ -97,9 +97,21 @@ describe("show domain", () => {
       const expectedShows: Media[] = [
         {
           __type: "show",
-          title: "Stub Show",
+          title: "Stub Show Two",
           images: getImages("/posterPath.jpg", configuration),
-          id: 12345,
+          id: 22222,
+        },
+        {
+          __type: "show",
+          title: "Stub Show Three",
+          images: getImages("/posterPath.jpg", configuration),
+          id: 33333,
+        },
+        {
+          __type: "show",
+          title: "Stub Show One",
+          images: getImages("/posterPath.jpg", configuration),
+          id: 11111,
         },
       ];
       const result = await searchShows("Stub");
@@ -113,9 +125,21 @@ describe("show domain", () => {
       const expectedShows: Media[] = [
         {
           __type: "show",
-          title: "Stub Show",
+          title: "Stub Show Two",
           images: getImages("/posterPath.jpg", configuration),
-          id: 12345,
+          id: 22222,
+        },
+        {
+          __type: "show",
+          title: "Stub Show Three",
+          images: getImages("/posterPath.jpg", configuration),
+          id: 33333,
+        },
+        {
+          __type: "show",
+          title: "Stub Show One",
+          images: getImages("/posterPath.jpg", configuration),
+          id: 11111,
         },
       ];
       const result = await searchShows("Stub");

@@ -100,7 +100,7 @@ const search = async <MediaType extends Media>(
     logger.profile(`TMDB search ${mediaType} "${query}"`);
     return {
       ...response.data,
-      results: markedMedia,
+      results: markedMedia.sort((a, b) => b.popularity - a.popularity),
     };
   } catch (e) {
     throw Error(

@@ -28,7 +28,7 @@ describe("movie domain", () => {
       await dropAllCollections();
 
       const apiSpy = vi.spyOn(tmdb, "getMovie");
-      const expectedShow: Media = {
+      const expectedMovie: Media = {
         __type: "movie",
         title: "Stub Movie",
         images: getImages("/posterPath.jpg", configuration),
@@ -48,7 +48,7 @@ describe("movie domain", () => {
       const result = await getMovie("12345", "AU");
 
       expect(apiSpy).toHaveBeenCalledOnce();
-      expect(result).toEqual(expectedShow);
+      expect(result).toEqual(expectedMovie);
     });
 
     it("retrieves from cache if it exists", async () => {
@@ -67,7 +67,7 @@ describe("movie domain", () => {
 
     it("retrieves from cache with watch providers if it exists and region is specified", async () => {
       const apiSpy = vi.spyOn(tmdb, "getShow");
-      const expectedShow: Media = {
+      const expectedMovie: Media = {
         __type: "movie",
         title: "Stub Movie",
         images: getImages("/posterPath.jpg", configuration),
@@ -87,7 +87,7 @@ describe("movie domain", () => {
       const result = await getMovie("12345", "AU");
 
       expect(apiSpy).not.toHaveBeenCalled();
-      expect(result).toEqual(expectedShow);
+      expect(result).toEqual(expectedMovie);
     });
   });
 
@@ -97,9 +97,21 @@ describe("movie domain", () => {
       const expectedMovies: Media[] = [
         {
           __type: "movie",
-          title: "Stub Movie",
+          title: "Stub Movie Two",
+          id: 22222,
           images: getImages("/posterPath.jpg", configuration),
-          id: 12345,
+        },
+        {
+          __type: "movie",
+          title: "Stub Movie Three",
+          id: 33333,
+          images: getImages("/posterPath.jpg", configuration),
+        },
+        {
+          __type: "movie",
+          title: "Stub Movie One",
+          id: 11111,
+          images: getImages("/posterPath.jpg", configuration),
         },
       ];
       const result = await searchMovies("Stub");
@@ -113,8 +125,20 @@ describe("movie domain", () => {
       const expectedMovies: Media[] = [
         {
           __type: "movie",
-          title: "Stub Movie",
-          id: 12345,
+          title: "Stub Movie Two",
+          id: 22222,
+          images: getImages("/posterPath.jpg", configuration),
+        },
+        {
+          __type: "movie",
+          title: "Stub Movie Three",
+          id: 33333,
+          images: getImages("/posterPath.jpg", configuration),
+        },
+        {
+          __type: "movie",
+          title: "Stub Movie One",
+          id: 11111,
           images: getImages("/posterPath.jpg", configuration),
         },
       ];
