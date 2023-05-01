@@ -1,14 +1,19 @@
-import { type FC, type MouseEvent, useState } from "react";
-import AppBar from "@mui/material/AppBar";
-import Box from "@mui/material/Box";
-import Toolbar from "@mui/material/Toolbar";
-import IconButton from "@mui/material/IconButton";
-import Typography from "@mui/material/Typography";
-import Menu from "@mui/material/Menu";
+import { type FC, useState } from "react";
+import {
+  AppBar,
+  Box,
+  Toolbar,
+  IconButton,
+  Typography,
+  Container,
+  Button,
+  Divider,
+  Drawer,
+  List,
+  ListItem,
+  ListItemButton,
+} from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
-import Container from "@mui/material/Container";
-import Button from "@mui/material/Button";
-import MenuItem from "@mui/material/MenuItem";
 import { UserMenu } from "../UserMenu";
 import { Link } from "react-router-dom";
 import { availableRoutes } from "../../../router";
@@ -21,14 +26,10 @@ const pages: Array<{ label: string; route: string }> = [
 ];
 
 export const Navigation: FC = () => {
-  const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
+  const [isNavigationOpen, setIsNavigationOpen] = useState(false);
 
-  const handleOpenNavMenu = (event: MouseEvent<HTMLElement>): void => {
-    setAnchorElNav(event.currentTarget);
-  };
-
-  const handleCloseNavMenu = (): void => {
-    setAnchorElNav(null);
+  const handleToggleNavigation = (): void => {
+    setIsNavigationOpen((prev) => !prev);
   };
 
   return (
@@ -61,7 +62,6 @@ export const Navigation: FC = () => {
               <Link key={label} to={route}>
                 <Button
                   key={label}
-                  onClick={handleCloseNavMenu}
                   sx={{ my: 2, color: "white", display: "block" }}
                 >
                   {label}
@@ -82,37 +82,35 @@ export const Navigation: FC = () => {
               aria-label="navigation menu"
               aria-controls="menu-appbar"
               aria-haspopup="true"
-              onClick={handleOpenNavMenu}
+              onClick={handleToggleNavigation}
               color="inherit"
             >
               <MenuIcon />
             </IconButton>
-            <Menu
-              id="menu-appbar"
-              anchorEl={anchorElNav}
-              anchorOrigin={{
-                vertical: "bottom",
-                horizontal: "left",
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: "top",
-                horizontal: "left",
-              }}
-              open={Boolean(anchorElNav)}
-              onClose={handleCloseNavMenu}
-              sx={{
-                display: { xs: "block", md: "none" },
-              }}
+            <Drawer
+              anchor="left"
+              open={isNavigationOpen}
+              onClose={handleToggleNavigation}
             >
-              {pages.map(({ label, route }) => (
-                <MenuItem key={label} onClick={handleCloseNavMenu}>
-                  <Link to={route}>
-                    <Typography textAlign="center">{label}</Typography>
-                  </Link>
-                </MenuItem>
-              ))}
-            </Menu>
+              <List>
+                {pages.map(({ label, route }, index) => (
+                  <>
+                    <Divider />
+                    <Link to={route} key={label}>
+                      <ListItem
+                        onClick={handleToggleNavigation}
+                        disablePadding
+                        sx={{ width: "200px" }}
+                      >
+                        <ListItemButton>
+                          <Typography textAlign="center">{label}</Typography>
+                        </ListItemButton>
+                      </ListItem>
+                    </Link>
+                  </>
+                ))}
+              </List>
+            </Drawer>
           </Box>
           <Box sx={{ display: { xs: "flex", md: "none" }, mr: 2 }}>
             <Link to={availableRoutes.root}>
