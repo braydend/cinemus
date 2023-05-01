@@ -16,7 +16,26 @@ export const handlers = [
   }),
 
   rest.get(`${url.TMDB_URL}/search/movie`, (req, res, ctx) => {
-    const movie = buildStubMovie();
+    const movies = [
+        buildStubMovie({
+            title: "Stub Movie One",
+            original_title: "Stub Movie One",
+            id: 11111,
+            popularity: 50
+        }),
+        buildStubMovie({
+            title: "Stub Movie Two",
+            id: 22222,
+            original_title: "Stub Movie Two",
+            popularity: 150
+        }),
+        buildStubMovie({
+            title: "Stub Movie Three",
+            id: 33333,
+            original_title: "Stub Movie Three",
+            popularity: 100
+        })
+    ];
 
     return res(
       ctx.status(200),
@@ -24,7 +43,7 @@ export const handlers = [
         page: 1,
         total_pages: 1,
         total_results: 1,
-        results: [movie],
+        results: movies,
       })
     );
   }),
@@ -36,7 +55,26 @@ export const handlers = [
   }),
 
   rest.get(`${url.TMDB_URL}/search/tv`, (req, res, ctx) => {
-    const show = buildStubShow();
+    const shows = [
+        buildStubShow({
+            name: "Stub Show One",
+            original_name: "Stub Show One",
+            id: 11111,
+            popularity: 50
+        }),
+        buildStubShow({
+            name: "Stub Show Two",
+            id: 22222,
+            original_name: "Stub Show Two",
+            popularity: 150
+        }),
+        buildStubShow({
+            name: "Stub Show Three",
+            id: 33333,
+            original_name: "Stub Show Three",
+            popularity: 100
+        })
+    ]
 
     return res(
       ctx.status(200),
@@ -44,7 +82,7 @@ export const handlers = [
         page: 1,
         total_pages: 1,
         total_results: 1,
-        results: [show],
+        results: shows,
       })
     );
   }),
