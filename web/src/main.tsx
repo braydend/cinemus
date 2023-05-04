@@ -7,6 +7,7 @@ import { auth, sentry } from "./utils/config";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { routes } from "./router";
 import { queryClient } from "./queries/queryClient";
+import { createTheme, ThemeProvider } from "@mui/material";
 
 Sentry.init({
   dsn: sentry.dsn,
@@ -20,6 +21,26 @@ Sentry.init({
 
 const router = createBrowserRouter(routes);
 
+enum color {
+  darkPurple = "#4b2366",
+  lightPurple = "#ac80b9",
+  yellow = "#f8d089",
+}
+
+const theme = createTheme({
+  palette: {
+    primary: {
+      main: color.darkPurple,
+    },
+    secondary: {
+      main: color.lightPurple,
+    },
+    background: {
+      default: "black",
+    },
+  },
+});
+
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
   <React.StrictMode>
     <Auth0Provider
@@ -31,7 +52,9 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
       }}
     >
       <QueryClientProvider client={queryClient}>
-        <RouterProvider router={router} />
+        <ThemeProvider theme={theme}>
+          <RouterProvider router={router} />
+        </ThemeProvider>
       </QueryClientProvider>
     </Auth0Provider>
   </React.StrictMode>
