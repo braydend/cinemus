@@ -1,3 +1,5 @@
+@import "../../../variables.css";
+
 .main {
     display: flex;
     flex-direction: column;
@@ -5,9 +7,14 @@
 }
 
 .tagline {
+    font-family: Raleway, "PT Sans", sans-serif;
     display: inline;
     flex-shrink: 1;
     text-align: center;
+    color: var(--yellowPink);
+    font-size: 4rem;
+    margin: 0;
+    line-height: 4rem;
 }
 
 /* non-mobile */
