@@ -1,7 +1,6 @@
 import { type FC, type MouseEvent, useState } from "react";
 import Avatar from "@mui/material/Avatar";
 import Box from "@mui/material/Box";
-import Button from "@mui/material/Button";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import Menu from "@mui/material/Menu";
@@ -9,6 +8,7 @@ import MenuItem from "@mui/material/MenuItem";
 import { Link } from "react-router-dom";
 import { availableRoutes } from "../../../router";
 import { useAuth } from "../../../hooks/useAuth";
+import { Button } from "../../atoms";
 
 export const UserMenu: FC = () => {
   const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
@@ -65,10 +65,8 @@ export const UserMenu: FC = () => {
         // eslint-disable-next-line @typescript-eslint/no-floating-promises
         loginWithRedirect();
       }}
-      variant="contained"
-      color="success"
-    >
-      Login
-    </Button>
+      variant="yellow"
+      label="Login"
+    />
   );
 };

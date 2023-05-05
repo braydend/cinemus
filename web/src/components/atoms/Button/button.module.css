@@ -1,0 +1,28 @@
+@import "../../../variables.css";
+
+.button {
+    border-radius: 4px;
+    padding: 0.5rem 1rem;
+    filter: brightness(100%) drop-shadow(3px 3px 4px black);
+    transition: filter 0.2s ease;
+    border: none;
+}
+
+.palePurple {
+    background-color: var(--palePurple);
+    color: var(--darkPurple);
+}
+
+.purple {
+    background-color: var(--purple);
+    color: var(--yellowPink);
+}
+
+.yellow {
+    background: var(--yellowPink);
+    color: var(--darkPurple);
+}
+
+.button:hover {
+    filter: brightness(75%);
+}
