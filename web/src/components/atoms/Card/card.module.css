@@ -1,0 +1,33 @@
+@import "../../../variables.css";
+
+/* non-mobile */
+@media screen and (min-width: 750px) {
+
+}
+
+/* mobile */
+@media screen and (max-width: 750px) {
+
+}
+
+.container {
+    background: linear-gradient(var(--backgroundColour), var(--backgroundColour)) padding-box,
+    linear-gradient(to right, var(--darkPurple), var(--palePurple)) border-box;
+    border-radius: 6px;
+    border: 6px solid transparent;
+    padding: 1rem;
+}
+
+.purple {
+    background: linear-gradient(var(--backgroundColour), var(--backgroundColour)) padding-box,
+    linear-gradient(to right, var(--darkPurple), var(--palePurple)) border-box;
+
+    color: var(--palePurple);
+}
+
+.yellow {
+    background: linear-gradient(var(--backgroundColour), var(--backgroundColour)) padding-box,
+    linear-gradient(to right, var(--palePurple), var(--yellow)) border-box;
+
+    color: var(--yellowPink);
+}

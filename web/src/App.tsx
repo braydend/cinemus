@@ -1,6 +1,4 @@
-import "./App.css";
 import { type FC } from "react";
-import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { Navigation } from "./components/molecules";
 import Container from "@mui/material/Container";
 import CssBaseline from "@mui/material/CssBaseline";
