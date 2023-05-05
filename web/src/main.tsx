@@ -23,14 +23,17 @@ const router = createBrowserRouter(routes);
 
 enum color {
   darkPurple = "#4b2366",
+  purple = "#79609f",
   lightPurple = "#ac80b9",
+  palePurple = "#cab1d5",
+  yellowPink = "#e2bcae",
   yellow = "#f8d089",
 }
 
 const theme = createTheme({
   palette: {
     primary: {
-      main: color.darkPurple,
+      main: color.purple,
     },
     secondary: {
       main: color.lightPurple,
