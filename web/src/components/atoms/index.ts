@@ -4,3 +4,4 @@ export * from "./Inspiration";
 export * from "./TmdbInfo";
 export * from "./Feature";
 export * from "./Select";
+export * from "./Card";
