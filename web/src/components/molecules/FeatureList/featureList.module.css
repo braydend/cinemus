@@ -1,3 +1,5 @@
+@import "../../../variables.css";
+
 /* non-mobile */
 @media screen and (min-width: 750px) {
     .description:nth-of-type(odd) {

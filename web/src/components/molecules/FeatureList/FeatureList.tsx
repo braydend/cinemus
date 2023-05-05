@@ -1,20 +1,19 @@
 import { type FC, Fragment } from "react";
 import { features } from "../../../content";
-import { Feature } from "../../atoms";
-import { Card, CardContent } from "@mui/material";
+import { Card } from "../../atoms";
 import styles from "./featureList.module.css";
 
 export const FeatureList: FC = () => {
   return (
     <div className={styles.container}>
-      {features.map(({ icon, title, body }) => (
+      {features.map(({ icon, title, body }, index) => (
         <Fragment key={title}>
           <span className={styles.icon}>{icon}</span>
-          <Card variant="outlined" className={styles.description}>
-            <CardContent>
-              <Feature title={title} body={body} />
-            </CardContent>
-          </Card>
+          <Card
+            title={title}
+            body={body}
+            variant={index % 2 === 1 ? "yellow" : "purple"}
+          />
         </Fragment>
       ))}
     </div>
