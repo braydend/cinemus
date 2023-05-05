@@ -3,10 +3,11 @@ import Typography from "@mui/material/Typography";
 import { Divider } from "@mui/material";
 import { Inspiration, TmdbInfo } from "../../atoms";
 import { FeatureList } from "../../molecules";
+import styles from "./about.module.css";
 
 export const About: FC = () => {
   return (
-    <main>
+    <main className={styles.container}>
       <Typography noWrap variant="h2" paddingBottom="0.5rem">
         Features
       </Typography>

@@ -8,6 +8,8 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 import { routes } from "./router";
 import { queryClient } from "./queries/queryClient";
 import { createTheme, ThemeProvider } from "@mui/material";
+import CssBaseline from "@mui/material/CssBaseline";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 Sentry.init({
   dsn: sentry.dsn,
@@ -56,7 +58,9 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
     >
       <QueryClientProvider client={queryClient}>
         <ThemeProvider theme={theme}>
+          <CssBaseline />
           <RouterProvider router={router} />
+          <ReactQueryDevtools />
         </ThemeProvider>
       </QueryClientProvider>
     </Auth0Provider>
