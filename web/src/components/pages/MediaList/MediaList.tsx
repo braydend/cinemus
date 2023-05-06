@@ -11,6 +11,12 @@ import { getUserPreferences } from "../../../queries/userPreferences";
 import { Link } from "react-router-dom";
 import { availableRoutes } from "../../../router";
 import { useAuth } from "../../../hooks/useAuth";
+import { queryClient } from "../../../queries/queryClient";
+
+const sortAlphabetically: (a: Media, b: Media) => number = (
+  { title: firstTitle },
+  { title: secondTitle }
+) => (firstTitle > secondTitle ? 1 : 0);
 
 export const MediaList: FC = () => {
   const { jwt } = useAuth();
@@ -21,19 +27,19 @@ export const MediaList: FC = () => {
     });
 
   const region = useMemo(
-    () => userPreferences?.data.watchProviderRegion,
+    () => userPreferences?.data?.watchProviderRegion,
     [userPreferences]
   );
 
   const isRegionSelected = !(region === "" || region === undefined);
 
-  const { data: initialList, isLoading } = useQuery(
+  const { data: list, isLoading } = useQuery(
     [`getList(${region ?? ""})`],
     async () => await getList(jwt, region),
     { enabled: Boolean(jwt) && !isUserPreferencesLoading }
   );
 
-  const { mutate, data: selections } = useMutation(
+  const { mutate } = useMutation(
     ["updateList"],
     async (media: MediaResponse[]) =>
       await updateList(
@@ -44,13 +50,41 @@ export const MediaList: FC = () => {
         })),
         jwt,
         region
-      )
+      ),
+    {
+      onMutate: async (newMedia) => {
+        await queryClient.cancelQueries({
+          queryKey: [`getList(${region ?? ""})`],
+        });
+
+        const previousTodos = queryClient.getQueryData([
+          `getList(${region ?? ""})`,
+        ]);
+
+        queryClient.setQueryData<{ data: Media[] }>(
+          [`getList(${region ?? ""})`],
+          () => ({ data: newMedia.sort(sortAlphabetically) })
+        );
+
+        return { previousTodos };
+      },
+      // eslint-disable-next-line n/handle-callback-err
+      onError: (err, newTodo, context) => {
+        queryClient.setQueryData(
+          [`getList(${region ?? ""})`],
+          context?.previousTodos
+        );
+      },
+      onSettled: async () => {
+        await queryClient.invalidateQueries({
+          queryKey: [`getList(${region ?? ""})`],
+        });
+      },
+    }
   );
 
-  const currentSelections = (selections?.data ?? initialList?.data ?? []).sort(
-    ({ title: firstTitle }, { title: secondTitle }) =>
-      firstTitle > secondTitle ? 1 : 0
-  );
+  const currentSelections = (list?.data ?? []).sort(sortAlphabetically);
+
   const handleSelection = (media: MediaResponse): void => {
     mutate([...currentSelections, media]);
   };
