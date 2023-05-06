@@ -1,6 +1,6 @@
-import { useEffect, type FC, useState, type HTMLAttributes } from "react";
+import { type FC, useState, type HTMLAttributes } from "react";
 import { Autocomplete, Box, CircularProgress, TextField } from "@mui/material";
-import { type Media, type MediaType } from "../../../types";
+import { type MediaType } from "../../../types";
 import { useDebounce } from "use-debounce";
 import { useQuery } from "@tanstack/react-query";
 import {
@@ -24,12 +24,10 @@ export const SearchBox: FC<Props> = ({
   setQuery,
 }) => {
   const [open, setOpen] = useState(false);
-  const [options, setOptions] = useState<readonly Media[]>([]);
-  const loading = open && options.length === 0;
 
   const { jwt } = useAuth();
   const [debouncedQuery] = useDebounce(query, 500);
-  const { data } = useQuery(
+  const { data, isFetching } = useQuery(
     [`search-${mediaType}-${debouncedQuery}`],
     async () =>
       mediaType === "movie"
@@ -37,12 +35,6 @@ export const SearchBox: FC<Props> = ({
         : await searchShows(debouncedQuery, jwt),
     { enabled: Boolean(jwt) && Boolean(debouncedQuery) }
   );
-
-  useEffect(() => {
-    if (!open) {
-      setOptions([]);
-    }
-  }, [open]);
 
   const handleSelection = (selection: MediaResponse): void => {
     onSelect(selection);
@@ -92,10 +84,11 @@ export const SearchBox: FC<Props> = ({
       isOptionEqualToValue={(option, value) => option.title === value.title}
       getOptionLabel={(option) => option.title}
       options={data?.results ?? []}
-      loading={loading}
+      loading={isFetching}
       onChange={(_, selection) => {
         selection !== null && handleSelection(selection);
       }}
+      noOptionsText="No media found"
       inputValue={query}
       renderOption={renderOption}
       renderInput={(params) => (
@@ -109,7 +102,7 @@ export const SearchBox: FC<Props> = ({
             ...params.InputProps,
             endAdornment: (
               <>
-                {loading ? (
+                {isFetching ? (
                   <CircularProgress color="inherit" size={20} />
                 ) : null}
                 {params.InputProps.endAdornment}
