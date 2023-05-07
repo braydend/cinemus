@@ -1,7 +1,6 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/react-query";
 import { type FC, useMemo, useState } from "react";
 import { type Media } from "../../../types";
-import { getList, updateList } from "../../../queries/list";
 import { ListItem } from "../../atoms";
 import { Alert, Divider, List } from "@mui/material";
 import { MediaSearch } from "../../organisms";
@@ -11,20 +10,19 @@ import { getUserPreferences } from "../../../queries/userPreferences";
 import { Link } from "react-router-dom";
 import { availableRoutes } from "../../../router";
 import { useAuth } from "../../../hooks/useAuth";
-import { queryClient } from "../../../queries/queryClient";
-
-const sortAlphabetically: (a: Media, b: Media) => number = (
-  { title: firstTitle },
-  { title: secondTitle }
-) => (firstTitle > secondTitle ? 1 : 0);
+import { useList } from "../../../hooks/useList";
+import { sortMediaAlphabetically } from "../../../utils/sort";
 
 export const MediaList: FC = () => {
   const { jwt } = useAuth();
   const [selectedMedia, setSelectedMedia] = useState<string>();
-  const { data: userPreferences, isLoading: isUserPreferencesLoading } =
-    useQuery(["userPreferences"], async () => await getUserPreferences(jwt), {
+  const { data: userPreferences } = useQuery(
+    ["userPreferences"],
+    async () => await getUserPreferences(jwt),
+    {
       enabled: Boolean(jwt),
-    });
+    }
+  );
 
   const region = useMemo(
     () => userPreferences?.data?.watchProviderRegion,
@@ -33,57 +31,9 @@ export const MediaList: FC = () => {
 
   const isRegionSelected = !(region === "" || region === undefined);
 
-  const { data: list, isLoading } = useQuery(
-    [`getList(${region ?? ""})`],
-    async () => await getList(jwt, region),
-    { enabled: Boolean(jwt) && !isUserPreferencesLoading }
-  );
+  const { data: list, isLoading, mutate } = useList(jwt, region);
 
-  const { mutate } = useMutation(
-    ["updateList"],
-    async (media: MediaResponse[]) =>
-      await updateList(
-        media.map(({ id, __type, isWatched }) => ({
-          id: `${id}`,
-          __type,
-          isWatched,
-        })),
-        jwt,
-        region
-      ),
-    {
-      onMutate: async (newMedia) => {
-        await queryClient.cancelQueries({
-          queryKey: [`getList(${region ?? ""})`],
-        });
-
-        const previousTodos = queryClient.getQueryData([
-          `getList(${region ?? ""})`,
-        ]);
-
-        queryClient.setQueryData<{ data: Media[] }>(
-          [`getList(${region ?? ""})`],
-          () => ({ data: newMedia.sort(sortAlphabetically) })
-        );
-
-        return { previousTodos };
-      },
-      // eslint-disable-next-line n/handle-callback-err
-      onError: (err, newTodo, context) => {
-        queryClient.setQueryData(
-          [`getList(${region ?? ""})`],
-          context?.previousTodos
-        );
-      },
-      onSettled: async () => {
-        await queryClient.invalidateQueries({
-          queryKey: [`getList(${region ?? ""})`],
-        });
-      },
-    }
-  );
-
-  const currentSelections = (list?.data ?? []).sort(sortAlphabetically);
+  const currentSelections = (list?.data ?? []).sort(sortMediaAlphabetically);
 
   const handleSelection = (media: MediaResponse): void => {
     mutate([...currentSelections, media]);
