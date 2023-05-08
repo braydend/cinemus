@@ -37,6 +37,7 @@
     "@typescript-eslint/eslint-plugin": "^5.55.0",
     "@typescript-eslint/parser": "^5.45.0",
     "@vitejs/plugin-react": "^3.1.0",
+    "dotenv": "^16.0.3",
     "eslint": "^8.36.0",
     "eslint-config-prettier": "^8.7.0",
     "eslint-config-standard-with-typescript": "^34.0.1",
@@ -47,6 +48,8 @@
     "eslint-plugin-react": "^7.32.2",
     "eslint-plugin-svelte3": "^4.0.0",
     "jsdom": "^21.1.1",
+    "msw": "^1.2.1",
+    "playwright-msw": "^2.2.1",
     "prettier": "^2.8.4",
     "typescript": "^4.9.3",
     "vite": "^4.1.0"
