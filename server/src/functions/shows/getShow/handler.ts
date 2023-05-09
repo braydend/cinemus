@@ -29,7 +29,7 @@ const handler: ValidatedGetEventAPIGatewayProxyEvent<typeof schema> =
     const show = await getShow(id, region);
 
     return formatJSONResponse({
-      show,
+      media: show,
     });
   });
 

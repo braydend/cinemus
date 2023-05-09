@@ -1,5 +1,5 @@
-import { useQuery } from "@tanstack/react-query";
-import { type FC, useMemo, useState } from "react";
+import { useQueries, useQuery } from "@tanstack/react-query";
+import { type FC, useEffect, useMemo, useState } from "react";
 import { type Media } from "../../../types";
 import { ListItem } from "../../atoms";
 import { Alert, Divider, List } from "@mui/material";
@@ -12,10 +12,12 @@ import { availableRoutes } from "../../../router";
 import { useAuth } from "../../../hooks/useAuth";
 import { useList } from "../../../hooks/useList";
 import { sortMediaAlphabetically } from "../../../utils/sort";
+import { getMovie, getShow } from "../../../queries/media";
 
 export const MediaList: FC = () => {
   const { jwt } = useAuth();
   const [selectedMedia, setSelectedMedia] = useState<string>();
+  const [media, setMedia] = useState<Media[]>([]);
   const { data: userPreferences } = useQuery(
     ["userPreferences"],
     async () => await getUserPreferences(jwt),
@@ -32,8 +34,45 @@ export const MediaList: FC = () => {
   const isRegionSelected = !(region === "" || region === undefined);
 
   const { data: list, isLoading, mutate } = useList(jwt, region);
+  const mediaQueries = useQueries({
+    queries: media.map(({ __type, id }) => {
+      return {
+        queryKey: [__type, id],
+        queryFn: async () =>
+          __type === "movie"
+            ? await getMovie(jwt, id, region)
+            : await getShow(jwt, id, region),
+      };
+    }),
+  });
 
-  const currentSelections = (list?.data ?? []).sort(sortMediaAlphabetically);
+  // TODO: Try to remove this if possible. The useEffect is a red flag.
+  // TODO: Need to update each item as they come back from the API without re-rendering too many times
+  useEffect(() => {
+    const newMedia = mediaQueries
+      .filter((query) => query.isFetched)
+      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+      // @ts-expect-error
+      .map(({ data }) => data.media);
+    console.log({ newMedia });
+    setMedia(newMedia);
+  }, [mediaQueries]);
+
+  // mediaQueries.forEach((x) => {
+  //   if (x.data !== undefined) {
+  //     setMedia((prev) => {
+  //       return [...prev.filter((m) => m.id !== x.data.id), x.data];
+  //     });
+  //   }
+  // });
+
+  useEffect(() => {
+    if (list !== undefined) {
+      setMedia(list.data);
+    }
+  }, [list]);
+
+  const currentSelections = media.sort(sortMediaAlphabetically);
 
   const handleSelection = (media: MediaResponse): void => {
     mutate([...currentSelections, media]);

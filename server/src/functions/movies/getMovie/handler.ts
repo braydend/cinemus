@@ -29,7 +29,7 @@ const getMovieHandler: ValidatedGetEventAPIGatewayProxyEvent<typeof schema> =
     const movie = await getMovie(id, region);
 
     return formatJSONResponse({
-      movie,
+      media: movie,
     });
   });
 
