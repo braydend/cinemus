@@ -9,6 +9,7 @@ import {
   searchShows,
 } from "../../../queries/search";
 import { useAuth } from "../../../hooks/useAuth";
+import styles from "./SearchBox.module.css";
 
 interface Props {
   mediaType: MediaType;
@@ -89,12 +90,13 @@ export const SearchBox: FC<Props> = ({
         selection !== null && handleSelection(selection);
       }}
       noOptionsText="No media found"
+      className={styles.input}
       inputValue={query}
       renderOption={renderOption}
       renderInput={(params) => (
         <TextField
           {...params}
-          label="Search"
+          label={`Search ${mediaType}s`}
           onChange={({ target: { value } }) => {
             setQuery(value);
           }}

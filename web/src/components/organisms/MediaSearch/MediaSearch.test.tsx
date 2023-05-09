@@ -31,10 +31,24 @@ describe("<MediaSearch />", () => {
     );
   };
 
-  it("renders correctly", () => {
-    setup();
+  describe("renders correctly", () => {
+    it("tv show search", async () => {
+      const user = userEvent.setup();
+      setup();
 
-    expect(screen.getByLabelText("Search")).toBeInTheDocument();
+      await user.click(screen.getByRole("button", { name: "TV Show" }));
+
+      expect(screen.getByLabelText("Search shows")).toBeInTheDocument();
+    });
+
+    it("movie search", async () => {
+      const user = userEvent.setup();
+      setup();
+
+      await user.click(screen.getByRole("button", { name: "Movie" }));
+
+      expect(screen.getByLabelText("Search movies")).toBeInTheDocument();
+    });
   });
 
   it("calls setQuery when typed into", async () => {
@@ -42,14 +56,14 @@ describe("<MediaSearch />", () => {
     const querySpy = vi.spyOn(searchQueries, "searchShows");
     setup();
 
-    await user.type(screen.getByLabelText("Search"), "Foo");
+    await user.type(screen.getByLabelText("Search shows"), "Foo");
 
     await sleep(1000);
 
     expect(querySpy).toHaveBeenCalledWith("Foo", "mock-token");
 
-    await user.clear(screen.getByLabelText("Search"));
-    await user.type(screen.getByLabelText("Search"), "Bar");
+    await user.clear(screen.getByLabelText("Search shows"));
+    await user.type(screen.getByLabelText("Search shows"), "Bar");
 
     await sleep(1000);
 
