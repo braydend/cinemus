@@ -3,6 +3,7 @@ import { type MediaType } from "../../../types";
 import { MediaTypeSelector } from "../../atoms";
 import { SearchBox } from "../../molecules";
 import { type MediaResponse } from "../../../queries/search";
+import styles from "./MediaSearch.module.css";
 
 interface Props {
   onSelect: (selection: MediaResponse) => void;
@@ -17,8 +18,8 @@ export const MediaSearch: FC<Props> = ({ onSelect }) => {
   };
 
   return (
-    <div>
-      <MediaTypeSelector onChange={handleMediaTypeChange} />
+    <div className={styles.container}>
+      <MediaTypeSelector value={mediaType} onChange={handleMediaTypeChange} />
       <SearchBox
         mediaType={mediaType}
         onSelect={onSelect}
