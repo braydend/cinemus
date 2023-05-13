@@ -1,33 +1,35 @@
 @import "../../../variables.css";
 
-/* non-mobile */
-@media screen and (min-width: 750px) {
-
-}
-
-/* mobile */
-@media screen and (max-width: 750px) {
-
+.icon {
+    padding: 0.5rem;
+    border-radius: 4px;
+    width: 60px;
+    height: 60px;
+    margin-bottom: 1rem;
 }
 
 .container {
-    background: linear-gradient(var(--backgroundColour), var(--backgroundColour)) padding-box,
-    linear-gradient(to right, var(--darkPurple), var(--palePurple)) border-box;
+    background: var(--backgroundColour);
+    border: 6px solid var(--purple);
     border-radius: 6px;
-    border: 6px solid transparent;
     padding: 1rem;
+    color: var(--purple);
 }
 
-.purple {
-    background: linear-gradient(var(--backgroundColour), var(--backgroundColour)) padding-box,
-    linear-gradient(to right, var(--darkPurple), var(--palePurple)) border-box;
-
-    color: var(--palePurple);
+.heading {
+    font-family: var(--algeraFont);
+    font-size: 2rem;
+    margin: 0;
 }
 
-.yellow {
-    background: linear-gradient(var(--backgroundColour), var(--backgroundColour)) padding-box,
-    linear-gradient(to right, var(--palePurple), var(--yellow)) border-box;
+.body {
+    font-family: var(--ralewayFont);
+    font-weight: bolder;
+}
 
-    color: var(--yellowPink);
+/* non-mobile */
+@media screen and (min-width: 900px) {
+    .heading {
+        height: 3.5em;
+    }
 }
