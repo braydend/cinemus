@@ -8,9 +8,9 @@ export const FeatureList: FC = () => {
     <div className={styles.container}>
       {features.map(({ icon, title, body }, index) => (
         <Fragment key={title}>
-          <span className={styles.icon}>{icon}</span>
           <Card
             title={title}
+            icon={icon}
             body={body}
             variant={index % 2 === 1 ? "yellow" : "purple"}
           />

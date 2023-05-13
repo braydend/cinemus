@@ -1,5 +1,6 @@
 :root {
     --backgroundColour: black;
+    --backgroundColourLight: #252529;
     --darkPurple: #4b2366;
     --purple: #79609f;
     --yellow: #f8d089;
@@ -9,14 +10,14 @@
 
 @font-face {
     font-family: Raleway;
-    src: url("/public/Raleway-Regular.ttf");
+    src: url("/Raleway-Regular.ttf");
     font-style: normal;
     font-weight: 300 800;
 }
 
 @font-face {
     font-family: Algera;
-    src: url("/public/Algera-ExtraBold.ttf");
+    src: url("/Algera-ExtraBold.ttf");
     font-style: normal;
     font-weight: 300 800;
 }
