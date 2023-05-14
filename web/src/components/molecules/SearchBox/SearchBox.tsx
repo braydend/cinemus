@@ -89,7 +89,9 @@ export const SearchBox: FC<Props> = ({
       onChange={(_, selection) => {
         selection !== null && handleSelection(selection);
       }}
-      noOptionsText="No media found"
+      noOptionsText={
+        query === "" ? `Search for a ${mediaType}` : "No media found"
+      }
       className={styles.input}
       inputValue={query}
       renderOption={renderOption}
