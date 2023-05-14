@@ -30,6 +30,7 @@ enum color {
   palePurple = "#cab1d5",
   yellowPink = "#e2bcae",
   yellow = "#f8d089",
+  gray = "#edf0f2",
 }
 
 const theme = createTheme({
@@ -41,7 +42,7 @@ const theme = createTheme({
       main: color.lightPurple,
     },
     background: {
-      default: "black",
+      default: color.gray,
     },
   },
 });

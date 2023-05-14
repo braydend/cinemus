@@ -12,6 +12,7 @@ import { availableRoutes } from "../../../router";
 import { useAuth } from "../../../hooks/useAuth";
 import { useList } from "../../../hooks/useList";
 import { sortMediaAlphabetically } from "../../../utils/sort";
+import styles from "./MediaList.module.css";
 
 export const MediaList: FC = () => {
   const { jwt } = useAuth();
@@ -53,8 +54,8 @@ export const MediaList: FC = () => {
   };
 
   return (
-    <main>
-      <Typography variant={"h2"}>List</Typography>
+    <main className={styles.container}>
+      <h2 className={styles.heading}>List</h2>
       {isLoading ? (
         <>Loading list...</>
       ) : (
