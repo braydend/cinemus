@@ -6,6 +6,9 @@
     --yellow: #f8d089;
     --yellowPink: #e2bcae;
     --palePurple: #cab1d5;
+
+    --ralewayFont: Raleway, "PT Sans", sans-serif;
+    --algeraFont: Algera, "PT Sans", sans-serif;
 }
 
 @font-face {
