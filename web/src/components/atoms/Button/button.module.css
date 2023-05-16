@@ -1,28 +1,35 @@
 @import "../../../variables.css";
 
 .button {
+    --transitionDuration: 0.3s;
+    --transitionType: ease-in-out;
+    --hoverTransition: var(--transitionDuration) var(--transitionType);
+
     border-radius: 4px;
     padding: 0.5rem 1rem;
-    filter: brightness(100%) drop-shadow(3px 3px 4px black);
-    transition: filter 0.2s ease;
-    border: none;
-}
-
-.palePurple {
-    background-color: var(--palePurple);
-    color: var(--darkPurple);
+    transition: background-color var(--hoverTransition), color var(--hoverTransition), border var(--hoverTransition);
+    font-family: var(--ralewayFont);
+    font-size: 1.5rem;
+    cursor: pointer;
 }
 
 .purple {
     background-color: var(--purple);
     color: var(--yellowPink);
+    border: 1px solid var(--yellowPink);
 }
 
-.yellow {
-    background: var(--yellowPink);
-    color: var(--darkPurple);
+.purple:hover {
+    background-color: var(--yellowPink);
+    color: var(--purple);
+    border: 1px solid var(--purple);
 }
 
-.button:hover {
-    filter: brightness(75%);
+/* Mobile styles */
+@media screen and (max-width: 900px) {
+    .purple:focus {
+        background-color: var(--yellowPink);
+        color: var(--purple);
+        border: 1px solid var(--purple);
+    }
 }

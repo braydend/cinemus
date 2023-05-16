@@ -7,13 +7,13 @@ import Typography from "@mui/material/Typography";
 import Menu from "@mui/material/Menu";
 import MenuIcon from "@mui/icons-material/Menu";
 import Container from "@mui/material/Container";
-import Button from "@mui/material/Button";
 import MenuItem from "@mui/material/MenuItem";
 import { UserMenu } from "../UserMenu";
 import { Link } from "react-router-dom";
 import { availableRoutes } from "../../../router";
 import couchLogo from "../../../assets/couchLogo.png";
 import styles from "./Navigation.module.css";
+import { Button } from "../../atoms";
 
 const pages: Array<{ label: string; route: string }> = [
   { label: "List", route: "/list" },
@@ -56,16 +56,21 @@ export const Navigation: FC = () => {
               />
             </Link>
           </Box>
-          <Box sx={{ flexGrow: 1, display: { xs: "none", md: "flex" } }}>
+          <Box
+            sx={{
+              flexGrow: 1,
+              display: { xs: "none", md: "flex" },
+              ml: "1.5rem",
+              gap: "1rem",
+            }}
+          >
             {pages.map(({ label, route }) => (
-              <Link key={label} to={route}>
+              <Link key={label} to={route} className={styles.link}>
                 <Button
-                  key={label}
+                  variant={"purple"}
                   onClick={handleCloseNavMenu}
-                  sx={{ my: 2, color: "white", display: "block" }}
-                >
-                  {label}
-                </Button>
+                  label={label}
+                />
               </Link>
             ))}
           </Box>
@@ -106,11 +111,11 @@ export const Navigation: FC = () => {
               }}
             >
               {pages.map(({ label, route }) => (
-                <MenuItem key={label} onClick={handleCloseNavMenu}>
-                  <Link to={route}>
+                <Link to={route} key={label} className={styles.link}>
+                  <MenuItem onClick={handleCloseNavMenu}>
                     <Typography textAlign="center">{label}</Typography>
-                  </Link>
-                </MenuItem>
+                  </MenuItem>
+                </Link>
               ))}
             </Menu>
           </Box>

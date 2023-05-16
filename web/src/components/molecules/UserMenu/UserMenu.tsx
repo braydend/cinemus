@@ -65,7 +65,7 @@ export const UserMenu: FC = () => {
         // eslint-disable-next-line @typescript-eslint/no-floating-promises
         loginWithRedirect();
       }}
-      variant="yellow"
+      variant="purple"
       label="Login"
     />
   );

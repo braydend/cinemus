@@ -35,6 +35,7 @@ export const ListItem: FC<Props> = ({
     <MuiListItem
       className={`${styles.listItem} ${isSelected ? styles.selected : ""}`}
       sx={{ justifyContent: "space-between" }}
+      aria-label={media.title}
     >
       <div className={styles.posterAndTitle}>
         <Box paddingRight={"0.5rem"} justifyItems={"center"} display={"flex"}>
