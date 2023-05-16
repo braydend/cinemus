@@ -1,4 +1,21 @@
+@import "../../../variables.css";
+
 .couchLogo {
     height: 50px;
     width: auto;
+}
+
+.link {
+    text-decoration: none;
+}
+
+.menuButton {
+    font-family: var(--ralewayFont) !important;
+    font-size: 1.5rem !important;
+    color: var(--yellowPink) !important;
+}
+
+.menuButton:hover {
+    background-color: var(--yellowPink) !important;
+    color: var(--purple) !important;
 }
