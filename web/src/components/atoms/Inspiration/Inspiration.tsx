@@ -1,9 +1,9 @@
 import { type FC } from "react";
-import Typography from "@mui/material/Typography";
 import { inspiration } from "../../../content";
+import { Heading } from "../Heading";
 export const Inspiration: FC = () => (
   <section>
-    <Typography variant="h2">{inspiration.title}</Typography>
+    <Heading level="2">{inspiration.title}</Heading>
     <p>{inspiration.body}</p>
   </section>
 );

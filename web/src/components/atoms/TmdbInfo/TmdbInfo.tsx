@@ -1,10 +1,10 @@
 import { type FC } from "react";
-import Typography from "@mui/material/Typography";
 import { tmdb } from "../../../content";
 import styles from "./TmdbInfo.module.css";
+import { Heading } from "../Heading";
 export const TmdbInfo: FC = () => (
   <section>
-    <Typography variant="h2">{tmdb.title}</Typography>
+    <Heading level="2">{tmdb.title}</Heading>
     <p>{tmdb.body}</p>
     <p>
       {tmdb.disclaimer}{" "}
