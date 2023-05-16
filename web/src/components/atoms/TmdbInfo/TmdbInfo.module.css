@@ -1,5 +1,5 @@
 @import "../../../variables.css";
 
 .link, .link:visited {
-    color: var(--yellowPink)
+    color: var(--purple)
 }
