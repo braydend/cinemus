@@ -12,7 +12,7 @@ export const features: Array<{ title: string; body: string; icon: Icon }> = [
     icon: "tick",
   },
   {
-    title: "Discover Streaming Availability",
+    title: "Discover streaming availability",
     body: "Find out which streaming services in your region have the TV shows and movies on your watchlist available. Cinemus provides information on streaming availability, so you can easily find where to watch your favorite shows and movies.",
     icon: "search",
   },
