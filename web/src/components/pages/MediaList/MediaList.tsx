@@ -5,7 +5,6 @@ import { ListItem } from "../../atoms";
 import { Alert, Divider, List } from "@mui/material";
 import { MediaSearch } from "../../organisms";
 import { type MediaResponse } from "../../../queries/search";
-import Typography from "@mui/material/Typography";
 import { getUserPreferences } from "../../../queries/userPreferences";
 import { Link } from "react-router-dom";
 import { availableRoutes } from "../../../router";

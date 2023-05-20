@@ -4,24 +4,47 @@ import React from "react";
 import ReactDOM from "react-dom/client";
 import * as Sentry from "@sentry/react";
 import { auth, sentry } from "./utils/config";
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import {
+  createBrowserRouter,
+  createRoutesFromChildren,
+  matchRoutes,
+  RouterProvider,
+  useLocation,
+  useNavigationType,
+} from "react-router-dom";
 import { routes } from "./router";
 import { queryClient } from "./queries/queryClient";
 import { createTheme, ThemeProvider } from "@mui/material";
 import CssBaseline from "@mui/material/CssBaseline";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import { SnackbarProvider } from "notistack";
 
 Sentry.init({
   dsn: sentry.dsn,
   environment: sentry.environment,
-  integrations: [new Sentry.BrowserTracing(), new Sentry.Replay()],
   release: sentry.release,
   tracesSampleRate: sentry.tracesSampleRate,
   replaysSessionSampleRate: sentry.sessionSampleRate,
   replaysOnErrorSampleRate: sentry.errorSampleRate,
+  integrations: [
+    new Sentry.BrowserTracing(),
+    new Sentry.Replay(),
+    new Sentry.BrowserTracing({
+      routingInstrumentation: Sentry.reactRouterV6Instrumentation(
+        React.useEffect,
+        useLocation,
+        useNavigationType,
+        createRoutesFromChildren,
+        matchRoutes
+      ),
+    }),
+  ],
 });
 
-const router = createBrowserRouter(routes);
+const sentryCreateBrowserRouter =
+  Sentry.wrapCreateBrowserRouter(createBrowserRouter);
+
+const router = sentryCreateBrowserRouter(routes);
 
 enum color {
   darkPurple = "#4b2366",
@@ -60,7 +83,13 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
       <QueryClientProvider client={queryClient}>
         <ThemeProvider theme={theme}>
           <CssBaseline />
-          <RouterProvider router={router} />
+          <Sentry.ErrorBoundary
+            fallback={<p>An error has occurred. We are looking into a fix!</p>}
+          >
+            <SnackbarProvider maxSnack={3}>
+              <RouterProvider router={router} />
+            </SnackbarProvider>
+          </Sentry.ErrorBoundary>
           <ReactQueryDevtools />
         </ThemeProvider>
       </QueryClientProvider>
