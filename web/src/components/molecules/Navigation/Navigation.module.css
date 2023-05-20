@@ -7,6 +7,21 @@
 
 .link {
     text-decoration: none;
+    color: var(--purple);
+}
+
+.textLogo {
+    width: 100%;
+}
+
+.drawerLink {
+    font-family: var(--ralewayFont);
+    padding: 0.5rem;
+}
+
+.drawerDivider {
+    border-color: var(--purple);
+    border-width: 3px;
 }
 
 .menuButton {

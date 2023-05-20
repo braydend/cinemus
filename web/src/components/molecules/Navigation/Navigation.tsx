@@ -1,19 +1,24 @@
-import { type FC, type MouseEvent, useState } from "react";
+import { type FC, useState } from "react";
 import AppBar from "@mui/material/AppBar";
 import Box from "@mui/material/Box";
 import Toolbar from "@mui/material/Toolbar";
 import IconButton from "@mui/material/IconButton";
-import Typography from "@mui/material/Typography";
-import Menu from "@mui/material/Menu";
 import MenuIcon from "@mui/icons-material/Menu";
 import Container from "@mui/material/Container";
-import MenuItem from "@mui/material/MenuItem";
 import { UserMenu } from "../UserMenu";
 import { Link } from "react-router-dom";
 import { availableRoutes } from "../../../router";
 import couchLogo from "../../../assets/couchLogo.png";
+import textLogo from "../../../assets/textLogo.png";
 import styles from "./Navigation.module.css";
 import { Button } from "../../atoms";
+import {
+  Divider,
+  List,
+  ListItem,
+  ListItemButton,
+  SwipeableDrawer,
+} from "@mui/material";
 
 const pages: Array<{ label: string; route: string }> = [
   { label: "List", route: "/list" },
@@ -21,14 +26,14 @@ const pages: Array<{ label: string; route: string }> = [
 ];
 
 export const Navigation: FC = () => {
-  const [anchorElNav, setAnchorElNav] = useState<null | HTMLElement>(null);
+  const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
-  const handleOpenNavMenu = (event: MouseEvent<HTMLElement>): void => {
-    setAnchorElNav(event.currentTarget);
+  const handleOpenNavMenu = (): void => {
+    setIsDrawerOpen(true);
   };
 
   const handleCloseNavMenu = (): void => {
-    setAnchorElNav(null);
+    setIsDrawerOpen(false);
   };
 
   return (
@@ -92,32 +97,45 @@ export const Navigation: FC = () => {
             >
               <MenuIcon />
             </IconButton>
-            <Menu
-              id="menu-appbar"
-              anchorEl={anchorElNav}
-              anchorOrigin={{
-                vertical: "bottom",
-                horizontal: "left",
-              }}
-              keepMounted
-              transformOrigin={{
-                vertical: "top",
-                horizontal: "left",
-              }}
-              open={Boolean(anchorElNav)}
+            <SwipeableDrawer
+              anchor="left"
+              open={isDrawerOpen}
               onClose={handleCloseNavMenu}
-              sx={{
-                display: { xs: "block", md: "none" },
-              }}
+              onOpen={handleOpenNavMenu}
             >
-              {pages.map(({ label, route }) => (
-                <Link to={route} key={label} className={styles.link}>
-                  <MenuItem onClick={handleCloseNavMenu}>
-                    <Typography textAlign="center">{label}</Typography>
-                  </MenuItem>
-                </Link>
-              ))}
-            </Menu>
+              <List
+                sx={{
+                  width: "10rem",
+                  backgroundColor: "var(--backgroundColour)",
+                  height: "100%",
+                }}
+              >
+                <img
+                  src={textLogo}
+                  alt="Cinemus"
+                  width="150"
+                  height="40"
+                  className={styles.textLogo}
+                />
+                <Divider sx={{ borderColor: "var(--palePurple)" }} />
+                {pages.map(({ label, route }) => (
+                  <>
+                    <Link
+                      to={route}
+                      key={label}
+                      onClick={handleCloseNavMenu}
+                      className={styles.link}
+                    >
+                      <ListItem disablePadding>
+                        <ListItemButton>
+                          <span className={styles.drawerLink}>{label}</span>
+                        </ListItemButton>
+                      </ListItem>
+                    </Link>
+                  </>
+                ))}
+              </List>
+            </SwipeableDrawer>
           </Box>
           <Box sx={{ display: { xs: "flex", md: "none" }, mr: 2 }}>
             <Link to={availableRoutes.root}>
