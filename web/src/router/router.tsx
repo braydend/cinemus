@@ -4,10 +4,14 @@ import { About, Home, MediaList, UserPage } from "../components/pages";
 import { type FC } from "react";
 import { availableRoutes } from "./routes";
 import { useAuth } from "../hooks/useAuth";
+import { DefaultErrorBoundary } from "../components/errorBoundary";
+import { useSnackbar } from "notistack";
 
 const ProtectedRoute: FC<{ children: JSX.Element }> = ({ children }) => {
   const { isAuthenticated } = useAuth();
+  const { enqueueSnackbar } = useSnackbar();
   if (!isAuthenticated) {
+    enqueueSnackbar("You need to log in to do this!", { variant: "error" });
     return <Navigate to="/" replace />;
   }
 
@@ -17,7 +21,11 @@ const ProtectedRoute: FC<{ children: JSX.Element }> = ({ children }) => {
 export const routes: RouteObject[] = [
   {
     path: availableRoutes.root,
-    element: <BaseLayout />,
+    element: (
+      <DefaultErrorBoundary>
+        <BaseLayout />
+      </DefaultErrorBoundary>
+    ),
     children: [
       {
         path: availableRoutes.root,
