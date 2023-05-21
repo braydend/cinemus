@@ -18,6 +18,7 @@ import { createTheme, ThemeProvider } from "@mui/material";
 import CssBaseline from "@mui/material/CssBaseline";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { SnackbarProvider } from "notistack";
+import { DefaultErrorBoundary } from "./components/errorBoundary";
 
 Sentry.init({
   dsn: sentry.dsn,
@@ -83,13 +84,11 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
       <QueryClientProvider client={queryClient}>
         <ThemeProvider theme={theme}>
           <CssBaseline />
-          <Sentry.ErrorBoundary
-            fallback={<p>An error has occurred. We are looking into a fix!</p>}
-          >
+          <DefaultErrorBoundary>
             <SnackbarProvider maxSnack={3}>
               <RouterProvider router={router} />
             </SnackbarProvider>
-          </Sentry.ErrorBoundary>
+          </DefaultErrorBoundary>
           <ReactQueryDevtools />
         </ThemeProvider>
       </QueryClientProvider>
