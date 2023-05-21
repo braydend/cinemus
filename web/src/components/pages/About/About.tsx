@@ -1,7 +1,7 @@
 import { type FC } from "react";
 import { Divider } from "@mui/material";
 import { Heading, Inspiration, TmdbInfo } from "../../atoms";
-import { FeatureList } from "../../molecules";
+import { FeatureList } from "../../organisms";
 import styles from "./about.module.css";
 
 export const About: FC = () => {

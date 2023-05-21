@@ -4,23 +4,16 @@ import TV from "../../../assets/television.png";
 import Search from "../../../assets/magnifying-glass.png";
 import Tick from "../../../assets/check-mark.png";
 import { type Icon } from "../../../content/icons";
-import { Heading } from "../Heading";
+import { Heading } from "../../atoms";
 
 interface Props {
   title: string;
   body: string;
   icon: Icon;
-  variant: "yellow" | "purple";
   className?: string;
 }
 
-export const Card: FC<Props> = ({
-  title,
-  body,
-  icon,
-  variant,
-  className = "",
-}) => {
+export const Card: FC<Props> = ({ title, body, icon, className = "" }) => {
   const icons: Record<Icon, string> = {
     tv: TV,
     search: Search,
@@ -28,10 +21,7 @@ export const Card: FC<Props> = ({
   };
 
   return (
-    <section
-      key={title}
-      className={`${styles.container} ${styles[variant]} ${className}`}
-    >
+    <section key={title} className={`${styles.container} ${className}`}>
       <img
         className={styles.icon}
         src={icons[icon]}
