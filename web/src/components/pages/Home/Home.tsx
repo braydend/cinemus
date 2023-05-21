@@ -1,6 +1,6 @@
 import { type FC } from "react";
 import styles from "./home.module.css";
-import { FeatureList } from "../../molecules";
+import { FeatureList } from "../../organisms";
 import textLogo from "../../../assets/textLogo.png";
 
 export const Home: FC = () => {
