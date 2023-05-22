@@ -1,5 +1,5 @@
 import { type TmdbMovie, type TmdbShow } from "../../api";
-import { type Media, mapApiResponseToMedia } from "./media";
+import { type Media, mapMediaDetailsToMedia } from "./media";
 import {
   buildStubConfiguration,
   buildStubMovie,
@@ -22,10 +22,11 @@ describe("media domain", () => {
         __type: "show",
         id: 12345,
         title: "Stub Show",
+        genres: ["Horror", "Comedy"],
         images: getImages("/posterPath.jpg", configuration),
       };
 
-      expect(mapApiResponseToMedia(input, configuration)).toEqual(expected);
+      expect(mapMediaDetailsToMedia(input, configuration)).toEqual(expected);
     });
 
     it("correctly maps movie to media", async () => {
@@ -34,10 +35,11 @@ describe("media domain", () => {
         __type: "movie",
         id: 12345,
         title: "Stub Movie",
+        genres: ["Horror", "Comedy"],
         images: getImages("/posterPath.jpg", configuration),
       };
 
-      expect(mapApiResponseToMedia(input, configuration)).toEqual(expected);
+      expect(mapMediaDetailsToMedia(input, configuration)).toEqual(expected);
     });
   });
 });

@@ -37,6 +37,7 @@ describe("movie domain", () => {
       const expectedMovie: Media = {
         __type: "movie",
         title: "Stub Movie",
+        genres: ["Horror", "Comedy"],
         images: getImages("/posterPath.jpg", configuration),
         id: 12345,
       };
@@ -53,6 +54,7 @@ describe("movie domain", () => {
       const apiSpy = vi.spyOn(tmdb, "getMovie");
       const expectedMovie: Media = {
         __type: "movie",
+        genres: ["Horror", "Comedy"],
         title: "Stub Movie",
         images: getImages("/posterPath.jpg", configuration),
         id: 12345,
@@ -79,6 +81,7 @@ describe("movie domain", () => {
       const expectedMovie: Media = {
         __type: "movie",
         title: "Stub Movie",
+        genres: ["Horror", "Comedy"],
         images: getImages("/posterPath.jpg", configuration),
         id: 12345,
       };
@@ -95,6 +98,7 @@ describe("movie domain", () => {
         title: "Stub Movie",
         images: getImages("/posterPath.jpg", configuration),
         id: 12345,
+        genres: ["Horror", "Comedy"],
         watchProviders: [
           {
             region: "AU",
@@ -121,18 +125,21 @@ describe("movie domain", () => {
         {
           __type: "movie",
           title: "Stub Movie Two",
+          genres: [],
           id: 22222,
           images: getImages("/posterPath.jpg", configuration),
         },
         {
           __type: "movie",
           title: "Stub Movie Three",
+          genres: [],
           id: 33333,
           images: getImages("/posterPath.jpg", configuration),
         },
         {
           __type: "movie",
           title: "Stub Movie One",
+          genres: [],
           id: 11111,
           images: getImages("/posterPath.jpg", configuration),
         },
@@ -149,18 +156,21 @@ describe("movie domain", () => {
         {
           __type: "movie",
           title: "Stub Movie Two",
+          genres: [],
           id: 22222,
           images: getImages("/posterPath.jpg", configuration),
         },
         {
           __type: "movie",
           title: "Stub Movie Three",
+          genres: [],
           id: 33333,
           images: getImages("/posterPath.jpg", configuration),
         },
         {
           __type: "movie",
           title: "Stub Movie One",
+          genres: [],
           id: 11111,
           images: getImages("/posterPath.jpg", configuration),
         },

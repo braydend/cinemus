@@ -1,55 +1,20 @@
 import axios from "axios";
 import { secrets, url } from "../../config";
 import { logger } from "../../libs/logger";
+import {
+  type TmdbMovieDetails,
+  type TmdbShowDetails,
+  type TmdbMedia,
+  type TmdbSearchMovieResult,
+  type TmdbSearch,
+  type TmdbSearchShowResult,
+} from "./types";
 
 type MediaCategory = "movie" | "tv";
 
 const tmdbBaseUrl = url.TMDB_URL;
 
-interface TmdbSearchResult<MediaType extends Media> {
-  page: number;
-  results: MediaType[];
-  total_results: number;
-  total_pages: number;
-}
-
-interface Media {
-  poster_path: string;
-  overview: string;
-  genre_ids: number[];
-  id: number;
-  original_language: string;
-  backdrop_path: string;
-  popularity: number;
-  vote_count: number;
-  vote_average: number;
-}
-
-export type TmdbMovie = Media & {
-  __type: "movie";
-  adult: boolean;
-  release_date: string;
-  original_title: string;
-  title: string;
-  video: boolean;
-};
-
-export type TmdbShow = Media & {
-  __type: "show";
-  first_air_date: string;
-  origin_country: string[];
-  name: string;
-  original_name: string;
-};
-
-export interface SearchResponse<MediaType extends Media> {
-  page: number;
-  results: MediaType[];
-  total_results: number;
-  total_pages: number;
-}
-
-const markMediaType = <MediaType extends Media>(
+const markMediaType = <MediaType extends TmdbMedia>(
   media: MediaType,
   type: MediaCategory
 ): MediaType => {
@@ -57,14 +22,14 @@ const markMediaType = <MediaType extends Media>(
   return { ...media, __type: typeString };
 };
 
-const markMediaTypes = <MediaType extends Media>(
+const markMediaTypes = <MediaType extends TmdbMedia>(
   media: MediaType[],
   type: MediaCategory
 ): MediaType[] => {
   return media.map((data) => markMediaType(data, type));
 };
 
-const get = async <MediaType extends Media>(
+const get = async <MediaType extends TmdbMedia>(
   id: string,
   type: MediaCategory
 ): Promise<MediaType> => {
@@ -85,13 +50,13 @@ const get = async <MediaType extends Media>(
   }
 };
 
-const search = async <MediaType extends Media>(
+const search = async <MediaType extends TmdbMedia>(
   mediaType: MediaCategory,
   query: string
-): Promise<SearchResponse<MediaType>> => {
+): Promise<TmdbSearch<MediaType>> => {
   logger.profile(`TMDB search ${mediaType} "${query}"`);
   try {
-    const response = await axios.get<SearchResponse<MediaType>>(
+    const response = await axios.get<TmdbSearch<MediaType>>(
       `${tmdbBaseUrl}/search/${mediaType}?api_key=${secrets.MOVIE_DB_API_KEY}&query=${query}`
     );
 
@@ -109,15 +74,16 @@ const search = async <MediaType extends Media>(
   }
 };
 
-export const getMovie = async (id: string): Promise<TmdbMovie> =>
-  await get<TmdbMovie>(id, "movie");
-export const getShow = async (id: string): Promise<TmdbShow> =>
-  await get<TmdbShow>(id, "tv");
+export const getMovie = async (id: string): Promise<TmdbMovieDetails> =>
+  await get<TmdbMovieDetails>(id, "movie");
+export const getShow = async (id: string): Promise<TmdbShowDetails> =>
+  await get<TmdbShowDetails>(id, "tv");
 
 export const searchMovies = async (
   query: string
-): Promise<TmdbSearchResult<TmdbMovie>> =>
-  await search<TmdbMovie>("movie", query);
+): Promise<TmdbSearch<TmdbSearchMovieResult>> =>
+  await search<TmdbSearchMovieResult>("movie", query);
 export const searchShows = async (
   query: string
-): Promise<TmdbSearchResult<TmdbShow>> => await search<TmdbShow>("tv", query);
+): Promise<TmdbSearch<TmdbSearchShowResult>> =>
+  await search<TmdbSearchShowResult>("tv", query);

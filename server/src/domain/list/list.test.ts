@@ -40,6 +40,7 @@ describe("list domain", () => {
           __type: "show",
           title: "Stub Show",
           images: getImages("/posterPath.jpg", configuration),
+          genres: ["Horror", "Comedy"],
           id: 12345,
           isWatched: false,
         },
@@ -66,6 +67,8 @@ describe("list domain", () => {
           title: "Stub Show",
           images: getImages("/posterPath.jpg", configuration),
           id: 12345,
+          genres: ["Horror", "Comedy"],
+
           isWatched: false,
           watchProviders: [
             {
@@ -106,6 +109,7 @@ describe("list domain", () => {
             images: getImages("/posterPath.jpg", configuration),
             id: 12345,
             isWatched: false,
+            genres: ["Horror", "Comedy"],
           },
         ];
         const result = await updateList(newData, "foo");
@@ -131,6 +135,8 @@ describe("list domain", () => {
             images: getImages("/posterPath.jpg", configuration),
             id: 12345,
             isWatched: false,
+            genres: ["Horror", "Comedy"],
+
             watchProviders: [
               {
                 region: "AU",

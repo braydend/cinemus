@@ -1,12 +1,12 @@
 import {
   getShow as fetchShow,
   searchShows as searchShowRequest,
-  type TmdbShow,
+  type TmdbShowDetails,
 } from "../../api/tmdb";
 import { logger } from "../../libs/logger";
 import {
-  mapApiResponseToMedia,
-  mapApiResponseToMediaList,
+  mapMediaDetailsToMedia,
+  mapSearchResponseToMediaList,
   type Media,
   type MediaList,
 } from "../media";
@@ -17,7 +17,7 @@ import { addToCache, retrieveFromCache } from "../../db/upstash/cache";
 export const getShow = async (id: string, region?: string): Promise<Media> => {
   logger.profile(`getShow #${id}`);
   const cacheKey = `show-${id}`;
-  const cachedShow = await retrieveFromCache<TmdbShow>(cacheKey);
+  const cachedShow = await retrieveFromCache<TmdbShowDetails>(cacheKey);
   const configuration = await getConfiguration();
   const watchProviders =
     region != null
@@ -25,13 +25,13 @@ export const getShow = async (id: string, region?: string): Promise<Media> => {
       : undefined;
 
   if (cachedShow != null) {
-    return mapApiResponseToMedia(cachedShow, configuration, watchProviders);
+    return mapMediaDetailsToMedia(cachedShow, configuration, watchProviders);
   }
 
   const show = await fetchShow(id);
   addToCache(cacheKey, show);
 
-  const mappedMedia = mapApiResponseToMedia(
+  const mappedMedia = mapMediaDetailsToMedia(
     show,
     configuration,
     watchProviders
@@ -47,13 +47,15 @@ export const searchShows = async (query: string): Promise<MediaList> => {
   const { results } = await searchShowRequest(query);
   const configuration = await getConfiguration();
 
-  for (const show of results) {
-    const cacheKey = `show-${show.id.toString(10)}`;
-    // Don't await caching of data returned from API
-    addToCache(cacheKey, show);
-  }
+  // for (const show of results) {
+  // const cacheKey = `show-${show.id.toString(10)}`;
+  // Don't await caching of data returned from API
+  // TODO: Search results aren't being cached since the shape is different to the "get" result
+  // addToCache(cacheKey, show);
+  // getShow(show.id)
+  // }
 
-  const mappedMedia = mapApiResponseToMediaList(results, configuration);
+  const mappedMedia = mapSearchResponseToMediaList(results, configuration);
   logger.profile(`searchShows: ${query}`);
 
   return mappedMedia;
