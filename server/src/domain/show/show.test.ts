@@ -37,6 +37,7 @@ describe("show domain", () => {
       const expectedShow: Media = {
         __type: "show",
         title: "Stub Show",
+        genres: ["Horror", "Comedy"],
         images: getImages("/posterPath.jpg", configuration),
         id: 12345,
       };
@@ -54,6 +55,7 @@ describe("show domain", () => {
       const expectedShow: Media = {
         __type: "show",
         title: "Stub Show",
+        genres: ["Horror", "Comedy"],
         images: getImages("/posterPath.jpg", configuration),
         id: 12345,
         watchProviders: [
@@ -79,6 +81,7 @@ describe("show domain", () => {
       const expectedShow: Media = {
         __type: "show",
         title: "Stub Show",
+        genres: ["Horror", "Comedy"],
         images: getImages("/posterPath.jpg", configuration),
         id: 12345,
       };
@@ -95,6 +98,7 @@ describe("show domain", () => {
         title: "Stub Show",
         images: getImages("/posterPath.jpg", configuration),
         id: 12345,
+        genres: ["Horror", "Comedy"],
         watchProviders: [
           {
             region: "AU",
@@ -121,6 +125,7 @@ describe("show domain", () => {
         {
           __type: "show",
           title: "Stub Show Two",
+          genres: [],
           images: getImages("/posterPath.jpg", configuration),
           id: 22222,
         },
@@ -128,12 +133,14 @@ describe("show domain", () => {
           __type: "show",
           title: "Stub Show Three",
           images: getImages("/posterPath.jpg", configuration),
+          genres: [],
           id: 33333,
         },
         {
           __type: "show",
           title: "Stub Show One",
           images: getImages("/posterPath.jpg", configuration),
+          genres: [],
           id: 11111,
         },
       ];
@@ -150,17 +157,20 @@ describe("show domain", () => {
           __type: "show",
           title: "Stub Show Two",
           images: getImages("/posterPath.jpg", configuration),
+          genres: [],
           id: 22222,
         },
         {
           __type: "show",
           title: "Stub Show Three",
+          genres: [],
           images: getImages("/posterPath.jpg", configuration),
           id: 33333,
         },
         {
           __type: "show",
           title: "Stub Show One",
+          genres: [],
           images: getImages("/posterPath.jpg", configuration),
           id: 11111,
         },
