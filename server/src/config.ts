@@ -7,6 +7,10 @@ export const db = {
   MONGO_CONNECTION_STRING: process.env.MONGO_CONNECTION_STRING ?? "",
 };
 
+export const upstash = {
+  REDIS_API_KEY: process.env.UPSTASH_REDIS_API_KEY ?? "",
+};
+
 export const url = {
   TMDB_URL: process.env.TMDB_URL ?? "",
 };

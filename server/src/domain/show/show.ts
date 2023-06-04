@@ -3,7 +3,6 @@ import {
   searchShows as searchShowRequest,
   type TmdbShow,
 } from "../../api/tmdb";
-import { addToCache, retrieveFromCache } from "../../db/mongodb/cache";
 import { logger } from "../../libs/logger";
 import {
   mapApiResponseToMedia,
@@ -13,12 +12,12 @@ import {
 } from "../media";
 import { getConfiguration } from "../configuration";
 import { getShowWatchProviders } from "../watchProviders";
+import { addToCache, retrieveFromCache } from "../../db/upstash/cache";
 
 export const getShow = async (id: string, region?: string): Promise<Media> => {
   logger.profile(`getShow #${id}`);
-  const cachedShow = await retrieveFromCache<TmdbShow>(id, {
-    "data.__type": "show",
-  });
+  const cacheKey = `show-${id}`;
+  const cachedShow = await retrieveFromCache<TmdbShow>(cacheKey);
   const configuration = await getConfiguration();
   const watchProviders =
     region != null
@@ -26,15 +25,11 @@ export const getShow = async (id: string, region?: string): Promise<Media> => {
       : undefined;
 
   if (cachedShow != null) {
-    return mapApiResponseToMedia(
-      cachedShow.data,
-      configuration,
-      watchProviders
-    );
+    return mapApiResponseToMedia(cachedShow, configuration, watchProviders);
   }
 
   const show = await fetchShow(id);
-  addToCache(id, show);
+  addToCache(cacheKey, show);
 
   const mappedMedia = mapApiResponseToMedia(
     show,
@@ -53,8 +48,9 @@ export const searchShows = async (query: string): Promise<MediaList> => {
   const configuration = await getConfiguration();
 
   for (const show of results) {
+    const cacheKey = `show-${show.id.toString(10)}`;
     // Don't await caching of data returned from API
-    addToCache(show.id.toString(10), show);
+    addToCache(cacheKey, show);
   }
 
   const mappedMedia = mapApiResponseToMediaList(results, configuration);

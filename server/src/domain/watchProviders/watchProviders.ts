@@ -7,9 +7,9 @@ import {
   getShowWatchProviders as fetchShowWatchProviders,
   getMovieWatchProviders as fetchMovieWatchProviders,
 } from "../../api";
-import { addToCache, retrieveFromCache } from "../../db/mongodb/cache";
 import { logger } from "../../libs/logger";
 import { getImages } from "../image";
+import { addToCache, retrieveFromCache } from "../../db/upstash/cache";
 
 type MediaCategory = "movie" | "tv";
 
@@ -109,7 +109,7 @@ export const getWatchProviderRegions = async (): Promise<
     await retrieveFromCache<TmdbWatchProviderRegionsResponse>(CACHE_KEY);
 
   if (cachedProviders != null) {
-    return mapResponseToRegion(cachedProviders.data);
+    return mapResponseToRegion(cachedProviders);
   }
 
   const response = await getWatchProviderRegionsQuery();
@@ -130,15 +130,14 @@ const getWatchProviders = async (
 ): Promise<WatchProvider[]> => {
   const isMovie = type === "movie";
   const mediaType = isMovie ? "movie" : "show";
+  const cacheKey = `${mediaType}-${id}-watch-providers`;
 
   const cachedWatchProviders =
-    await retrieveFromCache<TmdbWatchProviderResponse>(id, {
-      "data.__type": `${mediaType}WatchProviders`,
-    });
+    await retrieveFromCache<TmdbWatchProviderResponse>(cacheKey);
 
   if (cachedWatchProviders != null) {
     return mapResponseToWatchProvider(
-      cachedWatchProviders.data,
+      cachedWatchProviders,
       configuration,
       region
     );
@@ -148,7 +147,7 @@ const getWatchProviders = async (
     ? await fetchMovieWatchProviders(id)
     : await fetchShowWatchProviders(id);
 
-  addToCache(id, { ...result, __type: `${mediaType}WatchProviders` });
+  addToCache(cacheKey, result);
 
   return mapResponseToWatchProvider(result, configuration, region);
 };
