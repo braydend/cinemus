@@ -3,30 +3,25 @@ import {
   searchMovies as searchMovieRequest,
   type TmdbMovie,
 } from "../../api/tmdb";
-import { addToCache, retrieveFromCache } from "../../db/mongodb/cache";
 import { mapApiResponseToMedia, type Media } from "../media";
 import { getConfiguration } from "../configuration";
 import { getMovieWatchProviders } from "../watchProviders";
+import { addToCache, retrieveFromCache } from "../../db/upstash/cache";
 
 export const getMovie = async (id: string, region?: string): Promise<Media> => {
-  const cachedMovie = await retrieveFromCache<TmdbMovie>(id, {
-    "data.__type": "movie",
-  });
+  const cacheKey = `movie-${id}`;
+  const cachedMovie = await retrieveFromCache<TmdbMovie>(cacheKey);
   const configuration = await getConfiguration();
   const watchProviders =
     region != null
       ? await getMovieWatchProviders(id, configuration, region)
       : undefined;
   if (cachedMovie != null) {
-    return mapApiResponseToMedia(
-      cachedMovie.data,
-      configuration,
-      watchProviders
-    );
+    return mapApiResponseToMedia(cachedMovie, configuration, watchProviders);
   }
 
   const movie = await fetchMovie(id);
-  addToCache(id, movie);
+  addToCache(cacheKey, movie);
 
   return mapApiResponseToMedia(movie, configuration, watchProviders);
 };
@@ -36,8 +31,9 @@ export const searchMovies = async (query: string): Promise<Media[]> => {
   const configuration = await getConfiguration();
 
   for (const movie of results) {
+    const cacheKey = `show-${movie.id.toString(10)}`;
     // Don't await caching of data returned from API
-    addToCache(movie.id.toString(10), movie);
+    addToCache(cacheKey, movie);
   }
 
   return results.map((media) => mapApiResponseToMedia(media, configuration));

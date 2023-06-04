@@ -49,6 +49,7 @@ const serverlessConfiguration: AWS = {
       MOVIE_DB_API_KEY: "${param:MOVIE_DB_API_KEY}",
       SENTRY_DSN: "${param:SENTRY_DSN}",
       SENTRY_RELEASE: "${env:GITHUB_SHA}",
+      UPSTASH_REDIS_API_KEY: "${param:UPSTASH_REDIS_API_KEY}",
     },
   },
   // import the function via paths
