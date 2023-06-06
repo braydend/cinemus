@@ -3,7 +3,30 @@ import { type Media } from "../media";
 import { getMovie, searchMovies } from "./movie";
 import * as tmdb from "../../../src/api/tmdb";
 import { getImages } from "../image";
-import { buildStubConfiguration, dropAllCollections } from "../../../test";
+import { buildStubConfiguration } from "../../../test";
+import { clearCache } from "../../db/upstash/cache";
+
+vi.mock("../../db/upstash/cache", () => {
+  let data: any = {};
+
+  const addToCache = (key: string, value: any): void => {
+    data[key] = value;
+  };
+
+  const retrieveFromCache = (key: string): any => {
+    return data[key];
+  };
+
+  const clearCache = (): void => {
+    data = {};
+  };
+
+  return {
+    addToCache,
+    retrieveFromCache,
+    clearCache,
+  };
+});
 
 describe("movie domain", () => {
   const configuration = buildStubConfiguration();
@@ -25,7 +48,7 @@ describe("movie domain", () => {
 
     it("hits API and gets watch providers if not in cache and region is specified", async () => {
       // Reset cache
-      await dropAllCollections();
+      await clearCache();
 
       const apiSpy = vi.spyOn(tmdb, "getMovie");
       const expectedMovie: Media = {
