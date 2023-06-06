@@ -5,6 +5,9 @@ import {
 import { middyfy } from "../../../libs/lambda";
 import type schema from "./schema";
 import Sentry, { withSentry } from "../../../libs/sentry";
+import { createCacheInstance } from "../../../db/upstash/cache";
+
+createCacheInstance();
 
 const getRequest: ValidatedGetEventAPIGatewayProxyEvent<typeof schema> =
   withSentry(async (event) => {

@@ -4,6 +4,9 @@ import { middyfy } from "../../../libs/lambda";
 import { type bodySchema, type queryParamsSchema } from "./schema";
 import { updateList, type List } from "../../../domain/list";
 import Sentry, { withSentry } from "../../../libs/sentry";
+import { createCacheInstance } from "../../../db/upstash/cache";
+
+createCacheInstance();
 
 const handler: ValidatedEventAPIGatewayProxyEvent<
   typeof bodySchema,
