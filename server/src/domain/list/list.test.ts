@@ -11,6 +11,8 @@ const stubList = async (
   await updateList({ media, userId }, userId);
 };
 
+vi.mock("../../db/upstash/cache");
+
 describe("list domain", () => {
   const configuration = buildStubConfiguration();
 
