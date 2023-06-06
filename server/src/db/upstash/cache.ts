@@ -62,3 +62,9 @@ export const retrieveFromCache = async <Data>(
     logger.error(`Error retreiving from cache: ${(e as Error).message}`);
   }
 };
+
+export const clearCache = async (): Promise<void> => {
+  const instance = getInstance();
+
+  await instance.flushall();
+};
