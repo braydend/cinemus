@@ -5,6 +5,9 @@ import {
 import { middyfy } from "../../../libs/lambda";
 import { getWatchProviderRegions } from "../../../domain/watchProviders";
 import Sentry, { withSentry } from "../../../libs/sentry";
+import { createCacheInstance } from "../../../db/upstash/cache";
+
+createCacheInstance();
 
 const getRequest: AuthorisedAPIGatewayProxyEvent = withSentry(async (event) => {
   const {
