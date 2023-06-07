@@ -4,6 +4,24 @@
     padding: 0.5rem;
 }
 
+.genreContainer {
+    display: flex;
+    flex-direction: row;
+    gap: 0.5rem 1rem;
+    flex-wrap: wrap;
+    height: 2rem;
+    overflow: hidden;
+}
+.mediaInfo {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.mediaTitle {
+    color: var(--darkPurple)
+}
+
 .watchProviderLogo {
     border-radius: 4px;
 }
@@ -65,5 +83,16 @@
 
     .selected .watchProviders {
         width: auto;
+    }
+
+    .selected .genreContainer {
+        margin-top: 0.5rem;
+        overflow: visible;
+        height: auto;
+        justify-content: center;
+    }
+
+    .selected .mediaInfo {
+        align-items: center;
     }
 }

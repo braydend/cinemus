@@ -5,3 +5,4 @@ export * from "./TmdbInfo";
 export * from "./Select";
 export * from "./Button";
 export * from "./Heading";
+export * from "./Pill";

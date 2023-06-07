@@ -21,7 +21,7 @@ export const UserPage: FC = () => {
 
   if (Boolean(error)) throw Error(JSON.stringify(error));
 
-  if (data == null) throw Error(`Unable to fetch user preferences for user`);
+  if (data == null) throw Error("Unable to fetch user preferences for user");
 
   return (
     <main className={styles.container}>

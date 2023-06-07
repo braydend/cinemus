@@ -50,7 +50,7 @@ export const UserPreferences: FC<Props> = ({ initialPreferences }) => {
 
   if (Boolean(error)) throw Error(JSON.stringify(error));
 
-  if (data == null) throw Error(`Unable to fetch watch provider regions`);
+  if (data == null) throw Error("Unable to fetch watch provider regions");
 
   const watchRegionOptions = data.data.map(({ countryId, name }) => ({
     label: name,

@@ -1,9 +1,10 @@
-import { Box, ListItem as MuiListItem, ListItemText } from "@mui/material";
+import { Box, ListItem as MuiListItem } from "@mui/material";
 import { type FC } from "react";
 import { type Media } from "../../../types";
 import { UnfoldLess, UnfoldMore } from "@mui/icons-material";
 import styles from "./ListItem.module.css";
 import Button from "@mui/material/Button";
+import { Pill } from "../Pill";
 
 interface Props {
   media: Media;
@@ -47,7 +48,14 @@ export const ListItem: FC<Props> = ({
             width={64}
           />
         </Box>
-        <ListItemText>{media.title}</ListItemText>
+        <div className={styles.mediaInfo}>
+          <div className={styles.genreContainer}>
+            {media.genres.map((genre) => (
+              <Pill key={genre} label={genre} />
+            ))}
+          </div>
+          <span className={styles.mediaTitle}>{media.title}</span>
+        </div>
       </div>
       <div className={styles.watchProvidersAndActions}>
         <div className={styles.watchProviders}>

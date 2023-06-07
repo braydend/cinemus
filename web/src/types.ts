@@ -28,6 +28,7 @@ export interface Media {
   title: string;
 
   images: Images;
+  genres: string[];
   __type: MediaType;
   isWatched?: boolean;
   watchProviders?: WatchProvider[];
