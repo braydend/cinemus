@@ -1,5 +1,6 @@
 :root {
-    --darkPurple: #4b2366;
+    /* Tailwind purple-950 */
+    --darkPurple: #4b2366; 
     --purple: #79609f;
     --yellow: #f8d089;
     --yellowPink: #e2bcae;
