@@ -19,6 +19,7 @@ import CssBaseline from "@mui/material/CssBaseline";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 import { SnackbarProvider } from "notistack";
 import { DefaultErrorBoundary } from "./components/errorBoundary";
+import "./index.css";
 
 Sentry.init({
   dsn: sentry.dsn,
