@@ -10,7 +10,13 @@ module.exports = {
     "prettier",
   ],
   overrides: [],
-  ignorePatterns: ["node_modules", "dist", "test-results", "playwright-report"],
+  ignorePatterns: [
+    "node_modules",
+    "dist",
+    "test-results",
+    "playwright-report",
+    "*.js",
+  ],
   parserOptions: {
     ecmaVersion: "latest",
     sourceType: "module",
