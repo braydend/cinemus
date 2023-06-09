@@ -1,12 +1,11 @@
 import { type FC, useState } from "react";
-import { type MediaType } from "../../../types";
+import { type Media, type MediaType } from "../../../types";
 import { MediaTypeSelector } from "../../atoms";
 import { SearchBox } from "../../molecules";
-import { type MediaResponse } from "../../../queries/search";
 import styles from "./MediaSearch.module.css";
 
 interface Props {
-  onSelect: (selection: MediaResponse) => void;
+  onSelect: (selection: Media) => void;
 }
 
 export const MediaSearch: FC<Props> = ({ onSelect }) => {
