@@ -1,6 +1,6 @@
 import { type FC, useState, type HTMLAttributes } from "react";
 import { Autocomplete, Box, CircularProgress, TextField } from "@mui/material";
-import { type MediaType } from "../../../types";
+import { type Media, type MediaType } from "../../../types";
 import { useDebounce } from "use-debounce";
 import { useQuery } from "@tanstack/react-query";
 import {
@@ -13,7 +13,7 @@ import styles from "./SearchBox.module.css";
 
 interface Props {
   mediaType: MediaType;
-  onSelect: (selection: MediaResponse) => void;
+  onSelect: (selection: Media) => void;
   query: string;
   setQuery: (query: string) => void;
 }
@@ -37,7 +37,7 @@ export const SearchBox: FC<Props> = ({
     { enabled: Boolean(jwt) && Boolean(debouncedQuery) }
   );
 
-  const handleSelection = (selection: MediaResponse): void => {
+  const handleSelection = (selection: Media): void => {
     onSelect(selection);
     setQuery("");
   };

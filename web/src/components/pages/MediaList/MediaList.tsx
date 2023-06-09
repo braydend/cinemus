@@ -4,7 +4,6 @@ import { type Media } from "../../../types";
 import { ListItem } from "../../atoms";
 import { Alert, Divider, List } from "@mui/material";
 import { MediaSearch } from "../../organisms";
-import { type MediaResponse } from "../../../queries/search";
 import { getUserPreferences } from "../../../queries/userPreferences";
 import { Link } from "react-router-dom";
 import { availableRoutes } from "../../../router";
@@ -35,7 +34,7 @@ export const MediaList: FC = () => {
 
   const currentSelections = (list?.data ?? []).sort(sortMediaAlphabetically);
 
-  const handleSelection = (media: MediaResponse): void => {
+  const handleSelection = (media: Media): void => {
     mutate([...currentSelections, media]);
   };
 

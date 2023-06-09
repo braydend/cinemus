@@ -9,7 +9,7 @@ export type MediaResponse = Pick<
 >;
 
 interface SearchResults {
-  results: MediaResponse[];
+  results: Media[];
 }
 
 const buildUrl = (type: SearchType, query: string): string => {
