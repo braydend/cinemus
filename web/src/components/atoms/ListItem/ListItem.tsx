@@ -2,7 +2,6 @@ import { Box, ListItem as MuiListItem } from "@mui/material";
 import { type FC } from "react";
 import { type Media } from "../../../types";
 import { UnfoldLess, UnfoldMore } from "@mui/icons-material";
-import styles from "./ListItem.module.css";
 import Button from "@mui/material/Button";
 import { Pill } from "../Pill";
 
@@ -34,36 +33,65 @@ export const ListItem: FC<Props> = ({
   };
   return (
     <MuiListItem
-      className={`${styles.listItem} ${isSelected ? styles.selected : ""}`}
+      className={`flex flex-row p-2 md:flex-row ${
+        isSelected ? "flex-col" : ""
+      }`}
       sx={{ justifyContent: "space-between" }}
       aria-label={media.title}
     >
-      <div className={styles.posterAndTitle}>
-        <Box paddingRight={"0.5rem"} justifyItems={"center"} display={"flex"}>
+      <div
+        className={`flex md:flex-row ${
+          isSelected ? "flex-col" : "flex-row"
+        } items-center`}
+      >
+        <Box
+          paddingRight={"0.5rem"}
+          justifyItems={"center"}
+          display={"flex"}
+          flexDirection={"row"}
+        >
           <img
-            className={styles.poster}
+            className={`object-cover transition-all ease-in-out max-w-none md:hover:w-full ${
+              isSelected ? "w-full" : ""
+            }`}
             src={media.images.logo.small}
             alt={`${media.title}-image`}
             onClick={handleSelect}
             width={64}
           />
         </Box>
-        <div className={styles.mediaInfo}>
-          <div className={styles.genreContainer}>
+        <div
+          className={`flex flex-col gap-2 md:items-start ${
+            isSelected ? "items-center" : ""
+          }`}
+        >
+          <div
+            className={`flex flex-row gap-x-4 gap-y-2 flex-wrap h-8 overflow-hidden md:m-auto md:overflow-auto md:h-auto md:justify-normal ${
+              isSelected ? "mt-4 overflow-visible h-auto justify-center" : ""
+            }`}
+          >
             {media.genres.map((genre) => (
               <Pill key={genre} label={genre} />
             ))}
           </div>
-          <span className={styles.mediaTitle}>{media.title}</span>
+          <span className="text-purple-950">{media.title}</span>
         </div>
       </div>
-      <div className={styles.watchProvidersAndActions}>
-        <div className={styles.watchProviders}>
+      <div
+        className={`flex flex-row items-center ${
+          isSelected ? "flex-col md:flex-row" : ""
+        }`}
+      >
+        <div
+          className={`flex flex-row overflow-hidden mx-2 my-0 gap-2 w-10 ${
+            isSelected ? "w-auto" : ""
+          } md:w-auto`}
+        >
           {media.watchProviders?.flatMap(({ flatrate }) =>
             flatrate?.map(({ logoUrl, name }) => (
               <img
                 key={name}
-                className={styles.watchProviderLogo}
+                className="rounded-md"
                 width={32}
                 src={logoUrl}
                 alt={name}
@@ -72,7 +100,9 @@ export const ListItem: FC<Props> = ({
           )}
         </div>
         <Box
-          className={styles.actions}
+          className={`flex flex-row justify-around gap-2 m-2 md:w-auto ${
+            isSelected ? "w-full" : ""
+          }`}
           sx={{ display: { md: "flex", xs: isSelected ? "flex" : "none" } }}
         >
           <Button
