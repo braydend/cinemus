@@ -1,5 +1,4 @@
 import { type FC } from "react";
-import styles from "./button.module.css";
 
 interface Props {
   label: string;
@@ -8,14 +7,26 @@ interface Props {
   className?: string;
 }
 
+const variantStyles = {
+  purple: `
+    bg-cinemus-purple text-cinemus-yellow-pink border-cinemus-yellow-pink 
+    hover:bg-cinemus-yellow-pink hover:text-cinemus-purple hover:border-cinemus-purple
+    focus:bg-cinemus-yellow-pink focus:text-cinemus-purple focus:border-cinemus-purple
+  `,
+};
+
 export const Button: FC<Props> = ({
   label,
   onClick,
   variant,
   className = "",
 }) => (
+  // TODO: Add raleway font
   <button
-    className={`${styles.button} ${styles[variant]} ${className}`}
+    className={`
+    ${className} ${variantStyles[variant]} 
+    rounded text-lg cursor-pointer font-raleway px-4 py-2 transition-colors border
+    `}
     onClick={onClick}
   >
     {label}
