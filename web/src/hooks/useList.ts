@@ -1,6 +1,5 @@
 import { useMutation, useQuery } from "@tanstack/react-query";
 import { getList, updateList } from "../queries/list";
-import { type MediaResponse } from "../queries/search";
 import { queryClient } from "../queries/queryClient";
 import { type Media } from "../types";
 import { sortMediaAlphabetically } from "../utils/sort";
@@ -11,7 +10,7 @@ export const useList = (
 ): {
   data: { data: Media[] } | undefined;
   isLoading: boolean;
-  mutate: (media: MediaResponse[]) => void;
+  mutate: (media: Media[]) => void;
 } => {
   const queryKey = `getList(${region ?? ""})`;
 
@@ -25,7 +24,7 @@ export const useList = (
 
   const { mutate } = useMutation(
     ["updateList"],
-    async (media: MediaResponse[]) =>
+    async (media: Media[]) =>
       await updateList(
         media.map(({ id, __type, isWatched }) => ({
           id: `${id}`,
