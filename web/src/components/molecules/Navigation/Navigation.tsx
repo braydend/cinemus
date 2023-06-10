@@ -10,7 +10,6 @@ import { Link } from "react-router-dom";
 import { availableRoutes } from "../../../router";
 import couchLogo from "../../../assets/couchLogo.png";
 import textLogo from "../../../assets/textLogo.png";
-import styles from "./Navigation.module.css";
 import { Button } from "../../atoms";
 import {
   Divider,
@@ -54,11 +53,7 @@ export const Navigation: FC = () => {
             }}
           >
             <Link to={availableRoutes.root}>
-              <img
-                src={couchLogo}
-                alt="Cinemus logo"
-                className={styles.couchLogo}
-              />
+              <img src={couchLogo} alt="Cinemus logo" className="h-12 w-auto" />
             </Link>
           </Box>
           <Box
@@ -70,7 +65,7 @@ export const Navigation: FC = () => {
             }}
           >
             {pages.map(({ label, route }) => (
-              <Link key={label} to={route} className={styles.link}>
+              <Link key={label} to={route}>
                 <Button
                   variant={"purple"}
                   onClick={handleCloseNavMenu}
@@ -115,20 +110,17 @@ export const Navigation: FC = () => {
                   alt="Cinemus"
                   width="150"
                   height="40"
-                  className={styles.textLogo}
+                  className="w-full"
                 />
                 <Divider sx={{ borderColor: "var(--palePurple)" }} />
                 {pages.map(({ label, route }) => (
                   <>
-                    <Link
-                      to={route}
-                      key={label}
-                      onClick={handleCloseNavMenu}
-                      className={styles.link}
-                    >
+                    <Link to={route} key={label} onClick={handleCloseNavMenu}>
                       <ListItem disablePadding>
                         <ListItemButton>
-                          <span className={styles.drawerLink}>{label}</span>
+                          <span className="font-raleway p-2 text-cinemus-purple">
+                            {label}
+                          </span>
                         </ListItemButton>
                       </ListItem>
                     </Link>
@@ -139,11 +131,7 @@ export const Navigation: FC = () => {
           </Box>
           <Box sx={{ display: { xs: "flex", md: "none" }, mr: 2 }}>
             <Link to={availableRoutes.root}>
-              <img
-                src={couchLogo}
-                alt="Cinemus logo"
-                className={styles.couchLogo}
-              />
+              <img src={couchLogo} alt="Cinemus logo" className="h-12 w-auto" />
             </Link>
           </Box>
           <Box sx={{ placeSelf: "end", alignSelf: "center" }}>
