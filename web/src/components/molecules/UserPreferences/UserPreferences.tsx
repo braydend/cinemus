@@ -7,7 +7,6 @@ import { useMutation, useQuery } from "@tanstack/react-query";
 import { Select } from "../../atoms";
 import { getWatchProviderRegions } from "../../../queries/watchProviders";
 import Button from "@mui/material/Button";
-import styles from "./userPreferences.module.css";
 import { TextField } from "@mui/material";
 import { queryClient } from "../../../queries/queryClient";
 import { useAuth } from "../../../hooks/useAuth";
@@ -70,7 +69,7 @@ export const UserPreferences: FC<Props> = ({ initialPreferences }) => {
   };
 
   return (
-    <div className={styles.container}>
+    <div className="w-full md:grid md:grid-cols-2 md:gap-4">
       <TextField
         required
         label="Email"
@@ -86,7 +85,7 @@ export const UserPreferences: FC<Props> = ({ initialPreferences }) => {
         value={preferences.watchProviderRegion}
         includeBlank
       />
-      <div className={styles.actions}>
+      <div className="flex flex-row pt-4 justify-between md:justify-end md:col-start-2">
         <Button color={"primary"} onClick={handleSaveChanges}>
           Save Changes
         </Button>
