@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { type FC, useMemo, useState } from "react";
 import { type Media } from "../../../types";
-import { ListItem } from "../../atoms";
+import { Heading, ListItem } from "../../atoms";
 import { Alert, Divider, List } from "@mui/material";
 import { MediaSearch } from "../../organisms";
 import { getUserPreferences } from "../../../queries/userPreferences";
@@ -10,7 +10,6 @@ import { availableRoutes } from "../../../router";
 import { useAuth } from "../../../hooks/useAuth";
 import { useList } from "../../../hooks/useList";
 import { sortMediaAlphabetically } from "../../../utils/sort";
-import styles from "./MediaList.module.css";
 
 export const MediaList: FC = () => {
   const { jwt } = useAuth();
@@ -52,8 +51,8 @@ export const MediaList: FC = () => {
   };
 
   return (
-    <main className={styles.container}>
-      <h2 className={styles.heading}>List</h2>
+    <main className="text-cinemus-purple font-raleway">
+      <Heading level="2">List</Heading>
       {isLoading ? (
         <>Loading list...</>
       ) : (
