@@ -9,7 +9,6 @@ import {
   searchShows,
 } from "../../../queries/search";
 import { useAuth } from "../../../hooks/useAuth";
-import styles from "./SearchBox.module.css";
 
 interface Props {
   mediaType: MediaType;
@@ -92,7 +91,7 @@ export const SearchBox: FC<Props> = ({
       noOptionsText={
         query === "" ? `Search for a ${mediaType}` : "No media found"
       }
-      className={styles.input}
+      className="grow p-1"
       inputValue={query}
       renderOption={renderOption}
       renderInput={(params) => (
