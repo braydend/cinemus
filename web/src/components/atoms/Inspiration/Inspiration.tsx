@@ -4,6 +4,6 @@ import { Heading } from "../Heading";
 export const Inspiration: FC = () => (
   <section>
     <Heading level="2">{inspiration.title}</Heading>
-    <p>{inspiration.body}</p>
+    <p className="py-4">{inspiration.body}</p>
   </section>
 );
