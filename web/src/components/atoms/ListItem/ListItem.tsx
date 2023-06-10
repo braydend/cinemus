@@ -66,7 +66,7 @@ export const ListItem: FC<Props> = ({
           }`}
         >
           <div
-            className={`flex flex-row gap-x-4 gap-y-2 flex-wrap h-8 overflow-hidden md:m-auto md:overflow-auto md:h-auto md:justify-normal ${
+            className={`flex flex-row gap-x-4 gap-y-2 flex-wrap h-8 overflow-hidden md:m-0 md:overflow-auto md:h-auto md:justify-normal ${
               isSelected ? "mt-4 overflow-visible h-auto justify-center" : ""
             }`}
           >
