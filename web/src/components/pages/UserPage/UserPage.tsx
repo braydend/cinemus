@@ -1,6 +1,5 @@
 import { type FC } from "react";
 import Avatar from "@mui/material/Avatar";
-import styles from "./userPage.module.css";
 import Typography from "@mui/material/Typography";
 import { useQuery } from "@tanstack/react-query";
 import { getUserPreferences } from "../../../queries/userPreferences";
@@ -24,7 +23,7 @@ export const UserPage: FC = () => {
   if (data == null) throw Error("Unable to fetch user preferences for user");
 
   return (
-    <main className={styles.container}>
+    <main className="flex flex-col items-center">
       <Typography variant={"h2"}>User Preferences</Typography>
       <Avatar
         src={user?.picture}
