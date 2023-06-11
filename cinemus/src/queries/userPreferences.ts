@@ -4,19 +4,15 @@ export interface UserPreferences {
   watchProviderRegion?: string;
 }
 
-export const getUserPreferences = async (
-  authToken: string
-): Promise<{
+export const getUserPreferences = async (): Promise<{
   data: UserPreferences;
 }> => {
   const response = await fetch(`${endpoints.lambdaBase}/userPreferences`, {
     method: "GET",
-    headers: {
-      Authorization: `Bearer ${authToken}`,
-    },
   });
 
   if (response.ok) {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
     return await response.json();
   }
 
@@ -24,21 +20,20 @@ export const getUserPreferences = async (
 };
 
 export const updateUserPreferences = async (
-  updatedPreferences: UserPreferences,
-  authToken: string
+  updatedPreferences: UserPreferences
 ): Promise<{
   data: UserPreferences;
 }> => {
   const response = await fetch(`${endpoints.lambdaBase}/userPreferences`, {
     method: "PUT",
     headers: {
-      Authorization: `Bearer ${authToken}`,
       "Content-Type": "application/json",
     },
     body: JSON.stringify(updatedPreferences),
   });
 
   if (response.ok) {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
     return await response.json();
   }
 

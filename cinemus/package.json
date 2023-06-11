@@ -10,7 +10,7 @@
     "start": "next start"
   },
   "dependencies": {
-    "@auth0/auth0-react": "^2.1.0",
+    "@auth0/nextjs-auth0": "^2.6.2",
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
     "@mui/icons-material": "^5.11.16",

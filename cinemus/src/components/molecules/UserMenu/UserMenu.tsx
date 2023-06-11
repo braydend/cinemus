@@ -5,14 +5,14 @@ import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
-import { useAuth } from "../../../hooks/useAuth";
 import { Button } from "../../atoms";
 import Link from "next/link";
 import { availableRoutes } from "../../../routes";
+import { useUser } from "@auth0/nextjs-auth0/client";
 
 export const UserMenu: FC = () => {
   const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
-  const { user, isAuthenticated, loginWithRedirect, logout } = useAuth();
+  const { user } = useUser();
 
   const handleOpenUserMenu = (event: MouseEvent<HTMLElement>): void => {
     setAnchorElUser(event.currentTarget);
@@ -21,16 +21,11 @@ export const UserMenu: FC = () => {
   const handleCloseUserMenu = (): void => {
     setAnchorElUser(null);
   };
-
-  const handleLogout = (): void => {
-    logout();
-    handleCloseUserMenu();
-  };
-  return isAuthenticated ? (
+  return Boolean(user) ? (
     <Box sx={{ flexGrow: 0 }}>
       <>
         <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-          <Avatar src={user?.picture} alt={user?.name} />
+          <Avatar src={user?.picture ?? ""} alt={user?.name ?? ""} />
         </IconButton>
         <Menu
           sx={{ mt: "45px" }}
@@ -53,20 +48,17 @@ export const UserMenu: FC = () => {
               <Typography textAlign="center">Preferences</Typography>
             </Link>
           </MenuItem>
-          <MenuItem onClick={handleLogout}>
-            <Typography textAlign="center">Logout</Typography>
+          <MenuItem>
+            <Link href={availableRoutes.logout}>
+              <Typography textAlign="center">Logout</Typography>
+            </Link>
           </MenuItem>
         </Menu>
       </>
     </Box>
   ) : (
-    <Button
-      onClick={() => {
-        // eslint-disable-next-line @typescript-eslint/no-floating-promises
-        loginWithRedirect();
-      }}
-      variant="purple"
-      label="Login"
-    />
+    <Link href={availableRoutes.login}>
+      <Button onClick={() => null} variant="purple" label="Login" />
+    </Link>
   );
 };

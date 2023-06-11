@@ -20,28 +20,21 @@ const buildUrl = (type: SearchType, query: string): string => {
 
 const search = async (
   query: string,
-  authToken: string,
   mediaType: SearchType
 ): Promise<SearchResults> => {
   const response = await fetch(buildUrl(mediaType, query), {
     method: "GET",
-    headers: {
-      Authorization: `Bearer ${authToken}`,
-    },
   });
 
   if (response.ok) {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-return
     return await response.json();
   }
 
   throw Error(await response.text());
 };
 
-export const searchShows = async (
-  query: string,
-  authToken: string
-): Promise<SearchResults> => await search(query, authToken, "show");
-export const searchMovies = async (
-  query: string,
-  authToken: string
-): Promise<SearchResults> => await search(query, authToken, "movie");
+export const searchShows = async (query: string): Promise<SearchResults> =>
+  await search(query, "show");
+export const searchMovies = async (query: string): Promise<SearchResults> =>
+  await search(query, "movie");

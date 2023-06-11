@@ -3,4 +3,6 @@ export const availableRoutes = {
   about: "/about",
   root: "/",
   user: "/user",
+  login: "/api/auth/login",
+  logout: "/api/auth/logout",
 } as const;

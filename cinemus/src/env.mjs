@@ -30,18 +30,7 @@ export const env = createEnv({
    * isn't built with invalid env vars. To expose them to the client, prefix them with
    * `NEXT_PUBLIC_`.
    */
-  client: {
-    NEXT_PUBLIC_AUTH0_CLIENT_ID: z.string(),
-    NEXT_PUBLIC_AUTH0_DOMAIN: z.string(),
-    NEXT_PUBLIC_AUTH0_AUDIENCE: z.string(),
-    NEXT_PUBLIC_SENTRY_DSN: z.string(),
-    NEXT_PUBLIC_SENTRY_TRACE_SAMPLE_RATE: z.string(),
-    NEXT_PUBLIC_SENTRY_SESSION_SAMPLE_RATE: z.string(),
-    NEXT_PUBLIC_SENTRY_ERROR_SAMPLE_RATE: z.string(),
-    NEXT_PUBLIC_SENTRY_ENV: z.string(),
-    NEXT_PUBLIC_SENTRY_RELEASE: z.string(),
-    NEXT_PUBLIC_NODE_ENV: z.enum(["development", "test", "production"]),
-  },
+  client: {},
 
   /**
    * You can't destruct `process.env` as a regular object in the Next.js edge runtimes (e.g.
@@ -54,19 +43,6 @@ export const env = createEnv({
     NEXTAUTH_URL: process.env.NEXTAUTH_URL,
     DISCORD_CLIENT_ID: process.env.DISCORD_CLIENT_ID,
     DISCORD_CLIENT_SECRET: process.env.DISCORD_CLIENT_SECRET,
-    NEXT_PUBLIC_AUTH0_CLIENT_ID: process.env.NEXT_PUBLIC_AUTH0_CLIENT_ID,
-    NEXT_PUBLIC_AUTH0_DOMAIN: process.env.NEXT_PUBLIC_AUTH0_DOMAIN,
-    NEXT_PUBLIC_AUTH0_AUDIENCE: process.env.NEXT_PUBLIC_AUTH0_AUDIENCE,
-    NEXT_PUBLIC_SENTRY_DSN: process.env.NEXT_PUBLIC_SENTRY_DSN,
-    NEXT_PUBLIC_SENTRY_TRACE_SAMPLE_RATE:
-      process.env.NEXT_PUBLIC_SENTRY_TRACE_SAMPLE_RATE,
-    NEXT_PUBLIC_SENTRY_SESSION_SAMPLE_RATE:
-      process.env.NEXT_PUBLIC_SENTRY_SESSION_SAMPLE_RATE,
-    NEXT_PUBLIC_SENTRY_ERROR_SAMPLE_RATE:
-      process.env.NEXT_PUBLIC_SENTRY_ERROR_SAMPLE_RATE,
-    NEXT_PUBLIC_SENTRY_ENV: process.env.NEXT_PUBLIC_SENTRY_ENV,
-    NEXT_PUBLIC_SENTRY_RELEASE: process.env.NEXT_PUBLIC_SENTRY_RELEASE,
-    NEXT_PUBLIC_NODE_ENV: process.env.NODE_ENV,
   },
   /**
    * Run `build` or `dev` with `SKIP_ENV_VALIDATION` to skip env validation.

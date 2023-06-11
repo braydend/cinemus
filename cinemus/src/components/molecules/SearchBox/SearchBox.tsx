@@ -8,7 +8,7 @@ import {
   searchMovies,
   searchShows,
 } from "~/queries/search";
-import { useAuth } from "~/hooks/useAuth";
+import Image from "next/image";
 
 interface Props {
   mediaType: MediaType;
@@ -25,15 +25,14 @@ export const SearchBox: FC<Props> = ({
 }) => {
   const [open, setOpen] = useState(false);
 
-  const { jwt } = useAuth();
   const [debouncedQuery] = useDebounce(query, 500);
   const { data, isFetching } = useQuery(
     [`search-${mediaType}-${debouncedQuery}`],
     async () =>
       mediaType === "movie"
-        ? await searchMovies(debouncedQuery, jwt)
-        : await searchShows(debouncedQuery, jwt),
-    { enabled: Boolean(jwt) && Boolean(debouncedQuery) }
+        ? await searchMovies(debouncedQuery)
+        : await searchShows(debouncedQuery),
+    { enabled: Boolean(debouncedQuery) }
   );
 
   const handleSelection = (selection: Media): void => {
@@ -56,7 +55,7 @@ export const SearchBox: FC<Props> = ({
           display={"block"}
         >
           {hasImage ? (
-            <img
+            <Image
               src={option.images.logo.xsmall}
               width={32}
               alt={`${option.title} poster`}
