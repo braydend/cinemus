@@ -1,5 +1,3 @@
-import { type Session } from "next-auth";
-import { SessionProvider } from "next-auth/react";
 import { type AppType } from "next/app";
 import { api } from "~/utils/api";
 import "~/styles/globals.css";
@@ -21,20 +19,15 @@ const theme = createTheme({
   },
 });
 
-const MyApp: AppType<{ session: Session | null }> = ({
-  Component,
-  pageProps: { session, ...pageProps },
-}) => {
+const MyApp: AppType = ({ Component, pageProps }) => {
   return (
     <UserProvider>
-      <SessionProvider session={session}>
-        <ThemeProvider theme={theme}>
-          <Navigation />
-          <div className="p-4">
-            <Component {...pageProps} />
-          </div>
-        </ThemeProvider>
-      </SessionProvider>
+      <ThemeProvider theme={theme}>
+        <Navigation />
+        <div className="p-4">
+          <Component {...pageProps} />
+        </div>
+      </ThemeProvider>
     </UserProvider>
   );
 };
