@@ -1,9 +1,15 @@
-import { Box, ListItem as MuiListItem } from "@mui/material";
+import { ListItem as MuiListItem } from "@mui/material";
 import { type FC } from "react";
-import { type Media } from "../../../types";
 import { UnfoldLess, UnfoldMore } from "@mui/icons-material";
 import Button from "@mui/material/Button";
 import { Pill } from "../Pill";
+import { type inferRouterOutputs } from "@trpc/server";
+import { type AppRouter } from "../../../server/api/root";
+import { type ArrayElement } from "../../../utils/types";
+import Image from "next/image";
+
+type List = inferRouterOutputs<AppRouter>["listRouter"]["getList"];
+type Media = ArrayElement<List>;
 
 interface Props {
   media: Media;
@@ -29,7 +35,7 @@ export const ListItem: FC<Props> = ({
   };
 
   const handleSelect = (): void => {
-    onSelect(isSelected ? "" : media.id);
+    onSelect(isSelected ? "" : media.id.toString(10));
   };
   return (
     <MuiListItem
@@ -44,30 +50,26 @@ export const ListItem: FC<Props> = ({
           isSelected ? "flex-col" : "flex-row"
         } items-center`}
       >
-        <Box
-          paddingRight={"0.5rem"}
-          justifyItems={"center"}
-          display={"flex"}
-          flexDirection={"row"}
+        <div
+          className={`relative mr-2 flex aspect-[2/3] w-16 min-w-[4rem] flex-row justify-center transition-all ease-in-out md:hover:w-36 ${
+            isSelected ? "min-w-none w-2/3" : ""
+          }`}
         >
-          <img
-            className={`object-cover transition-all ease-in-out max-w-none md:hover:w-full ${
-              isSelected ? "w-full" : ""
-            }`}
-            src={media.images.logo.small}
+          <Image
+            src={media.images.logo.small ?? ""}
             alt={`${media.title}-image`}
             onClick={handleSelect}
-            width={64}
+            fill
           />
-        </Box>
+        </div>
         <div
           className={`flex flex-col gap-2 md:items-start ${
             isSelected ? "items-center" : ""
           }`}
         >
           <div
-            className={`flex flex-row gap-x-4 gap-y-2 flex-wrap h-8 overflow-hidden md:m-0 md:overflow-auto md:h-auto md:justify-normal ${
-              isSelected ? "mt-4 overflow-visible h-auto justify-center" : ""
+            className={`flex h-8 flex-row flex-wrap gap-x-4 gap-y-2 overflow-hidden md:m-0 md:h-auto md:justify-normal md:overflow-auto ${
+              isSelected ? "mt-4 h-auto justify-center overflow-visible" : ""
             }`}
           >
             {media.genres.map((genre) => (
@@ -83,13 +85,13 @@ export const ListItem: FC<Props> = ({
         }`}
       >
         <div
-          className={`flex flex-row overflow-hidden mx-2 my-0 gap-2 w-10 ${
+          className={`mx-2 my-0 flex w-10 flex-row gap-2 overflow-hidden ${
             isSelected ? "w-auto" : ""
           } md:w-auto`}
         >
           {media.watchProviders?.flatMap(({ flatrate }) =>
             flatrate?.map(({ logoUrl, name }) => (
-              <img
+              <Image
                 key={name}
                 className="rounded-md"
                 width={32}
@@ -99,11 +101,10 @@ export const ListItem: FC<Props> = ({
             ))
           )}
         </div>
-        <Box
-          className={`flex flex-row justify-around gap-2 m-2 md:w-auto ${
-            isSelected ? "w-full" : ""
-          }`}
-          sx={{ display: { md: "flex", xs: isSelected ? "flex" : "none" } }}
+        <div
+          className={`m-2 justify-around gap-2 md:w-auto ${
+            isSelected ? "flex w-full" : "hidden"
+          }  md:flex md:flex-row`}
         >
           <Button
             variant="contained"
@@ -115,8 +116,8 @@ export const ListItem: FC<Props> = ({
           <Button variant="contained" color="error" onClick={onRemove}>
             Delete
           </Button>
-        </Box>
-        <Box sx={{ display: { md: "none" } }}>
+        </div>
+        <div className="md:hidden">
           {isSelected ? (
             <Button onClick={handleSelect}>
               <UnfoldLess />
@@ -128,7 +129,7 @@ export const ListItem: FC<Props> = ({
               onClick={handleSelect}
             />
           )}
-        </Box>
+        </div>
       </div>
     </MuiListItem>
   );
