@@ -1,14 +1,15 @@
 import { type FC, useState, type HTMLAttributes } from "react";
 import { Autocomplete, Box, CircularProgress, TextField } from "@mui/material";
-import { type Media, type MediaType } from "~/types";
+import { type MediaType } from "~/types";
 import { useDebounce } from "use-debounce";
-import { useQuery } from "@tanstack/react-query";
-import {
-  type MediaResponse,
-  searchMovies,
-  searchShows,
-} from "~/queries/search";
 import Image from "next/image";
+import { type inferRouterOutputs } from "@trpc/server";
+import { type AppRouter } from "../../../server/api/root";
+import { type ArrayElement } from "../../../utils/types";
+import { api } from "../../../utils/api";
+
+type List = inferRouterOutputs<AppRouter>["listRouter"]["getList"];
+type Media = ArrayElement<List>;
 
 interface Props {
   mediaType: MediaType;
@@ -26,12 +27,19 @@ export const SearchBox: FC<Props> = ({
   const [open, setOpen] = useState(false);
 
   const [debouncedQuery] = useDebounce(query, 500);
-  const { data, isFetching } = useQuery(
-    [`search-${mediaType}-${debouncedQuery}`],
-    async () =>
-      mediaType === "movie"
-        ? await searchMovies(debouncedQuery)
-        : await searchShows(debouncedQuery),
+  // const { data, isFetching } = useQuery(
+  //   [`search-${mediaType}-${debouncedQuery}`],
+  //   async () =>
+  //     mediaType === "movie"
+  //       ? await searchMovies(debouncedQuery)
+  //       : await searchShows(debouncedQuery),
+  //   { enabled: Boolean(debouncedQuery) }
+  // );
+  const { data, isFetching } = api.mediaRouter.searchMedia.useQuery(
+    {
+      query: debouncedQuery,
+      type: mediaType,
+    },
     { enabled: Boolean(debouncedQuery) }
   );
 
@@ -42,7 +50,7 @@ export const SearchBox: FC<Props> = ({
 
   const renderOption = (
     props: HTMLAttributes<HTMLLIElement>,
-    option: MediaResponse
+    option: Media
   ): JSX.Element => {
     const hasImage = Boolean(option.images.logo?.xsmall);
     return (
@@ -55,11 +63,13 @@ export const SearchBox: FC<Props> = ({
           display={"block"}
         >
           {hasImage ? (
-            <Image
-              src={option.images.logo.xsmall}
-              width={32}
-              alt={`${option.title} poster`}
-            />
+            <div className="relative aspect-[2/3] w-8">
+              <Image
+                src={option.images.logo.xsmall ?? ""}
+                fill
+                alt={`${option.title} poster`}
+              />
+            </div>
           ) : (
             <>&nbsp;</>
           )}
@@ -82,7 +92,7 @@ export const SearchBox: FC<Props> = ({
       }}
       isOptionEqualToValue={(option, value) => option.title === value.title}
       getOptionLabel={(option) => option.title}
-      options={data?.results ?? []}
+      options={data ?? []}
       loading={isFetching}
       onChange={(_, selection) => {
         selection !== null && handleSelection(selection);

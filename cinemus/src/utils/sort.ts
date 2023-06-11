@@ -1,4 +1,6 @@
-import { type Media } from "../types";
+interface Media {
+  title: string;
+}
 
 export const sortMediaAlphabetically: (a: Media, b: Media) => number = (
   { title: firstTitle },

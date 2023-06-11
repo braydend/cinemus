@@ -3,8 +3,10 @@ import Head from "next/head";
 import Image from "next/image";
 import { FeatureList } from "~/components/organisms";
 import textLogo from "~/assets/textLogo.png";
+import { api } from "../utils/api";
 
 const Home: NextPage = () => {
+  api.listRouter.getList.useQuery();
   return (
     <>
       <Head>
