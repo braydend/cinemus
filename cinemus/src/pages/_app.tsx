@@ -5,6 +5,7 @@ import { api } from "~/utils/api";
 import "~/styles/globals.css";
 import { Navigation } from "~/components/molecules";
 import { ThemeProvider, createTheme } from "@mui/material";
+import { UserProvider } from "@auth0/nextjs-auth0/client";
 
 const theme = createTheme({
   palette: {
@@ -25,14 +26,16 @@ const MyApp: AppType<{ session: Session | null }> = ({
   pageProps: { session, ...pageProps },
 }) => {
   return (
-    <SessionProvider session={session}>
-      <ThemeProvider theme={theme}>
-        <Navigation />
-        <div className="p-4">
-          <Component {...pageProps} />
-        </div>
-      </ThemeProvider>
-    </SessionProvider>
+    <UserProvider>
+      <SessionProvider session={session}>
+        <ThemeProvider theme={theme}>
+          <Navigation />
+          <div className="p-4">
+            <Component {...pageProps} />
+          </div>
+        </ThemeProvider>
+      </SessionProvider>
+    </UserProvider>
   );
 };
 

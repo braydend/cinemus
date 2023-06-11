@@ -9,27 +9,26 @@ import { getWatchProviderRegions } from "../../../queries/watchProviders";
 import Button from "@mui/material/Button";
 import { TextField } from "@mui/material";
 import { queryClient } from "../../../queries/queryClient";
-import { useAuth } from "../../../hooks/useAuth";
 import { useSnackbar } from "notistack";
+import { useUser } from "@auth0/nextjs-auth0/client";
 
 interface Props {
   initialPreferences: UserPreferencesType;
 }
 
 export const UserPreferences: FC<Props> = ({ initialPreferences }) => {
-  const { user, jwt } = useAuth();
   const [preferences, setPreferences] = useState(initialPreferences);
+  const { user } = useUser();
   const { enqueueSnackbar } = useSnackbar();
   const { data, isLoading, error } = useQuery(
     ["getWatchProviderRegions"],
-    async () => await getWatchProviderRegions(jwt),
-    { enabled: Boolean(jwt) }
+    async () => await getWatchProviderRegions()
   );
 
   const { mutate } = useMutation(
     ["updateUserPreferences"],
     async (newPreferences: UserPreferencesType) =>
-      await updateUserPreferences(newPreferences, jwt),
+      await updateUserPreferences(newPreferences),
     {
       onSuccess: async ({ data: updatedPreferences }) => {
         setPreferences(updatedPreferences);
@@ -85,7 +84,7 @@ export const UserPreferences: FC<Props> = ({ initialPreferences }) => {
         value={preferences.watchProviderRegion}
         includeBlank
       />
-      <div className="flex flex-row pt-4 justify-between md:justify-end md:col-start-2">
+      <div className="flex flex-row justify-between pt-4 md:col-start-2 md:justify-end">
         <Button color={"primary"} onClick={handleSaveChanges}>
           Save Changes
         </Button>
