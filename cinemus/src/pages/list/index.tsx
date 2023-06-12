@@ -10,6 +10,7 @@ import { type NextPage } from "next";
 import { type ArrayElement } from "../../utils/types";
 import Link from "next/link";
 import { availableRoutes } from "../../routes";
+import { withPageAuthRequired } from "@auth0/nextjs-auth0/client";
 
 type List = inferRouterOutputs<AppRouter>["listRouter"]["getList"];
 type Media = ArrayElement<List>;
@@ -110,4 +111,4 @@ const ListPage: NextPage = () => {
   );
 };
 
-export default ListPage;
+export default withPageAuthRequired(ListPage);
