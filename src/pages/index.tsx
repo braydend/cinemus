@@ -15,7 +15,7 @@ const Home: NextPage = () => {
       <main className="flex flex-col items-center">
         <Image src={textLogo} alt="Cinemus" className="w-full md:w-3/4" />
         <h2 className="m-0 inline shrink pb-8 text-center font-raleway text-6xl text-cinemus-purple">
-          Showtime Simplified
+          Showtime Simplified test
         </h2>
         <div className="flex h-full flex-col justify-around">
           <FeatureList />
