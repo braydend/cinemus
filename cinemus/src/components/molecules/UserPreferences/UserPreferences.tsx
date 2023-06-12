@@ -11,6 +11,7 @@ import { TextField } from "@mui/material";
 import { queryClient } from "../../../queries/queryClient";
 import { useSnackbar } from "notistack";
 import { useUser } from "@auth0/nextjs-auth0/client";
+import { api } from "../../../utils/api";
 
 interface Props {
   initialPreferences: UserPreferencesType;
@@ -20,27 +21,20 @@ export const UserPreferences: FC<Props> = ({ initialPreferences }) => {
   const [preferences, setPreferences] = useState(initialPreferences);
   const { user } = useUser();
   const { enqueueSnackbar } = useSnackbar();
-  const { data, isLoading, error } = useQuery(
-    ["getWatchProviderRegions"],
-    async () => await getWatchProviderRegions()
-  );
+  const trpcContext = api.useContext();
+  const { data, isLoading, error } =
+    api.mediaRouter.getWatchProviderRegions.useQuery();
 
-  const { mutate } = useMutation(
-    ["updateUserPreferences"],
-    async (newPreferences: UserPreferencesType) =>
-      await updateUserPreferences(newPreferences),
-    {
-      onSuccess: async ({ data: updatedPreferences }) => {
-        setPreferences(updatedPreferences);
-        await queryClient.invalidateQueries({
-          queryKey: ["userPreferences", "getList"],
-        });
-        enqueueSnackbar("Preferences updated successfully!", {
-          variant: "success",
-        });
-      },
-    }
-  );
+  const { mutate } = api.userRouter.setUserPreferences.useMutation({
+    onSuccess: async (updatedPreferences) => {
+      setPreferences(updatedPreferences);
+      await trpcContext.listRouter.getList.invalidate();
+      await trpcContext.userRouter.getUserPreferences.invalidate();
+      enqueueSnackbar("Preferences updated successfully!", {
+        variant: "success",
+      });
+    },
+  });
 
   if (isLoading) {
     return <div>loading</div>;
@@ -50,7 +44,7 @@ export const UserPreferences: FC<Props> = ({ initialPreferences }) => {
 
   if (data == null) throw Error("Unable to fetch watch provider regions");
 
-  const watchRegionOptions = data.data.map(({ countryId, name }) => ({
+  const watchRegionOptions = data.map(({ countryId, name }) => ({
     label: name,
     value: countryId,
   }));
