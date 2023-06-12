@@ -32,6 +32,7 @@ export const env = createEnv({
     MONGO_CONNECTION_STRING: z.string(),
     TMDB_URL: z.string(),
     DATABASE_NAME: z.string(),
+    UPSTASH_REDIS_API_KEY: z.string(),
   },
 
   /**
@@ -57,6 +58,7 @@ export const env = createEnv({
     MONGO_CONNECTION_STRING: process.env.MONGO_CONNECTION_STRING,
     TMDB_URL: process.env.TMDB_URL,
     DATABASE_NAME: process.env.DATABASE_NAME,
+    UPSTASH_REDIS_API_KEY: process.env.UPSTASH_REDIS_API_KEY,
     // NEXTAUTH_SECRET: process.env.NEXTAUTH_SECRET,
     // NEXTAUTH_URL: process.env.NEXTAUTH_URL,
     // DISCORD_CLIENT_ID: process.env.DISCORD_CLIENT_ID,
