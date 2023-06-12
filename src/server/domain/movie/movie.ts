@@ -26,6 +26,7 @@ export const getMovie = async (id: string, region?: string): Promise<Media> => {
   }
 
   const movie = await fetchMovie(id);
+  // eslint-disable-next-line @typescript-eslint/no-floating-promises
   addToCache(cacheKey, movie);
 
   return mapMediaDetailsToMedia(movie, configuration, watchProviders);

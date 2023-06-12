@@ -2,9 +2,9 @@ import { type FC, useState } from "react";
 import { type MediaType } from "../../../types";
 import { MediaTypeSelector } from "../../atoms";
 import { SearchBox } from "../../molecules";
-import { inferRouterOutputs } from "@trpc/server";
-import { AppRouter } from "../../../server/api/root";
-import { ArrayElement } from "../../../utils/types";
+import { type inferRouterOutputs } from "@trpc/server";
+import { type AppRouter } from "../../../server/api/root";
+import { type ArrayElement } from "../../../utils/types";
 
 type List = inferRouterOutputs<AppRouter>["listRouter"]["getList"];
 type Media = ArrayElement<List>;

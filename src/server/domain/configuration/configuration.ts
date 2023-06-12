@@ -15,6 +15,7 @@ export const getConfiguration =
     }
 
     const configuration = await fetchConfiguration();
+    // eslint-disable-next-line @typescript-eslint/no-floating-promises
     addToCache("configuration", configuration, 7);
     return configuration;
   };

@@ -4,7 +4,7 @@ import Search from "../../../assets/magnifying-glass.png";
 import Tick from "../../../assets/check-mark.png";
 import { type Icon } from "../../../content/icons";
 import { Heading } from "../../atoms";
-import Image, { StaticImageData } from "next/image";
+import Image, { type StaticImageData } from "next/image";
 
 interface Props {
   title: string;
