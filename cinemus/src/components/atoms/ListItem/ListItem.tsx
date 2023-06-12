@@ -95,6 +95,7 @@ export const ListItem: FC<Props> = ({
                 key={name}
                 className="rounded-md"
                 width={32}
+                height={32}
                 src={logoUrl}
                 alt={name}
               />

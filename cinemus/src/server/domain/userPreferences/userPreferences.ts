@@ -15,7 +15,6 @@ export const getUserPreferences = async (
   userId: string
 ): Promise<UserPreferences> => {
   logger.profile("getUserPreferences");
-  console.log(db);
 
   const userPreferences = await retrieveOne<UserPreferences>(MONGO_COLLECTION, {
     userId,

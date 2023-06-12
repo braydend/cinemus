@@ -3,6 +3,7 @@ import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
 import { getUserPreferences } from "../../domain/userPreferences";
 import { getMovie, searchMovies } from "../../domain/movie";
 import { getShow, searchShows } from "../../domain/show";
+import { getWatchProviderRegions } from "../../domain/watchProviders";
 
 export const mediaRouter = createTRPCRouter({
   getMedia: protectedProcedure
@@ -27,4 +28,7 @@ export const mediaRouter = createTRPCRouter({
       }
       return await searchShows(query);
     }),
+  getWatchProviderRegions: protectedProcedure.query(async () => {
+    return await getWatchProviderRegions();
+  }),
 });

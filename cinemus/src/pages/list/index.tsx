@@ -3,17 +3,21 @@ import { api } from "../../utils/api";
 import { sortMediaAlphabetically } from "../../utils/sort";
 import { Heading, ListItem } from "../../components/atoms";
 import { MediaSearch } from "../../components/organisms";
-import { Divider, List } from "@mui/material";
+import { Alert, Divider, List } from "@mui/material";
 import { type inferRouterOutputs } from "@trpc/server";
 import { type AppRouter } from "../../server/api/root";
 import { type NextPage } from "next";
 import { type ArrayElement } from "../../utils/types";
+import Link from "next/link";
+import { availableRoutes } from "../../routes";
 
 type List = inferRouterOutputs<AppRouter>["listRouter"]["getList"];
 type Media = ArrayElement<List>;
 
 const ListPage: NextPage = () => {
   const trpcContext = api.useContext();
+  const { data: userPreferences } =
+    api.userRouter.getUserPreferences.useQuery();
   const { data, isLoading } = api.listRouter.getList.useQuery();
   const { mutate } = api.listRouter.updateList.useMutation({
     onMutate: async (newMedia) => {
@@ -25,9 +29,6 @@ const ListPage: NextPage = () => {
           ...rest,
         }))
       );
-      //     () => ({
-      //     data: newMedia.sort(sortMediaAlphabetically),
-      //   }));
       return { previousMedia };
     },
     onError: (err, newTodo, context) => {
@@ -40,6 +41,7 @@ const ListPage: NextPage = () => {
   const [selectedMedia, setSelectedMedia] = useState<string>();
 
   const currentSelections: List = (data ?? []).sort(sortMediaAlphabetically);
+  const isRegionSelected = Boolean(userPreferences?.watchProviderRegion);
 
   const handleSelection = (media: Media): void => {
     mutate(
@@ -77,12 +79,12 @@ const ListPage: NextPage = () => {
       ) : (
         <>
           <MediaSearch onSelect={handleSelection} />
-          {/* {!isRegionSelected && (
+          {!isRegionSelected && (
             <Alert severity="info" sx={{ marginTop: "1rem" }}>
               Ready to find out where to watch everything on your list?{" "}
-              <Link to={availableRoutes.user}>Select your region</Link>
+              <Link href={availableRoutes.user}>Select your region</Link>
             </Alert>
-          )} */}
+          )}
           <List>
             {currentSelections.map((media, index) => (
               <>
