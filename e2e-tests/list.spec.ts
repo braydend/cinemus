@@ -44,7 +44,7 @@ test("successfully adds TV show to list", async ({ page }) => {
 });
 
 test("successfully adds movie to list", async ({ page }) => {
-  await page.getByRole("checkbox").check();
+  await page.getByRole("button", { name: "Movie" }).click();
   await page.getByLabel("Search").click();
   await page.getByRole("combobox", { name: "Search" }).fill("the matrix");
   await page
