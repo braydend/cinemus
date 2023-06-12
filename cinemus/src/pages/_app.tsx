@@ -4,6 +4,7 @@ import "~/styles/globals.css";
 import { Navigation } from "~/components/molecules";
 import { CssBaseline, ThemeProvider, createTheme } from "@mui/material";
 import { UserProvider } from "@auth0/nextjs-auth0/client";
+import { SnackbarProvider } from "notistack";
 
 const theme = createTheme({
   palette: {
@@ -25,9 +26,11 @@ const MyApp: AppType = ({ Component, pageProps }) => {
       <ThemeProvider theme={theme}>
         <CssBaseline />
         <Navigation />
-        <div className="p-4">
-          <Component {...pageProps} />
-        </div>
+        <SnackbarProvider maxSnack={3}>
+          <div className="p-4">
+            <Component {...pageProps} />
+          </div>
+        </SnackbarProvider>
       </ThemeProvider>
     </UserProvider>
   );
