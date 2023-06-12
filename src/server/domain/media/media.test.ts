@@ -1,11 +1,14 @@
-import { type TmdbMovie, type TmdbShow } from "../../api";
+import {
+  type TmdbMovieDetails,
+  type TmdbShowDetails,
+} from "~/server/externalApi";
 import { type Media, mapMediaDetailsToMedia } from "./media";
 import {
   buildStubConfiguration,
   buildStubMovie,
   buildStubShow,
-  dropAllCollections,
-} from "../../../test";
+} from "~/../test/mocks/tmdb";
+import { dropAllCollections } from "~/../test/utils/db";
 import { getImages } from "../image";
 import { describe, it, afterAll, expect } from "vitest";
 
@@ -16,8 +19,8 @@ describe("media domain", () => {
   describe("mapApiResponseToMedia", () => {
     const configuration = buildStubConfiguration();
 
-    it("correctly maps show to media", async () => {
-      const input: TmdbShow = buildStubShow();
+    it("correctly maps show to media", () => {
+      const input: TmdbShowDetails = buildStubShow();
       const expected: Media = {
         __type: "show",
         id: 12345,
@@ -29,8 +32,8 @@ describe("media domain", () => {
       expect(mapMediaDetailsToMedia(input, configuration)).toEqual(expected);
     });
 
-    it("correctly maps movie to media", async () => {
-      const input: TmdbMovie = buildStubMovie();
+    it("correctly maps movie to media", () => {
+      const input: TmdbMovieDetails = buildStubMovie();
       const expected: Media = {
         __type: "movie",
         id: 12345,

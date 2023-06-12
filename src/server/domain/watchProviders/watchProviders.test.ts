@@ -3,16 +3,18 @@ import {
   getWatchProviderRegions,
   type WatchProviderRegion,
 } from "./watchProviders";
-import * as tmdb from "../../api/tmdb";
+import * as tmdb from "~/server/externalApi/tmdb";
 
 vi.mock("../../db/upstash/cache", () => {
   const data: any = {};
 
   const addToCache = (key: string, value: any): void => {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
     data[key] = value;
   };
 
   const retrieveFromCache = (key: string): any => {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
     return data[key];
   };
 

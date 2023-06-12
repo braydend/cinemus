@@ -1,8 +1,8 @@
-import { it, expect, describe } from "vitest";
+import { it, expect, describe, vi } from "vitest";
 import { type Media } from "../media";
 import { getList, type List, updateList } from "./list";
 import { getImages } from "../image";
-import { buildStubConfiguration } from "../../../test";
+import { buildStubConfiguration } from "~/../test/mocks/tmdb";
 
 const stubList = async (
   media: List["media"],
@@ -90,7 +90,7 @@ describe("list domain", () => {
   });
 
   describe("updateList", () => {
-    describe("media is successfully added to list", async () => {
+    describe("media is successfully added to list", () => {
       it("does not include watch providers if region is omitted", async () => {
         const newData: List = {
           userId: "foo",

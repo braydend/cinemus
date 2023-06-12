@@ -1,19 +1,21 @@
 import { it, expect, describe, vi } from "vitest";
 import { type Media } from "../media";
 import { getShow, searchShows } from "./show";
-import * as tmdb from "../../../src/api/tmdb";
+import * as tmdb from "~/server/externalApi/tmdb";
 import { getImages } from "../image";
-import { buildStubConfiguration } from "../../../test";
+import { buildStubConfiguration } from "~/../test/mocks/tmdb";
 import { clearCache } from "../../db/upstash/cache";
 
 vi.mock("../../db/upstash/cache", () => {
   let data: any = {};
 
   const addToCache = (key: string, value: any): void => {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment, @typescript-eslint/no-unsafe-member-access
     data[key] = value;
   };
 
   const retrieveFromCache = (key: string): any => {
+    // eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
     return data[key];
   };
 

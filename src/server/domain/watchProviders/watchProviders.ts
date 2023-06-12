@@ -114,6 +114,7 @@ export const getWatchProviderRegions = async (): Promise<
 
   const response = await getWatchProviderRegionsQuery();
 
+  // eslint-disable-next-line @typescript-eslint/no-floating-promises
   addToCache(CACHE_KEY, response);
 
   const mappedRegions = mapResponseToRegion(response);
@@ -147,6 +148,7 @@ const getWatchProviders = async (
     ? await fetchMovieWatchProviders(id)
     : await fetchShowWatchProviders(id);
 
+  // eslint-disable-next-line @typescript-eslint/no-floating-promises
   addToCache(cacheKey, result);
 
   return mapResponseToWatchProvider(result, configuration, region);

@@ -29,6 +29,7 @@ export const getShow = async (id: string, region?: string): Promise<Media> => {
   }
 
   const show = await fetchShow(id);
+  // eslint-disable-next-line @typescript-eslint/no-floating-promises
   addToCache(cacheKey, show);
 
   const mappedMedia = mapMediaDetailsToMedia(

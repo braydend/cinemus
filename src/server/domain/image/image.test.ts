@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { getImages } from "./image";
-import { buildStubConfiguration } from "../../../test";
+import { buildStubConfiguration } from "~/../test/mocks/tmdb";
 
 describe("image domain", () => {
   it("returns a correctly constructed image map", () => {

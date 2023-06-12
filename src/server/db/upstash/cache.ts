@@ -22,7 +22,7 @@ const getInstance = (): Redis => {
 export const addToCache = async <Data>(
   key: string,
   data: Data,
-  daysToCache: number = 3
+  daysToCache = 3
 ): Promise<Data> => {
   const instance = getInstance();
   const secondsToCache = daysToCache * 24 * 60 * 60;

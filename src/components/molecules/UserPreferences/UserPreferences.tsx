@@ -1,17 +1,14 @@
 import { type FC, useState } from "react";
-import {
-  updateUserPreferences,
-  type UserPreferences as UserPreferencesType,
-} from "../../../queries/userPreferences";
-import { useMutation, useQuery } from "@tanstack/react-query";
 import { Select } from "../../atoms";
-import { getWatchProviderRegions } from "../../../queries/watchProviders";
-import Button from "@mui/material/Button";
-import { TextField } from "@mui/material";
-import { queryClient } from "../../../queries/queryClient";
+import { TextField, Button } from "@mui/material";
 import { useSnackbar } from "notistack";
 import { useUser } from "@auth0/nextjs-auth0/client";
 import { api } from "../../../utils/api";
+import { type inferRouterOutputs } from "@trpc/server";
+import { type AppRouter } from "../../../server/api/root";
+
+type UserPreferencesType =
+  inferRouterOutputs<AppRouter>["userRouter"]["getUserPreferences"];
 
 interface Props {
   initialPreferences: UserPreferencesType;
