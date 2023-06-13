@@ -1,10 +1,13 @@
-import { test, expect } from "@playwright/test";
+import { test, expect, Page } from "@playwright/test";
 
-test.beforeEach(async ({ page }) => {
+// test.beforeEach(async ({ page }) => {
+//   await page.goto("/");
+// });
+
+// test("home page", async ({ page }) => {
+export const assertHomePage = async (page: Page) => {
   await page.goto("/");
-});
 
-test("home page", async ({ page }) => {
   // Features
   await expect(
     page.getByRole("main").getByRole("img", { name: "Cinemus" })
@@ -36,4 +39,4 @@ test("home page", async ({ page }) => {
       "Find out which streaming services in your region have the TV shows and movies on your watchlist available. Cinemus provides information on streaming availability, so you can easily find where to watch your favorite shows and movies."
     )
   ).toBeVisible();
-});
+};

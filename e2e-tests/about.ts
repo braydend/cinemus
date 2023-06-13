@@ -1,18 +1,21 @@
 import { test, expect, type Page } from "@playwright/test";
 
-const navigateToAbout = async (page: Page): Promise<void> => {
+export const navigateToAbout = async (page: Page): Promise<void> => {
   if (await page.getByRole("button", { name: "navigation menu" }).isVisible()) {
     await page.getByRole("button", { name: "navigation menu" }).click();
   }
   await page.getByRole("link", { name: "About" }).click();
 };
 
-test.beforeEach(async ({ page }) => {
-  await page.goto("/");
-  await navigateToAbout(page);
-});
+// test.beforeEach(async ({ page }) => {
+//   await page.goto("/");
+//   await navigateToAbout(page);
+// });
 
-test("about page", async ({ page }) => {
+// test("about page", async ({ page }) => {
+export const assertAboutPage = async (page: Page) => {
+  await navigateToAbout(page);
+
   // Features
   await expect(page.getByRole("heading", { name: "Features" })).toBeVisible();
   await expect(
@@ -67,4 +70,4 @@ test("about page", async ({ page }) => {
   await expect(
     page.getByRole("link", { name: "https://www.themoviedb.org" })
   ).toBeVisible();
-});
+};

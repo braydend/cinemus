@@ -1,4 +1,8 @@
-import { defineConfig, devices } from "@playwright/test";
+import {
+  type PlaywrightTestConfig,
+  defineConfig,
+  devices,
+} from "@playwright/test";
 
 /**
  * Read environment variables from file.
@@ -11,7 +15,7 @@ const baseURL = process.env.BASE_URL ?? "http://localhost:3000";
 /**
  * See https://playwright.dev/docs/test-configuration.
  */
-export default defineConfig({
+const config: PlaywrightTestConfig = {
   testDir: "./e2e-tests",
   /* Run tests in files in parallel */
   fullyParallel: true,
@@ -69,11 +73,15 @@ export default defineConfig({
     //   use: { ..devices['Desktop Chrome'], channel: 'chrome' },
     // },
   ],
+};
 
-  /* Run your local dev server before starting the tests */
-  // webServer: {
-  //   command: 'npm run start',
-  //   url: 'http://127.0.0.1:3000',
-  //   reuseExistingServer: !process.env.CI,
-  // },
-});
+/* Run your local dev server before starting the tests */
+if (!process.env.CI) {
+  config.webServer = {
+    command: "npm run dev",
+    url: baseURL,
+    reuseExistingServer: !process.env.CI,
+  };
+}
+
+export default defineConfig(config);
