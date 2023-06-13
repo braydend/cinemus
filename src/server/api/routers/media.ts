@@ -14,9 +14,9 @@ export const mediaRouter = createTRPCRouter({
       const isMovie = input.type === "movie";
       const id = input.id.toString(10);
       if (isMovie) {
-        return await getMovie(id, prefs.watchProviderRegion);
+        return await getMovie(id, prefs.watchProviderRegion ?? undefined);
       }
-      return await getShow(id, prefs.watchProviderRegion);
+      return await getShow(id, prefs.watchProviderRegion ?? undefined);
     }),
   searchMedia: protectedProcedure
     .input(z.object({ type: z.enum(["show", "movie"]), query: z.string() }))

@@ -55,7 +55,9 @@ export const UserPreferences: FC<Props> = ({ initialPreferences }) => {
   };
 
   const handleSaveChanges = (): void => {
-    mutate(preferences);
+    mutate({
+      watchProviderRegion: preferences.watchProviderRegion ?? undefined,
+    });
   };
 
   return (
@@ -72,7 +74,7 @@ export const UserPreferences: FC<Props> = ({ initialPreferences }) => {
         options={watchRegionOptions}
         onChange={handleRegionChange}
         label={"Region"}
-        value={preferences.watchProviderRegion}
+        value={preferences.watchProviderRegion ?? undefined}
         includeBlank
       />
       <div className="flex flex-row justify-between pt-4 md:col-start-2 md:justify-end">

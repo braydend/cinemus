@@ -1,47 +1,30 @@
-import { db } from "../../config";
-import { retrieveOne } from "../../db/mongodb/retrieveOne";
-import { upsert } from "../../db/mongodb/upsert";
+import {
+  getUserPreferencesForUserId,
+  updateUserPreferencesForUserId,
+} from "../../db/prisma/userPreferences";
 import { logger } from "../../libs/logger";
 
 interface UserPreferences {
   watchProviderRegion?: string;
 }
 
-const MONGO_COLLECTION = "userPreferences";
-
-const EMPTY_PREFERENCES = { watchProviderRegion: undefined };
-
-export const getUserPreferences = async (
-  userId: string
-): Promise<UserPreferences> => {
+export const getUserPreferences = async (userId: string) => {
   logger.profile("getUserPreferences");
 
-  const userPreferences = await retrieveOne<UserPreferences>(MONGO_COLLECTION, {
-    userId,
-  });
+  const userPreferences = await getUserPreferencesForUserId(userId);
 
   logger.profile("getUserPreferences");
 
-  return userPreferences !== null
-    ? { watchProviderRegion: userPreferences.watchProviderRegion }
-    : EMPTY_PREFERENCES;
+  return userPreferences;
 };
 
 export const updateUserPreferences = async (
   userId: string,
-  data: Partial<UserPreferences>
-): Promise<UserPreferences> => {
+  data: UserPreferences
+) => {
   logger.profile("updateUserPreferences");
-  const existingPreferences = await getUserPreferences(userId);
-  const updatedPreferences = { ...existingPreferences, ...data };
-  const result = await upsert<UserPreferences>(
-    MONGO_COLLECTION,
-    updatedPreferences,
-    {
-      userId,
-    }
-  );
+  const updatedPreferences = await updateUserPreferencesForUserId(userId, data);
   logger.profile("updateUserPreferences");
 
-  return result;
+  return updatedPreferences;
 };

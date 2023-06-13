@@ -1,9 +1,13 @@
-import { retrieveOne } from "../../db/mongodb/retrieveOne";
-import { upsert } from "../../db/mongodb/upsert";
 import { type Media } from "../media";
 import { getMovie } from "../movie";
 import { getShow } from "../show";
 import { logger } from "../../libs/logger";
+import { type MediaType } from "../../../types";
+import {
+  getListDataForOwner,
+  removeMediaFromListDataForOwner,
+  updateListDataForOwner,
+} from "../../db/prisma";
 
 interface ListedMedia {
   id: string;
@@ -21,15 +25,12 @@ export const getList = async (
   region?: string
 ): Promise<Media[]> => {
   logger.profile(`getList #${userId}`);
-  const data = await retrieveOne<List>("lists", { userId });
 
-  if (data === null) {
-    return [];
-  }
+  const list = await getListDataForOwner(userId);
 
   const hydratedData = await Promise.all(
-    data.media.map(async (media) => ({
-      ...(media.__type === "movie"
+    list.media.map(async (media) => ({
+      ...(media.type === "movie"
         ? await getMovie(media.id, region)
         : await getShow(media.id, region)),
       isWatched: media.isWatched ?? false,
@@ -42,23 +43,47 @@ export const getList = async (
 };
 
 export const updateList = async (
-  data: List,
+  media: ListedMedia,
   userId: string,
   region?: string
 ): Promise<Media[]> => {
-  logger.profile(`updateList #${userId} data=${JSON.stringify(data)}`);
-  const result = await upsert<List>("lists", data, { userId });
+  logger.profile(`updateList #${userId} data=${JSON.stringify(media)}`);
+
+  const list = await updateListDataForOwner(media, userId);
 
   const hydratedResults = await Promise.all(
-    result.media.map(async (media) => ({
-      ...(media.__type === "movie"
+    list.media.map(async (media) => ({
+      ...(media.type === "movie"
         ? await getMovie(media.id, region)
         : await getShow(media.id, region)),
       isWatched: media.isWatched ?? false,
     }))
   );
 
-  logger.profile(`updateList #${userId} data=${JSON.stringify(data)}`);
+  logger.profile(`updateList #${userId} media:${JSON.stringify(media)}`);
+
+  return hydratedResults;
+};
+
+export const removeFromList = async (
+  media: { id: string; __type: MediaType },
+  userId: string,
+  region?: string
+): Promise<Media[]> => {
+  logger.profile(`removeFromList #${userId} data=${JSON.stringify(media)}`);
+
+  const list = await removeMediaFromListDataForOwner(media, userId);
+
+  const hydratedResults = await Promise.all(
+    list.media.map(async (media) => ({
+      ...(media.type === "movie"
+        ? await getMovie(media.id, region)
+        : await getShow(media.id, region)),
+      isWatched: media.isWatched ?? false,
+    }))
+  );
+
+  logger.profile(`removeFromList #${userId} media=${JSON.stringify(media)}`);
 
   return hydratedResults;
 };
