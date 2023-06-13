@@ -24,11 +24,45 @@ const ListPage: NextPage = () => {
     onMutate: async (newMedia) => {
       await trpcContext.listRouter.getList.cancel();
       const previousMedia = trpcContext.listRouter.getList.getData();
+      trpcContext.listRouter.getList.setData(undefined, (existingMedia) =>
+        [
+          ...(existingMedia ?? []).filter(
+            ({ id, __type }) =>
+              newMedia.id !== id.toString(10) && newMedia.__type !== __type
+          ),
+          newMedia,
+        ]
+          .sort(sortMediaAlphabetically)
+          .map(({ id, ...rest }) => ({
+            id: Number(id),
+            ...rest,
+          }))
+      );
+      return { previousMedia };
+    },
+    onError: (err, newTodo, context) => {
+      trpcContext.listRouter.getList.setData(undefined, context?.previousMedia);
+    },
+    onSettled: async () => {
+      await trpcContext.listRouter.getList.invalidate();
+    },
+  });
+  const { mutate: removeFromList } = api.listRouter.removeFromList.useMutation({
+    onMutate: async (mediaToRemove) => {
+      await trpcContext.listRouter.getList.cancel();
+      const previousMedia = trpcContext.listRouter.getList.getData();
       trpcContext.listRouter.getList.setData(undefined, () =>
-        newMedia.sort(sortMediaAlphabetically).map(({ id, ...rest }) => ({
-          id: Number(id),
-          ...rest,
-        }))
+        (data ?? [])
+          .filter(
+            ({ id, __type }) =>
+              mediaToRemove.id !== id.toString(10) &&
+              mediaToRemove.__type !== __type
+          )
+          .sort(sortMediaAlphabetically)
+          .map(({ id, ...rest }) => ({
+            id: Number(id),
+            ...rest,
+          }))
       );
       return { previousMedia };
     },
@@ -44,31 +78,34 @@ const ListPage: NextPage = () => {
   const currentSelections: List = (data ?? []).sort(sortMediaAlphabetically);
   const isRegionSelected = Boolean(userPreferences?.watchProviderRegion);
 
-  const handleSelection = (media: Media): void => {
+  const handleSelection = ({ id, ...rest }: Media): void => {
     mutate(
-      [...currentSelections, media].map(({ id, ...rest }) => ({
+      /*[...currentSelections, media].map(({ id, ...rest }) => (*/ {
         id: id.toString(10),
         ...rest,
-      }))
+      }
     );
   };
 
-  const handleRemoval = (media: Media): void => {
-    mutate(
-      currentSelections
+  const handleRemoval = ({ id, ...rest }: Media): void => {
+    removeFromList(
+      /*currentSelections
         .filter((selection) => selection !== media)
-        .map(({ id, ...rest }) => ({ id: id.toString(10), ...rest }))
+        .map(({ id, ...rest }) => (*/ { id: id.toString(10), ...rest }
     );
   };
 
-  const handleWatchedChange = (updatedMedia: Media): void => {
-    const updatedList = [
-      ...currentSelections.filter(({ id }) => id !== updatedMedia.id),
-      updatedMedia,
-    ];
+  const handleWatchedChange = ({ id, ...rest }: Media): void => {
+    // const updatedList = [
+    //   ...currentSelections.filter(({ id }) => id !== updatedMedia.id),
+    //   updatedMedia,
+    // ];
 
     mutate(
-      updatedList.map(({ id, ...rest }) => ({ id: id.toString(10), ...rest }))
+      /*updatedList.map(({ id, ...rest }) => (*/ {
+        id: id.toString(10),
+        ...rest,
+      }
     );
   };
 
