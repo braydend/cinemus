@@ -65,10 +65,32 @@ export const removeMediaFromListDataForOwner = async (
   return updatedList;
 };
 
+export const getListDataForId = async (listId: string) => {
+  const list = await findListById(listId);
+
+  return list;
+};
+
+export const addUserToList = async (listId: string, userId: string) => {
+  // const list = await findListById(listId);
+  return await prisma.listMember.upsert({
+    create: { userId, listId },
+    update: { userId, listId },
+    where: { userId_listId: { listId, userId } },
+  });
+};
+
 export const getListDataForOwner = async (ownerId: string) => {
   const list = await findListForOwner(ownerId);
 
   return list;
+};
+
+const findListById = async (listId: string) => {
+  return await prisma.list.findFirst({
+    where: { id: listId },
+    include: { media: true },
+  });
 };
 
 const findListForOwner = async (userId: string) => {
