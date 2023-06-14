@@ -1,9 +1,35 @@
 import { z } from "zod";
 import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
-import { getList, removeFromList, updateList } from "../../domain/list";
+import {
+  getList,
+  getListById,
+  joinList,
+  removeFromList,
+  updateList,
+} from "../../domain/list";
 import { getUserPreferences } from "../../domain/userPreferences";
+import { getUserDetails } from "../../domain/user";
 
 export const listRouter = createTRPCRouter({
+  getListById: protectedProcedure
+    .input(z.string())
+    .query(async ({ ctx, input }) => {
+      const userId = (ctx.session.user["sub"] as string).split("|")[1] ?? "";
+      const prefs = await getUserPreferences(userId);
+      return await getListById(input, prefs.watchProviderRegion ?? undefined);
+    }),
+  test: protectedProcedure.query(async ({ ctx }) => {
+    const userId = (ctx.session.user["sub"] as string).split("|")[1] ?? "";
+    // const prefs = await getUserPreferences(userId);
+    await getUserDetails(userId, ctx.session.accessToken ?? "");
+  }),
+  acceptInvitation: protectedProcedure
+    .input(z.string())
+    .mutation(async ({ ctx, input }) => {
+      const userId = (ctx.session.user["sub"] as string).split("|")[1] ?? "";
+      // const prefs = await getUserPreferences(userId);
+      return await joinList(input, userId);
+    }),
   getList: protectedProcedure.query(async ({ ctx }) => {
     const userId = ctx.session.user.id;
     const prefs = await getUserPreferences(userId);
