@@ -6,13 +6,11 @@ import Typography from "@mui/material/Typography";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import { Button } from "../../atoms";
-import Link from "next/link";
-import { availableRoutes } from "../../../routes";
-import { useUser } from "@auth0/nextjs-auth0/client";
+import { useSession, signOut, signIn } from "next-auth/react";
 
 export const UserMenu: FC = () => {
   const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
-  const { user } = useUser();
+  const { data: sessionData } = useSession();
 
   const handleOpenUserMenu = (event: MouseEvent<HTMLElement>): void => {
     setAnchorElUser(event.currentTarget);
@@ -21,11 +19,20 @@ export const UserMenu: FC = () => {
   const handleCloseUserMenu = (): void => {
     setAnchorElUser(null);
   };
-  return Boolean(user) ? (
+
+  const handleLogin = () => {
+    handleCloseUserMenu();
+    void signIn();
+  };
+
+  return Boolean(sessionData) ? (
     <Box sx={{ flexGrow: 0 }}>
       <>
         <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-          <Avatar src={user?.picture ?? ""} alt={user?.name ?? ""} />
+          <Avatar
+            src={sessionData?.user.image ?? ""}
+            alt={sessionData?.user.name ?? ""}
+          />
         </IconButton>
         <Menu
           sx={{ mt: "45px" }}
@@ -43,22 +50,20 @@ export const UserMenu: FC = () => {
           open={Boolean(anchorElUser)}
           onClose={handleCloseUserMenu}
         >
-          <MenuItem onClick={handleCloseUserMenu}>
-            <Link href={availableRoutes.user}>
-              <Typography textAlign="center">Preferences</Typography>
-            </Link>
+          <MenuItem onClick={handleLogin}>
+            <Typography textAlign="center">Preferences</Typography>
           </MenuItem>
-          <MenuItem>
-            <Link href={availableRoutes.logout}>
-              <Typography textAlign="center">Logout</Typography>
-            </Link>
+          <MenuItem
+            onClick={() => {
+              void signOut();
+            }}
+          >
+            <Typography textAlign="center">Logout</Typography>
           </MenuItem>
         </Menu>
       </>
     </Box>
   ) : (
-    <Link href={availableRoutes.login}>
-      <Button onClick={() => null} variant="purple" label="Login" />
-    </Link>
+    <Button onClick={handleLogin} variant="purple" label="Login" />
   );
 };

@@ -3,8 +3,9 @@ import { api } from "~/utils/api";
 import "~/styles/globals.css";
 import { Navigation } from "~/components/molecules";
 import { CssBaseline, ThemeProvider, createTheme } from "@mui/material";
-import { UserProvider } from "@auth0/nextjs-auth0/client";
+import { SessionProvider } from "next-auth/react";
 import { SnackbarProvider } from "notistack";
+import { Session } from "next-auth";
 
 const theme = createTheme({
   palette: {
@@ -20,9 +21,12 @@ const theme = createTheme({
   },
 });
 
-const MyApp: AppType = ({ Component, pageProps }) => {
+const MyApp: AppType<{ session: Session | null }> = ({
+  Component,
+  pageProps: { session, ...pageProps },
+}) => {
   return (
-    <UserProvider>
+    <SessionProvider session={session}>
       <ThemeProvider theme={theme}>
         <CssBaseline />
         <Navigation />
@@ -32,7 +36,7 @@ const MyApp: AppType = ({ Component, pageProps }) => {
           </div>
         </SnackbarProvider>
       </ThemeProvider>
-    </UserProvider>
+    </SessionProvider>
   );
 };
 
