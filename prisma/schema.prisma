@@ -31,6 +31,7 @@ model ListMember {
     listId String
 
     @@id([userId, listId])
+    @@index([listId])
 }
 
 model UserPreferences {
@@ -48,6 +49,7 @@ model Media {
     listId    String
 
     @@id([id, type, listId])
+    @@index([listId])
 }
 
 // Necessary for Next auth
