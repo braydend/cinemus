@@ -30,12 +30,6 @@ export const env = createEnv({
     EMAIL_SERVER_PASSWORD: z.string(),
     EMAIL_SERVER_HOST: z.string(),
     EMAIL_SERVER_PORT: z.string(),
-    // TODO: Remove auth0 env vars
-    AUTH0_SECRET: z.string(),
-    AUTH0_BASE_URL: z.string(),
-    AUTH0_ISSUER_BASE_URL: z.string(),
-    AUTH0_CLIENT_ID: z.string(),
-    AUTH0_CLIENT_SECRET: z.string(),
     MOVIE_DB_API_KEY: z.string(),
     MONGO_CONNECTION_STRING: z.string(),
     TMDB_URL: z.string(),
@@ -57,11 +51,6 @@ export const env = createEnv({
   runtimeEnv: {
     DATABASE_URL: process.env.DATABASE_URL,
     NODE_ENV: process.env.NODE_ENV,
-    AUTH0_SECRET: process.env.AUTH0_SECRET,
-    AUTH0_BASE_URL: process.env.AUTH0_BASE_URL,
-    AUTH0_ISSUER_BASE_URL: process.env.AUTH0_ISSUER_BASE_URL,
-    AUTH0_CLIENT_ID: process.env.AUTH0_CLIENT_ID,
-    AUTH0_CLIENT_SECRET: process.env.AUTH0_CLIENT_SECRET,
     MOVIE_DB_API_KEY: process.env.MOVIE_DB_API_KEY,
     MONGO_CONNECTION_STRING: process.env.MONGO_CONNECTION_STRING,
     TMDB_URL: process.env.TMDB_URL,
@@ -73,7 +62,6 @@ export const env = createEnv({
     GITHUB_CLIENT_SECRET: process.env.GITHUB_CLIENT_SECRET,
     GOOGLE_CLIENT_ID: process.env.GOOGLE_CLIENT_ID,
     GOOGLE_CLIENT_SECRET: process.env.GOOGLE_CLIENT_SECRET,
-
     EMAIL_FROM: process.env.EMAIL_FROM,
     EMAIL_SERVER_USER: process.env.EMAIL_SERVER_USER,
     EMAIL_SERVER_PASSWORD: process.env.EMAIL_SERVER_PASSWORD,

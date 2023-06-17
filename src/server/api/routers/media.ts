@@ -9,7 +9,7 @@ export const mediaRouter = createTRPCRouter({
   getMedia: protectedProcedure
     .input(z.object({ type: z.enum(["show", "movie"]), id: z.number() }))
     .query(async ({ ctx, input }) => {
-      const userId = (ctx.session.user["sub"] as string).split("|")[1] ?? "";
+      const userId = ctx.session.user.id;
       const prefs = await getUserPreferences(userId);
       const isMovie = input.type === "movie";
       const id = input.id.toString(10);

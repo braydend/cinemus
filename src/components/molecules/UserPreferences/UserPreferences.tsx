@@ -2,10 +2,10 @@ import { type FC, useState } from "react";
 import { Select } from "../../atoms";
 import { TextField, Button } from "@mui/material";
 import { useSnackbar } from "notistack";
-import { useUser } from "@auth0/nextjs-auth0/client";
 import { api } from "../../../utils/api";
 import { type inferRouterOutputs } from "@trpc/server";
 import { type AppRouter } from "../../../server/api/root";
+import { useSession } from "next-auth/react";
 
 type UserPreferencesType =
   inferRouterOutputs<AppRouter>["userRouter"]["getUserPreferences"];
@@ -16,7 +16,7 @@ interface Props {
 
 export const UserPreferences: FC<Props> = ({ initialPreferences }) => {
   const [preferences, setPreferences] = useState(initialPreferences);
-  const { user } = useUser();
+  const { data: sessionData } = useSession();
   const { enqueueSnackbar } = useSnackbar();
   const trpcContext = api.useContext();
   const { data, isLoading, error } =
@@ -65,7 +65,7 @@ export const UserPreferences: FC<Props> = ({ initialPreferences }) => {
       <TextField
         required
         label="Email"
-        defaultValue={user?.email}
+        defaultValue={sessionData?.user?.email}
         sx={{ marginBottom: "1rem" }}
         disabled
         fullWidth

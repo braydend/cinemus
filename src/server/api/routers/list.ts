@@ -5,7 +5,7 @@ import { getUserPreferences } from "../../domain/userPreferences";
 
 export const listRouter = createTRPCRouter({
   getList: protectedProcedure.query(async ({ ctx }) => {
-    const userId = (ctx.session.user["sub"] as string).split("|")[1] ?? "";
+    const userId = ctx.session.user.id;
     const prefs = await getUserPreferences(userId);
     return await getList(userId, prefs.watchProviderRegion ?? undefined);
   }),
@@ -70,7 +70,7 @@ export const listRouter = createTRPCRouter({
       // )
     )
     .mutation(async ({ ctx, input }) => {
-      const userId = (ctx.session.user["sub"] as string).split("|")[1] ?? "";
+      const userId = ctx.session.user.id;
       const prefs = await getUserPreferences(userId);
 
       return await updateList(
@@ -87,7 +87,7 @@ export const listRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ input, ctx }) => {
-      const userId = (ctx.session.user["sub"] as string).split("|")[1] ?? "";
+      const userId = ctx.session.user.id;
       const prefs = await getUserPreferences(userId);
 
       return await removeFromList(

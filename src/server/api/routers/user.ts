@@ -7,7 +7,7 @@ import { z } from "zod";
 
 export const userRouter = createTRPCRouter({
   getUserPreferences: protectedProcedure.query(async ({ ctx }) => {
-    const userId = (ctx.session.user["sub"] as string).split("|")[1] ?? "";
+    const userId = ctx.session.user.id;
     return await getUserPreferences(userId);
   }),
   setUserPreferences: protectedProcedure
@@ -17,7 +17,7 @@ export const userRouter = createTRPCRouter({
       })
     )
     .mutation(async ({ ctx, input }) => {
-      const userId = (ctx.session.user["sub"] as string).split("|")[1] ?? "";
+      const userId = ctx.session.user.id;
       return await updateUserPreferences(userId, input);
     }),
 });
