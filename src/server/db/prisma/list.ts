@@ -72,7 +72,7 @@ export const getListDataForOwner = async (ownerId: string) => {
 
 const findListForOwner = async (userId: string) => {
   const list = await prisma.list.findFirst({
-    where: { owner: userId },
+    where: { ownerId: userId },
     include: { media: true },
   });
 
@@ -80,7 +80,7 @@ const findListForOwner = async (userId: string) => {
     return list;
   }
   return await prisma.list.create({
-    data: { owner: userId },
+    data: { ownerId: userId },
     include: { media: true },
   });
 };
