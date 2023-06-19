@@ -5,6 +5,7 @@ interface Props {
   onClick: () => void;
   variant: "purple";
   className?: string;
+  disabled?: boolean;
 }
 
 const variantStyles = {
@@ -19,15 +20,17 @@ export const Button: FC<Props> = ({
   label,
   onClick,
   variant,
+  disabled,
   className = "",
 }) => (
   // TODO: Add raleway font
   <button
     className={`
     ${className} ${variantStyles[variant]} 
-    rounded text-lg cursor-pointer font-raleway px-4 py-2 transition-colors border
+    cursor-pointer rounded border px-4 py-2 font-raleway text-lg transition-colors
     `}
     onClick={onClick}
+    disabled={disabled}
   >
     {label}
   </button>
