@@ -66,13 +66,16 @@ export const removeMediaFromListDataForOwner = async (
 };
 
 export const getListDataForId = async (listId: string) => {
-  const list = await findListById(listId);
+  const list = await findListById(listId, {
+    media: true,
+    members: true,
+    owner: true,
+  });
 
   return list;
 };
 
 export const addUserToList = async (listId: string, userId: string) => {
-  // const list = await findListById(listId);
   return await prisma.listMember.upsert({
     create: { userId, listId },
     update: { userId, listId },
@@ -86,10 +89,14 @@ export const getListDataForOwner = async (ownerId: string) => {
   return list;
 };
 
-const findListById = async (listId: string) => {
+const findListById = async (
+  listId: string,
+  joins: { media?: boolean; members?: boolean; owner?: boolean }
+) => {
+  const { media, members: includeMembers, owner } = joins;
   return await prisma.list.findFirst({
     where: { id: listId },
-    include: { media: true },
+    include: { media, members: { include: { user: includeMembers } }, owner },
   });
 };
 
