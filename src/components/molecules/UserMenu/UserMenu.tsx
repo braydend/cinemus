@@ -7,6 +7,8 @@ import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import { Button } from "../../atoms";
 import { useSession, signOut, signIn } from "next-auth/react";
+import Link from "next/link";
+import { availableRoutes } from "../../../routes";
 
 export const UserMenu: FC = () => {
   const [anchorElUser, setAnchorElUser] = useState<null | HTMLElement>(null);
@@ -23,6 +25,11 @@ export const UserMenu: FC = () => {
   const handleLogin = () => {
     handleCloseUserMenu();
     void signIn();
+  };
+
+  const handleLogout = () => {
+    handleCloseUserMenu();
+    void signOut();
   };
 
   return Boolean(sessionData) ? (
@@ -50,14 +57,12 @@ export const UserMenu: FC = () => {
           open={Boolean(anchorElUser)}
           onClose={handleCloseUserMenu}
         >
-          <MenuItem onClick={handleLogin}>
-            <Typography textAlign="center">Preferences</Typography>
+          <MenuItem onClick={handleCloseUserMenu}>
+            <Link href={availableRoutes.user}>
+              <Typography textAlign="center">Preferences</Typography>
+            </Link>
           </MenuItem>
-          <MenuItem
-            onClick={() => {
-              void signOut();
-            }}
-          >
+          <MenuItem onClick={handleLogout}>
             <Typography textAlign="center">Logout</Typography>
           </MenuItem>
         </Menu>
