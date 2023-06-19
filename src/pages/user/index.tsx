@@ -3,24 +3,10 @@ import { api } from "../../utils/api";
 import { Heading } from "../../components/atoms";
 import { Avatar } from "@mui/material";
 import { UserPreferences } from "../../components/molecules";
-import { useSession } from "next-auth/react";
-import { useRouter } from "next/router";
-import { availableRoutes } from "../../routes";
-import { useSnackbar } from "notistack";
+import { useAuthRequired } from "../../hooks/useAuthRequired";
 
 const UserPage: NextPage = () => {
-  const router = useRouter();
-  const { enqueueSnackbar } = useSnackbar();
-
-  const { data: sessionData } = useSession({
-    required: true,
-    onUnauthenticated() {
-      enqueueSnackbar("You must be logged in first!", {
-        variant: "error",
-      });
-      void router.push(availableRoutes.root);
-    },
-  });
+  const { session: sessionData } = useAuthRequired();
   const { data, isLoading } = api.userRouter.getUserPreferences.useQuery();
 
   if (isLoading) {

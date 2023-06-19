@@ -10,25 +10,13 @@ import { type NextPage } from "next";
 import { type ArrayElement } from "../../utils/types";
 import Link from "next/link";
 import { availableRoutes } from "../../routes";
-import { useSession } from "next-auth/react";
-import { useSnackbar } from "notistack";
-import { useRouter } from "next/router";
+import { useAuthRequired } from "../../hooks/useAuthRequired";
 
 type List = inferRouterOutputs<AppRouter>["listRouter"]["getList"];
 type Media = ArrayElement<List>;
 
 const ListPage: NextPage = () => {
-  const { enqueueSnackbar } = useSnackbar();
-  const router = useRouter();
-  useSession({
-    required: true,
-    onUnauthenticated() {
-      enqueueSnackbar("You must be logged in first!", {
-        variant: "error",
-      });
-      void router.push(availableRoutes.root);
-    },
-  });
+  useAuthRequired();
   const trpcContext = api.useContext();
   const { data: userPreferences } =
     api.userRouter.getUserPreferences.useQuery();
