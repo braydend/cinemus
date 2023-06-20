@@ -3,6 +3,7 @@ import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
 import {
   getList,
   getListById,
+  getListsForUser,
   joinList,
   removeFromList,
   updateList,
@@ -91,6 +92,10 @@ export const listRouter = createTRPCRouter({
     const userId = ctx.session.user.id;
     const prefs = await getUserPreferences(userId);
     return await getList(userId, prefs.watchProviderRegion ?? undefined);
+  }),
+  getListsForUser: protectedProcedure.query(async ({ ctx }) => {
+    const userId = ctx.session.user.id;
+    return await getListsForUser(userId);
   }),
   updateList: protectedProcedure
     .input(updateListInput)

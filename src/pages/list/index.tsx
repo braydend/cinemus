@@ -1,154 +1,52 @@
-import { useState } from "react";
-import { api } from "../../utils/api";
-import { sortMediaAlphabetically } from "../../utils/sort";
-import { Heading, ListItem } from "../../components/atoms";
-import { MediaSearch } from "../../components/organisms";
-import { Alert, Divider, List } from "@mui/material";
-import { type inferRouterOutputs } from "@trpc/server";
-import { type AppRouter } from "../../server/api/root";
+import { api } from "~/utils/api";
+import { Heading, ImageStack, Pill } from "~/components/atoms";
 import { type NextPage } from "next";
-import { type ArrayElement } from "../../utils/types";
-import Link from "next/link";
-import { availableRoutes } from "../../routes";
-import { useAuthRequired } from "../../hooks/useAuthRequired";
+import { useAuthRequired } from "~/hooks/useAuthRequired";
 
-type List = inferRouterOutputs<AppRouter>["listRouter"]["getList"];
-type Media = ArrayElement<List>;
-
-const ListPage: NextPage = () => {
+const ListsPage: NextPage = () => {
   useAuthRequired();
-  const trpcContext = api.useContext();
-  const { data: userPreferences } =
-    api.userRouter.getUserPreferences.useQuery();
-  const { data, isLoading } = api.listRouter.getList.useQuery();
-  const { mutate } = api.listRouter.updateList.useMutation({
-    onMutate: async (newMedia) => {
-      await trpcContext.listRouter.getList.cancel();
-      const previousMedia = trpcContext.listRouter.getList.getData();
-      trpcContext.listRouter.getList.setData(undefined, (existingMedia) =>
-        [
-          ...(existingMedia ?? []).filter(
-            ({ id, __type }) =>
-              !(newMedia.id === id.toString(10) && newMedia.__type === __type)
-          ),
-          newMedia,
-        ]
-          .sort(sortMediaAlphabetically)
-          .map(({ id, ...rest }) => ({
-            id: Number(id),
-            ...rest,
-          }))
-      );
-      return { previousMedia };
-    },
-    onError: (err, newTodo, context) => {
-      trpcContext.listRouter.getList.setData(undefined, context?.previousMedia);
-    },
-    onSettled: async () => {
-      await trpcContext.listRouter.getList.invalidate();
-    },
-  });
-  const { mutate: removeFromList } = api.listRouter.removeFromList.useMutation({
-    onMutate: async (mediaToRemove) => {
-      await trpcContext.listRouter.getList.cancel();
-      const previousMedia = trpcContext.listRouter.getList.getData();
-      trpcContext.listRouter.getList.setData(undefined, () =>
-        (data ?? [])
-          .filter(
-            ({ id, __type }) =>
-              !(
-                mediaToRemove.id === id.toString(10) &&
-                mediaToRemove.__type === __type
-              )
-          )
-          .sort(sortMediaAlphabetically)
-          .map(({ id, ...rest }) => ({
-            id: Number(id),
-            ...rest,
-          }))
-      );
-      return { previousMedia };
-    },
-    onError: (err, newTodo, context) => {
-      trpcContext.listRouter.getList.setData(undefined, context?.previousMedia);
-    },
-    onSettled: async () => {
-      await trpcContext.listRouter.getList.invalidate();
-    },
-  });
-  const [selectedMedia, setSelectedMedia] = useState<string>();
+  const { data, isLoading } = api.listRouter.getListsForUser.useQuery();
 
-  const currentSelections: List = (data ?? []).sort(sortMediaAlphabetically);
-  const isRegionSelected = Boolean(userPreferences?.watchProviderRegion);
+  if (isLoading || !data) return <>Loading lists</>;
 
-  const handleSelection = ({ id, ...rest }: Media): void => {
-    mutate(
-      /*[...currentSelections, media].map(({ id, ...rest }) => (*/ {
-        id: id.toString(10),
-        ...rest,
-      }
-    );
-  };
-
-  const handleRemoval = ({ id, ...rest }: Media): void => {
-    removeFromList(
-      /*currentSelections
-        .filter((selection) => selection !== media)
-        .map(({ id, ...rest }) => (*/ { id: id.toString(10), ...rest }
-    );
-  };
-
-  const handleWatchedChange = ({ id, ...rest }: Media): void => {
-    // const updatedList = [
-    //   ...currentSelections.filter(({ id }) => id !== updatedMedia.id),
-    //   updatedMedia,
-    // ];
-
-    mutate(
-      /*updatedList.map(({ id, ...rest }) => (*/ {
-        id: id.toString(10),
-        ...rest,
-      }
-    );
-  };
+  const lists = [
+    ...data.ownedLists.map(({ ...listData }) => ({
+      ...listData,
+      role: "owner",
+    })),
+    ...data.joinedLists.map(({ ...listData }) => ({
+      ...listData,
+      role: "member",
+    })),
+  ];
 
   return (
     <main className="font-raleway text-cinemus-purple">
-      <Heading level="2">List</Heading>
-      {isLoading ? (
-        <>Loading list...</>
-      ) : (
-        <>
-          <MediaSearch onSelect={handleSelection} />
-          {!isRegionSelected && (
-            <Alert severity="info" sx={{ marginTop: "1rem" }}>
-              Ready to find out where to watch everything on your list?{" "}
-              <Link href={availableRoutes.user}>Select your region</Link>
-            </Alert>
-          )}
-          <List>
-            {currentSelections.map((media, index) => (
-              <>
-                <ListItem
-                  key={media.id}
-                  media={media}
-                  onRemove={() => {
-                    handleRemoval(media);
-                  }}
-                  onWatchedChange={(updatedMedia) => {
-                    handleWatchedChange(updatedMedia);
-                  }}
-                  onSelect={setSelectedMedia}
-                  isSelected={selectedMedia === media.id.toString(10)}
-                />
-                {index < currentSelections.length - 1 && <Divider />}
-              </>
-            ))}
-          </List>
-        </>
-      )}
+      <Heading level="2">Lists</Heading>
+      <ul>
+        {lists.map((list) => (
+          <li
+            key={list.id}
+            className="mb-4 flex flex-row items-center justify-between"
+          >
+            <span>
+              {list.id} <Pill label={list.role} />
+            </span>
+            <ImageStack
+              images={[...list.members, ...list.members, ...list.members].map(
+                (member) => ({
+                  src: member.user.image ?? "",
+                  alt: `${
+                    member.user.name ?? member.user.email ?? "someone"
+                  }'s icon`,
+                })
+              )}
+            />
+          </li>
+        ))}
+      </ul>
     </main>
   );
 };
 
-export default ListPage;
+export default ListsPage;
