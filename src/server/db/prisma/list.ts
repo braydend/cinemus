@@ -83,6 +83,13 @@ export const addUserToList = async (listId: string, userId: string) => {
   });
 };
 
+export const getListById = async (listId: string) => {
+  return prisma.list.findUnique({
+    where: { id: listId },
+    include: { media: true, members: { include: { user: true } }, owner: true },
+  });
+};
+
 export const getListDataForOwner = async (ownerId: string) => {
   const list = await findListForOwner(ownerId);
 
@@ -107,9 +114,10 @@ export default {
   getListsForUser,
   getListDataForId,
   getListDataForOwner,
-  updateListDataForOwner,
+  addMediaToListDataForOwner,
   addUserToList,
   removeMediaFromListDataForOwner,
+  getListById,
 };
 
 const findListById = async (

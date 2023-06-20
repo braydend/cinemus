@@ -2,6 +2,7 @@ import { api } from "~/utils/api";
 import { Heading, ImageStack, Pill } from "~/components/atoms";
 import { type NextPage } from "next";
 import { useAuthRequired } from "~/hooks/useAuthRequired";
+import Link from "next/link";
 
 const ListsPage: NextPage = () => {
   useAuthRequired();
@@ -29,18 +30,16 @@ const ListsPage: NextPage = () => {
             key={list.id}
             className="mb-4 flex flex-row items-center justify-between"
           >
-            <span>
-              {list.id} <Pill label={list.role} />
-            </span>
+            <Link href={`/list/${list.id}`}>
+              {list.name} <Pill label={list.role} />
+            </Link>
             <ImageStack
-              images={[...list.members, ...list.members, ...list.members].map(
-                (member) => ({
-                  src: member.user.image ?? "",
-                  alt: `${
-                    member.user.name ?? member.user.email ?? "someone"
-                  }'s icon`,
-                })
-              )}
+              images={list.members.map((member) => ({
+                src: member.user.image ?? "",
+                alt: `${
+                  member.user.name ?? member.user.email ?? "someone"
+                }'s icon`,
+              }))}
             />
           </li>
         ))}

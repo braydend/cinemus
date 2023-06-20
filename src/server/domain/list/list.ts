@@ -10,6 +10,7 @@ import db, {
   removeMediaFromListDataForOwner,
   addMediaToListDataForOwner,
 } from "../../db/prisma";
+import { ServerError, UserError } from "../../../errors";
 
 interface ListedMedia {
   id: string;
@@ -60,13 +61,17 @@ export const joinList = async (listId: string, userId: string) => {
   return list;
 };
 
-export const getList = async (
-  userId: string,
-  region?: string
-): Promise<Media[]> => {
-  logger.profile(`getList #${userId}`);
+export const getList = async (listId: string, region?: string) => {
+  logger.profile(`getList #${listId}`);
 
-  const list = await getListDataForOwner(userId);
+  const list = await db.getListById(listId);
+
+  if (!list) {
+    throw new UserError({
+      code: "NOT_FOUND",
+      message: `Cannot find list with id #${listId}`,
+    });
+  }
 
   const hydratedData = await Promise.all(
     list.media.map(async (media) => ({
@@ -77,9 +82,9 @@ export const getList = async (
     }))
   );
 
-  logger.profile(`getList #${userId}`);
+  logger.profile(`getList #${listId}`);
 
-  return hydratedData;
+  return { ...list, media: hydratedData };
 };
 
 export const getListsForUser = async (userId: string) => {
