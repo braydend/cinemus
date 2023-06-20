@@ -89,6 +89,29 @@ export const getListDataForOwner = async (ownerId: string) => {
   return list;
 };
 
+const getListsForUser = async (userId: string) => {
+  const ownedLists = await prisma.list.findMany({
+    where: { ownerId: userId },
+    include: { media: true, members: { include: { user: true } } },
+  });
+
+  const joinedLists = await prisma.list.findMany({
+    where: { members: { some: { userId } } },
+    include: { media: true, members: { include: { user: true } } },
+  });
+
+  return { ownedLists, joinedLists };
+};
+
+export default {
+  getListsForUser,
+  getListDataForId,
+  getListDataForOwner,
+  updateListDataForOwner,
+  addUserToList,
+  removeMediaFromListDataForOwner,
+};
+
 const findListById = async (
   listId: string,
   joins: { media?: boolean; members?: boolean; owner?: boolean }

@@ -3,7 +3,7 @@ import { getMovie } from "../movie";
 import { getShow } from "../show";
 import { logger } from "../../libs/logger";
 import { type MediaType } from "../../../types";
-import {
+import db, {
   addUserToList,
   getListDataForId,
   getListDataForOwner,
@@ -80,6 +80,16 @@ export const getList = async (
   logger.profile(`getList #${userId}`);
 
   return hydratedData;
+};
+
+export const getListsForUser = async (userId: string) => {
+  logger.profile(`getListsForUser #${userId}`);
+
+  const lists = await db.getListsForUser(userId);
+
+  logger.profile(`getListsForUser #${userId}`);
+
+  return lists;
 };
 
 export const updateList = async (
