@@ -1,4 +1,5 @@
 import { prisma } from "~/server/db";
+import { ServerError } from "../../../errors";
 
 interface UpdateMediaInput {
   id: string;
@@ -79,8 +80,26 @@ const findListForOwner = async (userId: string) => {
   if (list) {
     return list;
   }
+
+  // TODO: move the following to a list creation method instead
+
+  const owner = await prisma.user.findUnique({ where: { id: userId } });
+
+  if (!owner) {
+    throw new ServerError({
+      code: "INTERNAL_SERVER_ERROR",
+      message: "Unable to find user",
+    });
+  }
+
+  const name = owner.name
+    ? `${owner.name}'s list`
+    : owner.email
+    ? `${owner.email}'s list`
+    : "New List";
+
   return await prisma.list.create({
-    data: { ownerId: userId },
+    data: { ownerId: userId, name },
     include: { media: true },
   });
 };
