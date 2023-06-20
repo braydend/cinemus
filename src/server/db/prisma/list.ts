@@ -70,27 +70,6 @@ export const getListDataForOwner = async (ownerId: string) => {
   return list;
 };
 
-//TODO: remove
-export const addNamesToLists = async () => {
-  const lists = await prisma.list.findMany({ include: { owner: true } });
-
-  for (const list of lists) {
-    if (!list.name) {
-      const name = list.owner.name
-        ? `${list.owner.name}'s list`
-        : list.owner.email
-        ? `${list.owner.email}'s list`
-        : list.id;
-      await prisma.list.update({
-        where: { id: list.id },
-        data: {
-          name,
-        },
-      });
-    }
-  }
-};
-
 const findListForOwner = async (userId: string) => {
   const list = await prisma.list.findFirst({
     where: { ownerId: userId },
