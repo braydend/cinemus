@@ -88,11 +88,13 @@ export const listRouter = createTRPCRouter({
       // const prefs = await getUserPreferences(userId);
       return await joinList(input, userId);
     }),
-  getList: protectedProcedure.query(async ({ ctx }) => {
-    const userId = ctx.session.user.id;
-    const prefs = await getUserPreferences(userId);
-    return await getList(userId, prefs.watchProviderRegion ?? undefined);
-  }),
+  getList: protectedProcedure
+    .input(getListByIdInput)
+    .query(async ({ input, ctx }) => {
+      const userId = ctx.session.user.id;
+      const prefs = await getUserPreferences(userId);
+      return await getList(input, prefs.watchProviderRegion ?? undefined);
+    }),
   getListsForUser: protectedProcedure.query(async ({ ctx }) => {
     const userId = ctx.session.user.id;
     return await getListsForUser(userId);
