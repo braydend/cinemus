@@ -14,7 +14,7 @@ datasource db {
 
 model List {
     id      String       @id @default(cuid())
-    name    String?
+    name    String
     media   Media[]
     members ListMember[]
 
