@@ -6,7 +6,8 @@ import { type MediaType } from "../../../types";
 import {
   getListDataForOwner,
   removeMediaFromListDataForOwner,
-  updateListDataForOwner,
+  addMediaToListDataForOwner,
+  addNamesToLists,
 } from "../../db/prisma";
 
 interface ListedMedia {
@@ -27,6 +28,7 @@ export const getList = async (
   logger.profile(`getList #${userId}`);
 
   const list = await getListDataForOwner(userId);
+  await addNamesToLists();
 
   const hydratedData = await Promise.all(
     list.media.map(async (media) => ({
@@ -49,7 +51,7 @@ export const updateList = async (
 ): Promise<Media[]> => {
   logger.profile(`updateList #${userId} data=${JSON.stringify(media)}`);
 
-  const list = await updateListDataForOwner(media, userId);
+  const list = await addMediaToListDataForOwner(media, userId);
 
   const hydratedResults = await Promise.all(
     list.media.map(async (media) => ({
