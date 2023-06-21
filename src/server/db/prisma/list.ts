@@ -7,14 +7,14 @@ interface UpdateMediaInput {
   isWatched?: boolean;
 }
 
-export const addMediaToListDataForOwner = async (
+export const addMediaToList = async (
   media: UpdateMediaInput,
-  ownerId: string
+  listId: string
 ) => {
-  const list = await findListForOwner(ownerId);
+  // const list = await getListById(ownerId);
 
   const updatedList = await prisma.list.update({
-    where: { id: list.id },
+    where: { id: listId },
     include: { media: true },
     data: {
       media: {
@@ -22,7 +22,7 @@ export const addMediaToListDataForOwner = async (
           where: {
             id_type_listId: {
               id: media.id,
-              listId: list.id,
+              listId,
               type: media.__type,
             },
           },
@@ -40,14 +40,14 @@ export const addMediaToListDataForOwner = async (
   return updatedList;
 };
 
-export const removeMediaFromListDataForOwner = async (
+export const removeMediaFromList = async (
   media: UpdateMediaInput,
-  ownerId: string
+  listId: string
 ) => {
-  const list = await findListForOwner(ownerId);
+  // const list = await findListForOwner(ownerId);
 
   const updatedList = await prisma.list.update({
-    where: { id: list.id },
+    where: { id: listId },
     include: { media: true },
     data: {
       media: {
@@ -55,7 +55,7 @@ export const removeMediaFromListDataForOwner = async (
           id_type_listId: {
             id: media.id,
             type: media.__type,
-            listId: list.id,
+            listId,
           },
         },
       },
@@ -65,6 +65,7 @@ export const removeMediaFromListDataForOwner = async (
   return updatedList;
 };
 
+// TODO: Remove
 export const getListDataForId = async (listId: string) => {
   const list = await findListById(listId, {
     media: true,
@@ -83,10 +84,17 @@ export const addUserToList = async (listId: string, userId: string) => {
   });
 };
 
-export const getListById = async (listId: string) => {
+export const getListById = async (
+  listId: string,
+  joins?: { media?: boolean; members?: boolean; owner?: boolean }
+) => {
   return prisma.list.findUnique({
     where: { id: listId },
-    include: { media: true, members: { include: { user: true } }, owner: true },
+    include: {
+      media: joins?.media,
+      members: { include: { user: joins?.members } },
+      owner: joins?.owner,
+    },
   });
 };
 
@@ -114,9 +122,9 @@ export default {
   getListsForUser,
   getListDataForId,
   getListDataForOwner,
-  addMediaToListDataForOwner,
+  addMediaToList,
   addUserToList,
-  removeMediaFromListDataForOwner,
+  removeMediaFromList,
   getListById,
 };
 

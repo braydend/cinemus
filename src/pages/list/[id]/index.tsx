@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { api } from "~/utils/api";
 import { sortMediaAlphabetically } from "~/utils/sort";
 import { Heading, ListItem } from "~/components/atoms";
@@ -13,115 +13,147 @@ import { availableRoutes } from "~/routes";
 import { useAuthRequired } from "~/hooks/useAuthRequired";
 import { useRouter } from "next/router";
 
-type List = inferRouterOutputs<AppRouter>["listRouter"]["getList"];
+type List = inferRouterOutputs<AppRouter>["listRouter"]["getListMedia"];
 type Media = ArrayElement<List["media"]>;
+type SearchedMedia = ArrayElement<
+  inferRouterOutputs<AppRouter>["mediaRouter"]["searchMedia"]
+>;
 
 const ListPage: NextPage = () => {
+  const [listId, setListId] = useState<string>("");
   const {
-    query: { id },
+    isReady,
+    query: { id: listIdParam },
   } = useRouter();
 
-  const queryReady = id !== undefined;
-
-  if (typeof id !== "string" && queryReady) {
-    console.log("bad path param", id);
-    throw new Error("Unable to parse list id");
-  }
+  useEffect(() => {
+    if (isReady) {
+      setListId(listIdParam as string);
+    }
+  }, [isReady, listIdParam]);
 
   useAuthRequired();
-  // const trpcContext = api.useContext();
+  const trpcContext = api.useContext();
   const { data: userPreferences } =
     api.userRouter.getUserPreferences.useQuery();
-  const { data, isLoading } = api.listRouter.getList.useQuery(id, {
-    enabled: queryReady,
+  const { data: listData, isLoading: isLoadingListData } =
+    api.listRouter.getListData.useQuery(listId, {
+      enabled: Boolean(listId),
+    });
+  const { data, isLoading: isLoadingListMedia } =
+    api.listRouter.getListMedia.useQuery(listId, {
+      enabled: Boolean(listId),
+    });
+  const { mutate: updateList } = api.listRouter.updateListMedia.useMutation({
+    onMutate: async ({ media: newMedia }) => {
+      await trpcContext.listRouter.getListMedia.cancel(listId);
+      const previousMedia = trpcContext.listRouter.getListMedia.getData(listId);
+      trpcContext.listRouter.getListMedia.setData(listId, (prev) => {
+        const existingMedia = prev?.media ?? [];
+        const dehydratedMedia = existingMedia.filter(
+          ({ id, __type }) =>
+            !(newMedia.id === id.toString(10) && newMedia.__type === __type)
+        );
+        const updatedMedia = [...dehydratedMedia, newMedia]
+          .sort(sortMediaAlphabetically)
+          .map(({ id, isWatched, ...rest }) => ({
+            id: Number(id),
+            isWatched: Boolean(isWatched),
+            ...rest,
+          }));
+
+        return {
+          ...prev,
+          media: updatedMedia,
+        };
+      });
+      return { previousMedia };
+    },
+    onError: (err, newTodo, context) => {
+      trpcContext.listRouter.getListMedia.setData(
+        listId,
+        context?.previousMedia
+      );
+    },
+    onSettled: async () => {
+      await trpcContext.listRouter.getListMedia.invalidate(listId);
+    },
   });
-  const { mutate } = api.listRouter.updateList.useMutation({
-    // onMutate: async (newMedia) => {
-    //   await trpcContext.listRouter.getList.cancel();
-    //   const previousMedia = trpcContext.listRouter.getList.getData();
-    //   trpcContext.listRouter.getList.setData(undefined, (existingMedia) =>
-    //     [
-    //       ...(existingMedia ?? []).filter(
-    //         ({ id, __type }) =>
-    //           newMedia.id !== id.toString(10) && newMedia.__type !== __type
-    //       ),
-    //       newMedia,
-    //     ]
-    //       .sort(sortMediaAlphabetically)
-    //       .map(({ id, ...rest }) => ({
-    //         id: Number(id),
-    //         ...rest,
-    //       }))
-    //   );
-    //   return { previousMedia };
-    // },
-    // onError: (err, newTodo, context) => {
-    //   trpcContext.listRouter.getList.setData(undefined, context?.previousMedia);
-    // },
-    // onSettled: async () => {
-    //   await trpcContext.listRouter.getList.invalidate();
-    // },
-  });
-  const { mutate: removeFromList } = api.listRouter.removeFromList.useMutation({
-    // onMutate: async (mediaToRemove) => {
-    //   await trpcContext.listRouter.getList.cancel();
-    //   const previousMedia = trpcContext.listRouter.getList.getData();
-    //   trpcContext.listRouter.getList.setData(undefined, () =>
-    //     (data ?? [])
-    //       .filter(
-    //         ({ id, __type }) =>
-    //           mediaToRemove.id !== id.toString(10) &&
-    //           mediaToRemove.__type !== __type
-    //       )
-    //       .sort(sortMediaAlphabetically)
-    //       .map(({ id, ...rest }) => ({
-    //         id: Number(id),
-    //         ...rest,
-    //       }))
-    //   );
-    //   return { previousMedia };
-    // },
-    // onError: (err, newTodo, context) => {
-    //   trpcContext.listRouter.getList.setData(undefined, context?.previousMedia);
-    // },
-    // onSettled: async () => {
-    //   await trpcContext.listRouter.getList.invalidate();
-    // },
-  });
+  const { mutate: removeFromList } =
+    api.listRouter.removeMediaFromList.useMutation({
+      onMutate: async (mediaToRemove) => {
+        await trpcContext.listRouter.getListMedia.cancel();
+        const previousMedia = trpcContext.listRouter.getListMedia.getData();
+        trpcContext.listRouter.getListMedia.setData(listId, (prev) => {
+          const existingMedia = prev?.media ?? [];
+          const dehydratedMedia = existingMedia.filter(
+            ({ id, __type }) =>
+              !(
+                mediaToRemove.media.id === id.toString(10) &&
+                mediaToRemove.media.__type === __type
+              )
+          );
+          const updatedMedia = [...dehydratedMedia]
+            .sort(sortMediaAlphabetically)
+            .map(({ id, isWatched, ...rest }) => ({
+              id: Number(id),
+              isWatched: Boolean(isWatched),
+              ...rest,
+            }));
+
+          return {
+            ...prev,
+            media: updatedMedia,
+          };
+        });
+        return { previousMedia };
+      },
+      onError: (err, newTodo, context) => {
+        trpcContext.listRouter.getListMedia.setData(
+          listId,
+          context?.previousMedia
+        );
+      },
+      onSettled: async () => {
+        await trpcContext.listRouter.getListMedia.invalidate(listId);
+      },
+    });
   const [selectedMedia, setSelectedMedia] = useState<string>();
 
-  const handleSelection = ({ id, ...rest }: Media): void => {
-    mutate(
-      /*[...currentSelections, media].map(({ id, ...rest }) => (*/ {
+  const handleSelection = (
+    listId: string,
+    { id, ...rest }: SearchedMedia
+  ): void => {
+    updateList({
+      listId,
+      media: {
         id: id.toString(10),
         ...rest,
-      }
-    );
+      },
+    });
   };
 
-  const handleRemoval = ({ id, ...rest }: Media): void => {
-    removeFromList(
-      /*currentSelections
-        .filter((selection) => selection !== media)
-        .map(({ id, ...rest }) => (*/ { id: id.toString(10), ...rest }
-    );
+  const handleRemoval = (listId: string, { id, ...rest }: Media): void => {
+    removeFromList({
+      listId,
+      media: { id: id.toString(10), ...rest },
+    });
   };
 
   const handleWatchedChange = ({ id, ...rest }: Media): void => {
-    // const updatedList = [
-    //   ...currentSelections.filter(({ id }) => id !== updatedMedia.id),
-    //   updatedMedia,
-    // ];
-
-    mutate(
-      /*updatedList.map(({ id, ...rest }) => (*/ {
+    updateList({
+      listId,
+      media: {
         id: id.toString(10),
         ...rest,
-      }
-    );
+      },
+    });
   };
 
-  if (isLoading || !data) {
+  const isLoading = isLoadingListMedia || isLoadingListData;
+  const hasData = data && listData;
+
+  if (isLoading || !hasData) {
     return <>Loading list...</>;
   }
 
@@ -130,8 +162,10 @@ const ListPage: NextPage = () => {
 
   return (
     <main className="font-raleway text-cinemus-purple">
-      <Heading level="2">{data.name}</Heading>
-      <MediaSearch onSelect={handleSelection} />
+      <Heading level="2">{listData.name}</Heading>
+      <MediaSearch
+        onSelect={(selection) => handleSelection(listId, selection)}
+      />
       {!isRegionSelected && (
         <Alert severity="info" sx={{ marginTop: "1rem" }}>
           Ready to find out where to watch everything on your list?{" "}
@@ -145,7 +179,7 @@ const ListPage: NextPage = () => {
               key={media.id}
               media={media}
               onRemove={() => {
-                handleRemoval(media);
+                handleRemoval(listId, media);
               }}
               onWatchedChange={(updatedMedia) => {
                 handleWatchedChange(updatedMedia);

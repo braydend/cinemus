@@ -7,8 +7,8 @@ import db, {
   addUserToList,
   getListDataForId,
   getListDataForOwner,
-  removeMediaFromListDataForOwner,
-  addMediaToListDataForOwner,
+  removeMediaFromList,
+  addMediaToList,
 } from "../../db/prisma";
 import { ServerError, UserError } from "../../../errors";
 
@@ -61,10 +61,10 @@ export const joinList = async (listId: string, userId: string) => {
   return list;
 };
 
-export const getList = async (listId: string, region?: string) => {
-  logger.profile(`getList #${listId}`);
+export const getListData = async (listId: string, region?: string) => {
+  logger.profile(`getListData #${listId}`);
 
-  const list = await db.getListById(listId);
+  const list = await db.getListById(listId, { members: true, owner: true });
 
   if (!list) {
     throw new UserError({
@@ -72,6 +72,32 @@ export const getList = async (listId: string, region?: string) => {
       message: `Cannot find list with id #${listId}`,
     });
   }
+
+  // const hydratedData = await Promise.all(
+  //   list.media.map(async (media) => ({
+  //     ...(media.type === "movie"
+  //       ? await getMovie(media.id, region)
+  //       : await getShow(media.id, region)),
+  //     isWatched: media.isWatched ?? false,
+  //   }))
+  // );
+
+  logger.profile(`getListData #${listId}`);
+
+  return list;
+};
+
+export const getListMedia = async (listId: string, region?: string) => {
+  logger.profile(`getListMedia #${listId}`);
+
+  const list = await db.getListById(listId, { media: true });
+
+  // if (!list) {
+  //   throw new UserError({
+  //     code: "NOT_FOUND",
+  //     message: `Cannot find list with id #${listId}`,
+  //   });
+  // }
 
   const hydratedData = await Promise.all(
     list.media.map(async (media) => ({
@@ -82,9 +108,9 @@ export const getList = async (listId: string, region?: string) => {
     }))
   );
 
-  logger.profile(`getList #${listId}`);
+  logger.profile(`getListMedia #${listId}`);
 
-  return { ...list, media: hydratedData };
+  return { media: hydratedData };
 };
 
 export const getListsForUser = async (userId: string) => {
@@ -99,12 +125,12 @@ export const getListsForUser = async (userId: string) => {
 
 export const updateList = async (
   media: ListedMedia,
-  userId: string,
+  listId: string,
   region?: string
 ): Promise<Media[]> => {
-  logger.profile(`updateList #${userId} data=${JSON.stringify(media)}`);
+  logger.profile(`updateList #${listId} data=${JSON.stringify(media)}`);
 
-  const list = await addMediaToListDataForOwner(media, userId);
+  const list = await db.addMediaToList(media, listId);
 
   const hydratedResults = await Promise.all(
     list.media.map(async (media) => ({
@@ -115,19 +141,19 @@ export const updateList = async (
     }))
   );
 
-  logger.profile(`updateList #${userId} media:${JSON.stringify(media)}`);
+  logger.profile(`updateList #${listId} media:${JSON.stringify(media)}`);
 
   return hydratedResults;
 };
 
 export const removeFromList = async (
   media: { id: string; __type: MediaType },
-  userId: string,
+  listId: string,
   region?: string
 ): Promise<Media[]> => {
-  logger.profile(`removeFromList #${userId} data=${JSON.stringify(media)}`);
+  logger.profile(`removeFromList #${listId} data=${JSON.stringify(media)}`);
 
-  const list = await removeMediaFromListDataForOwner(media, userId);
+  const list = await db.removeMediaFromList(media, listId);
 
   const hydratedResults = await Promise.all(
     list.media.map(async (media) => ({
@@ -138,7 +164,7 @@ export const removeFromList = async (
     }))
   );
 
-  logger.profile(`removeFromList #${userId} media=${JSON.stringify(media)}`);
+  logger.profile(`removeFromList #${listId} media=${JSON.stringify(media)}`);
 
   return hydratedResults;
 };
