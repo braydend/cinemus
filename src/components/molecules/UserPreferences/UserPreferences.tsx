@@ -25,7 +25,7 @@ export const UserPreferences: FC<Props> = ({ initialPreferences }) => {
   const { mutate } = api.userRouter.setUserPreferences.useMutation({
     onSuccess: async (updatedPreferences) => {
       setPreferences(updatedPreferences);
-      await trpcContext.listRouter.getList.invalidate();
+      await trpcContext.listRouter.getListMedia.invalidate();
       await trpcContext.userRouter.getUserPreferences.invalidate();
       enqueueSnackbar("Preferences updated successfully!", {
         variant: "success",

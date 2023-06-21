@@ -6,11 +6,11 @@ import { type inferRouterOutputs } from "@trpc/server";
 import { type AppRouter } from "../../../server/api/root";
 import { type ArrayElement } from "../../../utils/types";
 
-type List = inferRouterOutputs<AppRouter>["listRouter"]["getList"];
-type Media = ArrayElement<List>;
-
+type SearchedMedia = ArrayElement<
+  inferRouterOutputs<AppRouter>["mediaRouter"]["searchMedia"]
+>;
 interface Props {
-  onSelect: (selection: Media) => void;
+  onSelect: (selection: SearchedMedia) => void;
 }
 
 export const MediaSearch: FC<Props> = ({ onSelect }) => {

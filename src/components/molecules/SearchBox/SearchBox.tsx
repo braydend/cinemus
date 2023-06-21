@@ -8,12 +8,13 @@ import { type AppRouter } from "../../../server/api/root";
 import { type ArrayElement } from "../../../utils/types";
 import { api } from "../../../utils/api";
 
-type List = inferRouterOutputs<AppRouter>["listRouter"]["getList"];
-type Media = ArrayElement<List>;
+type SearchedMedia = ArrayElement<
+  inferRouterOutputs<AppRouter>["mediaRouter"]["searchMedia"]
+>;
 
 interface Props {
   mediaType: MediaType;
-  onSelect: (selection: Media) => void;
+  onSelect: (selection: SearchedMedia) => void;
   query: string;
   setQuery: (query: string) => void;
 }
@@ -43,14 +44,14 @@ export const SearchBox: FC<Props> = ({
     { enabled: Boolean(debouncedQuery) }
   );
 
-  const handleSelection = (selection: Media): void => {
+  const handleSelection = (selection: SearchedMedia): void => {
     onSelect(selection);
     setQuery("");
   };
 
   const renderOption = (
     props: HTMLAttributes<HTMLLIElement>,
-    option: Media
+    option: SearchedMedia
   ): JSX.Element => {
     const hasImage = Boolean(option.images.logo?.xsmall);
     return (

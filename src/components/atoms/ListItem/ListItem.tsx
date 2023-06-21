@@ -8,7 +8,7 @@ import { type AppRouter } from "../../../server/api/root";
 import { type ArrayElement } from "../../../utils/types";
 import Image from "next/image";
 
-type List = inferRouterOutputs<AppRouter>["listRouter"]["getList"];
+type List = inferRouterOutputs<AppRouter>["listRouter"]["getListMedia"];
 type Media = ArrayElement<List["media"]>;
 
 interface Props {
