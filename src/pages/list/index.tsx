@@ -29,7 +29,7 @@ const ListPage: NextPage = () => {
         [
           ...(existingMedia ?? []).filter(
             ({ id, __type }) =>
-              newMedia.id !== id.toString(10) && newMedia.__type !== __type
+              !(newMedia.id === id.toString(10) && newMedia.__type === __type)
           ),
           newMedia,
         ]
@@ -56,8 +56,10 @@ const ListPage: NextPage = () => {
         (data ?? [])
           .filter(
             ({ id, __type }) =>
-              mediaToRemove.id !== id.toString(10) &&
-              mediaToRemove.__type !== __type
+              !(
+                mediaToRemove.id === id.toString(10) &&
+                mediaToRemove.__type === __type
+              )
           )
           .sort(sortMediaAlphabetically)
           .map(({ id, ...rest }) => ({
