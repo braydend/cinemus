@@ -6,6 +6,7 @@ import { CssBaseline, ThemeProvider, createTheme } from "@mui/material";
 import { SessionProvider } from "next-auth/react";
 import { SnackbarProvider } from "notistack";
 import { Session } from "next-auth";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 const theme = createTheme({
   palette: {
@@ -34,6 +35,7 @@ const MyApp: AppType<{ session: Session | null }> = ({
           <div className="p-4">
             <Component {...pageProps} />
           </div>
+          <ReactQueryDevtools initialIsOpen={false} />
         </SnackbarProvider>
       </ThemeProvider>
     </SessionProvider>
