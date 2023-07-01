@@ -5,9 +5,11 @@ import { api } from "../../../../utils/api";
 import { useAuthRequired } from "../../../../hooks/useAuthRequired";
 import { availableRoutes } from "../../../../routes";
 import Link from "next/link";
+import { useState } from "react";
 
 const ListInvitationPage: NextPage = () => {
   useAuthRequired();
+  const [error, setError] = useState<string>();
   const router = useRouter();
   const {
     query: { id },
@@ -21,6 +23,9 @@ const ListInvitationPage: NextPage = () => {
     api.listRouter.acceptInvitation.useMutation({
       onSuccess: () => {
         void router.push(`${availableRoutes.list}/${listId}`);
+      },
+      onError: (error) => {
+        setError(error.message);
       },
     });
 
@@ -60,6 +65,7 @@ const ListInvitationPage: NextPage = () => {
           })),
         ]}
       />
+      {Boolean(error) && <span className="mt-8 text-red-600">{error}</span>}
       <div className="mt-8 grid w-1/2 grid-cols-2 gap-4">
         <Button
           onClick={() => {
