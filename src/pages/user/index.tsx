@@ -1,7 +1,6 @@
 import { type NextPage } from "next";
 import { api } from "../../utils/api";
-import { Heading } from "../../components/atoms";
-import { Avatar } from "@mui/material";
+import { Avatar, Heading } from "../../components/atoms";
 import { UserPreferences } from "../../components/molecules";
 import { useAuthRequired } from "../../hooks/useAuthRequired";
 
@@ -14,15 +13,14 @@ const UserPage: NextPage = () => {
   }
 
   if (data == null) throw Error("Unable to fetch user preferences for user");
+  if (sessionData === null) {
+    throw Error("Unable to get session for the current user");
+  }
 
   return (
     <main className="flex flex-col items-center">
       <Heading level="2">User Preferences</Heading>
-      <Avatar
-        src={sessionData?.user?.image ?? undefined}
-        alt={sessionData?.user?.name ?? undefined}
-        sx={{ width: "10rem", height: "10rem", marginBottom: "1rem" }}
-      />
+      <Avatar user={sessionData.user} className="mb-4 h-40 w-40" />
       <UserPreferences initialPreferences={data} />
     </main>
   );

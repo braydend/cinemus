@@ -1,11 +1,10 @@
 import { type FC, type MouseEvent, useState } from "react";
-import Avatar from "@mui/material/Avatar";
 import Box from "@mui/material/Box";
 import IconButton from "@mui/material/IconButton";
 import Typography from "@mui/material/Typography";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
-import { Button } from "../../atoms";
+import { Avatar, Button } from "../../atoms";
 import { useSession, signOut, signIn } from "next-auth/react";
 import Link from "next/link";
 import { availableRoutes } from "../../../routes";
@@ -32,14 +31,15 @@ export const UserMenu: FC = () => {
     void signOut();
   };
 
+  if (sessionData === null) {
+    throw Error("Unable to get session for the current user");
+  }
+
   return Boolean(sessionData) ? (
     <Box sx={{ flexGrow: 0 }}>
       <>
         <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-          <Avatar
-            src={sessionData?.user.image ?? ""}
-            alt={sessionData?.user.name ?? ""}
-          />
+          <Avatar user={sessionData.user} size="small" />
         </IconButton>
         <Menu
           sx={{ mt: "45px" }}
