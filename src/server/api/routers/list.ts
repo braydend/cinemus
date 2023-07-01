@@ -92,7 +92,6 @@ export const listRouter = createTRPCRouter({
     .input(acceptInvitationInput)
     .mutation(async ({ ctx, input }) => {
       const userId = ctx.session.user.id;
-      // const prefs = await getUserPreferences(userId);
       return await joinList(input, userId);
     }),
   getListData: protectedProcedure

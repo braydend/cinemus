@@ -45,20 +45,22 @@ export const getListById = async (listId: string, region?: string) => {
 export const joinList = async (listId: string, userId: string) => {
   logger.profile(`getListById #${listId}`);
 
-  const list = await addUserToList(listId, userId);
+  const list = await db.getListById(listId);
 
-  // const hydratedData = await Promise.all(
-  //   (list?.media ?? []).map(async (media) => ({
-  //     ...(media.type === "movie"
-  //       ? await getMovie(media.id, region)
-  //       : await getShow(media.id, region)),
-  //     isWatched: media.isWatched ?? false,
-  //   }))
-  // );
+  if (
+    list?.ownerId === userId ||
+    list?.members.map(({ userId: id }) => id).includes(userId)
+  ) {
+    throw new UserError({
+      message: "This user already has access to the list",
+      code: "BAD_REQUEST",
+    });
+  }
+  const updatedList = await addUserToList(listId, userId);
 
   logger.profile(`getListById #${listId}`);
 
-  return list;
+  return updatedList;
 };
 
 export const getListData = async (listId: string, region?: string) => {
@@ -92,12 +94,12 @@ export const getListMedia = async (listId: string, region?: string) => {
 
   const list = await db.getListById(listId, { media: true });
 
-  // if (!list) {
-  //   throw new UserError({
-  //     code: "NOT_FOUND",
-  //     message: `Cannot find list with id #${listId}`,
-  //   });
-  // }
+  if (!list) {
+    throw new UserError({
+      code: "NOT_FOUND",
+      message: `Cannot find list with id #${listId}`,
+    });
+  }
 
   const hydratedData = await Promise.all(
     list.media.map(async (media) => ({
