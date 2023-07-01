@@ -7,19 +7,35 @@ type Props = {
   className?: string;
 };
 
-export const ImageStack: FC<Props> = ({ images, size = 64, className }) => {
+const MAX_IMAGES = 2;
+
+const IMAGE_SIZE = 64;
+
+const Counter: FC<{ count: number }> = ({ count }) => {
+  return (
+    <div className="mr-[-12px] flex h-16 w-16 items-center justify-center rounded-full bg-cinemus-purple text-3xl text-cinemus-yellow-pink">
+      +{count}
+    </div>
+  );
+};
+
+export const ImageStack: FC<Props> = ({ images, className }) => {
+  const limitedImages = images.slice(0, MAX_IMAGES);
+  const hiddenImageCount = images.length - MAX_IMAGES;
+
   return (
     <div className={`flex flex-row ${className ?? ""}`}>
-      {images.map(({ src, alt }) => (
+      {limitedImages.map(({ src, alt }) => (
         <Image
           key={alt}
           src={src}
           className="mr-[-12px] rounded-full"
           alt={alt}
-          width={size}
-          height={size}
+          width={IMAGE_SIZE}
+          height={IMAGE_SIZE}
         />
       ))}
+      {hiddenImageCount > 0 && <Counter count={hiddenImageCount} />}
     </div>
   );
 };
