@@ -1,8 +1,9 @@
 import { api } from "~/utils/api";
-import { Heading, ImageStack, Pill } from "~/components/atoms";
+import { Heading, Pill } from "~/components/atoms";
 import { type NextPage } from "next";
 import { useAuthRequired } from "~/hooks/useAuthRequired";
 import Link from "next/link";
+import { UserStack } from "../../components/molecules";
 
 const ListsPage: NextPage = () => {
   useAuthRequired();
@@ -33,14 +34,7 @@ const ListsPage: NextPage = () => {
             <Link href={`/list/${list.id}`}>
               {list.name} <Pill label={list.role} />
             </Link>
-            <ImageStack
-              images={list.members.map((member) => ({
-                src: member.user.image ?? "",
-                alt: `${
-                  member.user.name ?? member.user.email ?? "someone"
-                }'s icon`,
-              }))}
-            />
+            <UserStack users={list.members.map(({ user }) => user)} />
           </li>
         ))}
       </ul>

@@ -1,4 +1,4 @@
-import { Button, Heading, ImageStack } from "~/components/atoms";
+import { Button, Heading } from "~/components/atoms";
 import { type NextPage } from "next";
 import { useRouter } from "next/router";
 import { api } from "../../../../utils/api";
@@ -6,6 +6,7 @@ import { useAuthRequired } from "../../../../hooks/useAuthRequired";
 import { availableRoutes } from "../../../../routes";
 import Link from "next/link";
 import { useState } from "react";
+import { UserStack } from "../../../../components/molecules";
 
 const ListInvitationPage: NextPage = () => {
   useAuthRequired();
@@ -39,12 +40,6 @@ const ListInvitationPage: NextPage = () => {
 
   const owner = data.owner;
 
-  const listMembers = data.members.map(({ user: { name, email, image } }) => ({
-    name,
-    email,
-    image,
-  }));
-
   return (
     <main className="flex flex-col items-center font-raleway text-cinemus-purple">
       <Heading level="2">
@@ -52,19 +47,7 @@ const ListInvitationPage: NextPage = () => {
           data.owner.name ?? data.owner.email ?? "someone"
         }'s list`}
       </Heading>
-      <ImageStack
-        className="mt-8"
-        images={[
-          {
-            src: owner.image ?? "",
-            alt: `${owner.name ?? owner.email ?? "list owner"}'s icon`,
-          },
-          ...listMembers.map(({ image, name, email }, index) => ({
-            alt: `${name ?? email ?? `member#${index}`}'s icon`,
-            src: image ?? "",
-          })),
-        ]}
-      />
+      <UserStack users={[owner, ...data.members.map(({ user }) => user)]} />
       {Boolean(error) && <span className="mt-8 text-red-600">{error}</span>}
       <div className="mt-8 grid w-1/2 grid-cols-2 gap-4">
         <Button
