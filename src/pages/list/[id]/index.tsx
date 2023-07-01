@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { api } from "~/utils/api";
 import { sortMediaAlphabetically } from "~/utils/sort";
-import { Heading, ListItem } from "~/components/atoms";
+import { Button, Heading, ListItem } from "~/components/atoms";
 import { MediaSearch } from "~/components/organisms";
 import { Alert, Divider, List } from "@mui/material";
 import { type inferRouterOutputs } from "@trpc/server";
@@ -12,6 +12,8 @@ import Link from "next/link";
 import { availableRoutes } from "~/routes";
 import { useAuthRequired } from "~/hooks/useAuthRequired";
 import { useRouter } from "next/router";
+import { useSnackbar } from "notistack";
+import { UserStack } from "../../../components/molecules";
 
 type List = inferRouterOutputs<AppRouter>["listRouter"]["getListMedia"];
 type Media = ArrayElement<List["media"]>;
@@ -20,6 +22,7 @@ type SearchedMedia = ArrayElement<
 >;
 
 const ListPage: NextPage = () => {
+  const { enqueueSnackbar } = useSnackbar();
   const [listId, setListId] = useState<string>("");
   const {
     isReady,
@@ -162,7 +165,28 @@ const ListPage: NextPage = () => {
 
   return (
     <main className="font-raleway text-cinemus-purple">
-      <Heading level="2">{listData.name}</Heading>
+      <header className="flex flex-row justify-between">
+        <Heading level="2">{listData.name}</Heading>
+        <div className="flex h-fit flex-row flex-wrap items-center gap-4">
+          <UserStack
+            users={[
+              listData.owner,
+              ...listData.members.map(({ user }) => user),
+            ]}
+          />
+          <Button
+            label="Invite"
+            variant="purple"
+            className="h-fit"
+            onClick={() => {
+              void navigator.clipboard.writeText("foo");
+              enqueueSnackbar("Invitation link copied to clipboard!", {
+                variant: "info",
+              });
+            }}
+          />
+        </div>
+      </header>
       <MediaSearch
         onSelect={(selection) => handleSelection(listId, selection)}
       />
