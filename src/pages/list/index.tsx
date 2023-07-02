@@ -50,7 +50,7 @@ const ListsPage: NextPage = () => {
   };
 
   return (
-    <main className="font-raleway text-cinemus-purple">
+    <main className="px-12 font-raleway text-cinemus-purple">
       <Heading level="2">Lists</Heading>
       {hasNoLists ? (
         <div className="flex flex-col items-center gap-8">

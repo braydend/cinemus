@@ -1,10 +1,12 @@
 import { User } from "@prisma/client";
 import Image from "next/image";
-import { FC } from "react";
+import { FC, PropsWithChildren } from "react";
 
 type Props = {
   user: Omit<Partial<User>, "emailVerified">;
   size?: "small" | "original";
+  tooltipSuffix?: string;
+  showTooltip?: boolean;
   className?: string;
 };
 
@@ -16,19 +18,37 @@ const gradients = [
   "bg-gradient-to-tr from-amber-700 to-yellow-500",
 ] as const;
 
+const Tooltip: FC<PropsWithChildren<{ content: string }>> = ({
+  children,
+  content,
+}) => {
+  return (
+    <div className="group relative">
+      {children}
+      <span className="invisible absolute top-16 z-10 inline-block rounded-sm border border-cinemus-purple bg-white p-2 group-hover:visible group-active:visible">
+        {content}
+      </span>
+    </div>
+  );
+};
+
 const imageSize = { small: 48, original: 64 } as const;
 const elementSize = { small: "h-12 w-12", original: "h-16 w-16" } as const;
 
 export const Avatar: FC<Props> = ({
   user: { name, email, image },
   size = "original",
+  tooltipSuffix,
+  showTooltip = false,
   className,
 }) => {
   const altText = `${name ?? email ?? "someone"}'s avatar`;
+  const tooltip = `${name ?? email ?? "someone"} ${tooltipSuffix ?? ""}`;
   const hasImage = image != null;
+  const gradient = gradients[altText.length % 5] ?? gradients[0];
 
-  if (hasImage) {
-    return (
+  const AvatarIcon = () =>
+    hasImage ? (
       <Image
         src={image}
         className={`rounded-full ${className ?? ""}`}
@@ -36,17 +56,20 @@ export const Avatar: FC<Props> = ({
         height={imageSize[size]}
         width={imageSize[size]}
       />
+    ) : (
+      <div
+        className={`${elementSize[size]} rounded-full ${gradient} ${
+          className ?? ""
+        }`}
+        aria-label={altText}
+      />
     );
-  }
 
-  const gradient = gradients[altText.length % 5] ?? gradients[0];
-
-  return (
-    <div
-      className={`${elementSize[size]} rounded-full ${gradient} ${
-        className ?? ""
-      }`}
-      aria-label={altText}
-    />
+  return showTooltip ? (
+    <Tooltip content={tooltip}>
+      <AvatarIcon />
+    </Tooltip>
+  ) : (
+    <AvatarIcon />
   );
 };
