@@ -17,29 +17,6 @@ export interface List {
   media: ListedMedia[];
 }
 
-export const getListById = async (listId: string, region?: string) => {
-  logger.profile(`getListById #${listId}`);
-
-  const list = await db.getListById(listId, {
-    media: true,
-    members: true,
-    owner: true,
-  });
-
-  // const hydratedData = await Promise.all(
-  //   (list?.media ?? []).map(async (media) => ({
-  //     ...(media.type === "movie"
-  //       ? await getMovie(media.id, region)
-  //       : await getShow(media.id, region)),
-  //     isWatched: media.isWatched ?? false,
-  //   }))
-  // );
-
-  logger.profile(`getListById #${listId}`);
-
-  return list;
-};
-
 export const joinList = async (listId: string, userId: string) => {
   logger.profile(`getListById #${listId}`);
 
@@ -61,7 +38,7 @@ export const joinList = async (listId: string, userId: string) => {
   return updatedList;
 };
 
-export const getListData = async (listId: string, region?: string) => {
+export const getListData = async (listId: string) => {
   logger.profile(`getListData #${listId}`);
 
   const list = await db.getListById(listId, { members: true, owner: true });
@@ -72,15 +49,6 @@ export const getListData = async (listId: string, region?: string) => {
       message: `Cannot find list with id #${listId}`,
     });
   }
-
-  // const hydratedData = await Promise.all(
-  //   list.media.map(async (media) => ({
-  //     ...(media.type === "movie"
-  //       ? await getMovie(media.id, region)
-  //       : await getShow(media.id, region)),
-  //     isWatched: media.isWatched ?? false,
-  //   }))
-  // );
 
   logger.profile(`getListData #${listId}`);
 
@@ -123,7 +91,7 @@ export const getListsForUser = async (userId: string) => {
   return lists;
 };
 
-export const updateList = async (
+export const updateListMedia = async (
   media: ListedMedia,
   listId: string,
   region?: string
@@ -146,7 +114,7 @@ export const updateList = async (
   return hydratedResults;
 };
 
-export const removeFromList = async (
+export const removeMediaFromList = async (
   media: { id: string; __type: MediaType },
   listId: string,
   region?: string
