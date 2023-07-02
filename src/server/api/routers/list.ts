@@ -8,6 +8,7 @@ import {
   removeFromList as removeMediaFromList,
   updateList as updateListMedia,
   getListMedia,
+  createList,
 } from "../../domain/list";
 import { getUserPreferences } from "../../domain/userPreferences";
 
@@ -111,6 +112,10 @@ export const listRouter = createTRPCRouter({
   getListsForUser: protectedProcedure.query(async ({ ctx }) => {
     const userId = ctx.session.user.id;
     return await getListsForUser(userId);
+  }),
+  createList: protectedProcedure.mutation(async ({ ctx }) => {
+    const userId = ctx.session.user.id;
+    return await createList(userId);
   }),
   updateListMedia: protectedProcedure
     .input(updateListInput)

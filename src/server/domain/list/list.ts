@@ -170,3 +170,13 @@ export const removeFromList = async (
 
   return hydratedResults;
 };
+
+export const createList = async (userId: string) => {
+  logger.profile(`createList (userId #${userId})`);
+
+  const list = await db.createList(userId);
+
+  logger.profile(`createList (userId #${userId})`);
+
+  return list;
+};
