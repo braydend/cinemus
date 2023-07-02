@@ -7,12 +7,7 @@ interface UpdateMediaInput {
   isWatched?: boolean;
 }
 
-export const addMediaToList = async (
-  media: UpdateMediaInput,
-  listId: string
-) => {
-  // const list = await getListById(ownerId);
-
+const addMediaToList = async (media: UpdateMediaInput, listId: string) => {
   const updatedList = await prisma.list.update({
     where: { id: listId },
     include: { media: true },
@@ -40,12 +35,7 @@ export const addMediaToList = async (
   return updatedList;
 };
 
-export const removeMediaFromList = async (
-  media: UpdateMediaInput,
-  listId: string
-) => {
-  // const list = await findListForOwner(ownerId);
-
+const removeMediaFromList = async (media: UpdateMediaInput, listId: string) => {
   const updatedList = await prisma.list.update({
     where: { id: listId },
     include: { media: true },
@@ -65,18 +55,7 @@ export const removeMediaFromList = async (
   return updatedList;
 };
 
-// TODO: Remove
-export const getListDataForId = async (listId: string) => {
-  const list = await findListById(listId, {
-    media: true,
-    members: true,
-    owner: true,
-  });
-
-  return list;
-};
-
-export const addUserToList = async (listId: string, userId: string) => {
+const addUserToList = async (listId: string, userId: string) => {
   return await prisma.listMember.upsert({
     create: { userId, listId },
     update: { userId, listId },
@@ -84,7 +63,7 @@ export const addUserToList = async (listId: string, userId: string) => {
   });
 };
 
-export const getListById = async (
+const getListById = async (
   listId: string,
   joins?: { media?: boolean; members?: boolean; owner?: boolean }
 ) => {
@@ -96,12 +75,6 @@ export const getListById = async (
       owner: joins?.owner,
     },
   });
-};
-
-export const getListDataForOwner = async (ownerId: string) => {
-  const list = await findListForOwner(ownerId);
-
-  return list;
 };
 
 const getListsForUser = async (userId: string) => {
@@ -116,32 +89,6 @@ const getListsForUser = async (userId: string) => {
   });
 
   return { ownedLists, joinedLists };
-};
-
-const findListById = async (
-  listId: string,
-  joins: { media?: boolean; members?: boolean; owner?: boolean }
-) => {
-  const { media, members: includeMembers, owner } = joins;
-  return await prisma.list.findFirst({
-    where: { id: listId },
-    include: { media, members: { include: { user: includeMembers } }, owner },
-  });
-};
-
-const findListForOwner = async (userId: string) => {
-  const list = await prisma.list.findFirst({
-    where: { ownerId: userId },
-    include: { media: true },
-  });
-
-  if (list) {
-    return list;
-  }
-
-  // TODO: move the following to a list creation method instead
-  // TODO: remove?
-  return await createList(userId);
 };
 
 const createList = async (userId: string) => {
@@ -166,13 +113,13 @@ const createList = async (userId: string) => {
   });
 };
 
-export default {
+const prismaListFunctions = {
   getListsForUser,
-  getListDataForId,
-  getListDataForOwner,
   addMediaToList,
   addUserToList,
   removeMediaFromList,
   getListById,
   createList,
 };
+
+export default prismaListFunctions;
