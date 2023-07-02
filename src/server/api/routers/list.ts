@@ -11,8 +11,18 @@ import {
 } from "../../domain/list";
 import { getUserPreferences } from "../../domain/userPreferences";
 
+const watchProviderPaymentInput = z
+  .object({
+    name: z.string(),
+    logoUrl: z.string(),
+  })
+  .array()
+  .optional();
+
 const getListByIdInput = z.string();
+
 const acceptInvitationInput = z.string();
+
 const updateListInput = z.object({
   listId: z.string(),
   media: z.object({
@@ -24,41 +34,11 @@ const updateListInput = z.object({
     watchProviders: z
       .object({
         region: z.string(),
-        flatrate: z
-          .object({
-            name: z.string(),
-            logoUrl: z.string(),
-          })
-          .array()
-          .optional(),
-        buy: z
-          .object({
-            name: z.string(),
-            logoUrl: z.string(),
-          })
-          .array()
-          .optional(),
-        ads: z
-          .object({
-            name: z.string(),
-            logoUrl: z.string(),
-          })
-          .array()
-          .optional(),
-        rent: z
-          .object({
-            name: z.string(),
-            logoUrl: z.string(),
-          })
-          .array()
-          .optional(),
-        free: z
-          .object({
-            name: z.string(),
-            logoUrl: z.string(),
-          })
-          .array()
-          .optional(),
+        flatrate: watchProviderPaymentInput,
+        buy: watchProviderPaymentInput,
+        ads: watchProviderPaymentInput,
+        rent: watchProviderPaymentInput,
+        free: watchProviderPaymentInput,
       })
       .array()
       .optional(),
