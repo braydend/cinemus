@@ -28,13 +28,16 @@ export const UserStack: FC<Props> = ({ users }) => {
   return (
     <div className={`flex flex-row`}>
       {limitedImages.map((user, index) => (
-        <div
-          className={`mr-[-12px] rounded-full border-4 ${
-            index === 0 ? borderColours.owner : borderColours.member
-          }`}
-          key={JSON.stringify(user)}
-        >
-          <Avatar user={user} />
+        <div className="mr-[-12px]" key={JSON.stringify(user)}>
+          <Avatar
+            user={user}
+            // TODO: This is quite naive. Maybe do this more controlled
+            tooltipSuffix={index === 0 ? "(Owner)" : "(Member)"}
+            showTooltip
+            className={`border-4 ${
+              index === 0 ? borderColours.owner : borderColours.member
+            }`}
+          />
         </div>
       ))}
       {hiddenImageCount > 0 && <Counter count={hiddenImageCount} />}
