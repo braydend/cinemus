@@ -4,7 +4,6 @@ export const secrets = {
 
 export const db = {
   DATABASE_NAME: process.env.DATABASE_NAME ?? "",
-  MONGO_CONNECTION_STRING: process.env.MONGO_CONNECTION_STRING ?? "",
 };
 
 export const upstash = {
