@@ -2,11 +2,10 @@ import { z } from "zod";
 import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
 import {
   getListData,
-  getListById,
   getListsForUser,
   joinList,
-  removeFromList as removeMediaFromList,
-  updateList as updateListMedia,
+  removeMediaFromList,
+  updateListMedia,
   getListMedia,
   createList,
 } from "../../domain/list";
@@ -82,13 +81,6 @@ const removeFromListInput = z.object({
 });
 
 export const listRouter = createTRPCRouter({
-  getListById: protectedProcedure
-    .input(getListByIdInput)
-    .query(async ({ ctx, input }) => {
-      const userId = ctx.session.user.id;
-      const prefs = await getUserPreferences(userId);
-      return await getListById(input, prefs.watchProviderRegion ?? undefined);
-    }),
   acceptInvitation: protectedProcedure
     .input(acceptInvitationInput)
     .mutation(async ({ ctx, input }) => {
@@ -97,10 +89,8 @@ export const listRouter = createTRPCRouter({
     }),
   getListData: protectedProcedure
     .input(getListByIdInput)
-    .query(async ({ input, ctx }) => {
-      const userId = ctx.session.user.id;
-      const prefs = await getUserPreferences(userId);
-      return await getListData(input, prefs.watchProviderRegion ?? undefined);
+    .query(async ({ input }) => {
+      return await getListData(input);
     }),
   getListMedia: protectedProcedure
     .input(getListByIdInput)

@@ -19,7 +19,7 @@ const ListInvitationPage: NextPage = () => {
   const listId =
     (typeof id === "string" ? id : id !== undefined ? id[0] : "") ?? "";
 
-  const { data, isLoading } = api.listRouter.getListById.useQuery(listId);
+  const { data, isLoading } = api.listRouter.getListData.useQuery(listId);
   const { mutate: joinList, isLoading: isJoinLoading } =
     api.listRouter.acceptInvitation.useMutation({
       onSuccess: () => {
