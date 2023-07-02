@@ -4,11 +4,11 @@ import { type NextPage } from "next";
 import { useAuthRequired } from "~/hooks/useAuthRequired";
 import Link from "next/link";
 import { UserStack } from "../../components/molecules";
-import { inferRouterOutputs } from "@trpc/server";
-import { ArrayElement } from "mongodb";
-import { AppRouter } from "../../server/api/root";
+import { type inferRouterOutputs } from "@trpc/server";
+import { type AppRouter } from "../../server/api/root";
 import { useRouter } from "next/router";
 import { availableRoutes } from "../../routes";
+import { type ArrayElement } from "../../utils/types";
 
 type Lists = inferRouterOutputs<AppRouter>["listRouter"]["getListsForUser"];
 type List =
