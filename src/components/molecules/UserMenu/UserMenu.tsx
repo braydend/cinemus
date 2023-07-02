@@ -31,11 +31,9 @@ export const UserMenu: FC = () => {
     void signOut();
   };
 
-  if (sessionData === null) {
-    throw Error("Unable to get session for the current user");
-  }
-
-  return Boolean(sessionData) ? (
+  return sessionData?.user == null ? (
+    <Button onClick={handleLogin} variant="purple" label="Login" />
+  ) : (
     <Box sx={{ flexGrow: 0 }}>
       <>
         <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
@@ -68,7 +66,5 @@ export const UserMenu: FC = () => {
         </Menu>
       </>
     </Box>
-  ) : (
-    <Button onClick={handleLogin} variant="purple" label="Login" />
   );
 };
