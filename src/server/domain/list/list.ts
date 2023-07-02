@@ -3,13 +3,7 @@ import { getMovie } from "../movie";
 import { getShow } from "../show";
 import { logger } from "../../libs/logger";
 import { type MediaType } from "../../../types";
-import db, {
-  addUserToList,
-  getListDataForId,
-  getListDataForOwner,
-  removeMediaFromList,
-  addMediaToList,
-} from "../../db/prisma";
+import db from "../../db/prisma";
 import { ServerError, UserError } from "../../../errors";
 
 interface ListedMedia {
@@ -26,7 +20,11 @@ export interface List {
 export const getListById = async (listId: string, region?: string) => {
   logger.profile(`getListById #${listId}`);
 
-  const list = await getListDataForId(listId);
+  const list = await db.getListById(listId, {
+    media: true,
+    members: true,
+    owner: true,
+  });
 
   // const hydratedData = await Promise.all(
   //   (list?.media ?? []).map(async (media) => ({
@@ -56,7 +54,7 @@ export const joinList = async (listId: string, userId: string) => {
       code: "BAD_REQUEST",
     });
   }
-  const updatedList = await addUserToList(listId, userId);
+  const updatedList = await db.addUserToList(listId, userId);
 
   logger.profile(`getListById #${listId}`);
 
