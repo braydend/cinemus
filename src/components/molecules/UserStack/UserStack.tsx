@@ -6,6 +6,11 @@ type Props = {
   users: Omit<User, "emailVerified">[];
 };
 
+const borderColours = {
+  owner: "border-cinemus-yellow",
+  member: "border-cinemus-purple",
+} as const;
+
 const MAX_IMAGES = 2;
 
 const Counter: FC<{ count: number }> = ({ count }) => {
@@ -22,8 +27,13 @@ export const UserStack: FC<Props> = ({ users }) => {
 
   return (
     <div className={`flex flex-row`}>
-      {limitedImages.map((user) => (
-        <div className="mr-[-12px]" key={JSON.stringify(user)}>
+      {limitedImages.map((user, index) => (
+        <div
+          className={`mr-[-12px] rounded-full border-4 ${
+            index === 0 ? borderColours.owner : borderColours.member
+          }`}
+          key={JSON.stringify(user)}
+        >
           <Avatar user={user} />
         </div>
       ))}
