@@ -17,7 +17,7 @@ const gradients = [
 ] as const;
 
 const imageSize = { small: 48, original: 64 } as const;
-const gradientSize = { small: "h-12 w-12", original: "h-16 w-16" } as const;
+const elementSize = { small: "h-12 w-12", original: "h-16 w-16" } as const;
 
 export const Avatar: FC<Props> = ({
   user: { name, email, image },
@@ -43,7 +43,7 @@ export const Avatar: FC<Props> = ({
 
   return (
     <div
-      className={`${gradientSize[size]} rounded-full ${gradient} ${
+      className={`${elementSize[size]} rounded-full ${gradient} ${
         className ?? ""
       }`}
       aria-label={altText}

@@ -23,7 +23,9 @@ export const UserStack: FC<Props> = ({ users }) => {
   return (
     <div className={`flex flex-row`}>
       {limitedImages.map((user) => (
-        <Avatar user={user} key={JSON.stringify(user)} className="mr-[-12px]" />
+        <div className="mr-[-12px]" key={JSON.stringify(user)}>
+          <Avatar user={user} />
+        </div>
       ))}
       {hiddenImageCount > 0 && <Counter count={hiddenImageCount} />}
     </div>
