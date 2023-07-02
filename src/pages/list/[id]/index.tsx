@@ -27,6 +27,7 @@ const ListPage: NextPage = () => {
   const {
     isReady,
     query: { id: listIdParam },
+    asPath,
   } = useRouter();
 
   useEffect(() => {
@@ -181,7 +182,9 @@ const ListPage: NextPage = () => {
             variant="purple"
             className="h-fit"
             onClick={() => {
-              void navigator.clipboard.writeText("foo");
+              const origin = window.location.origin;
+              const invitationLink = `${origin}${asPath}/invitation`;
+              void navigator.clipboard.writeText(invitationLink);
               enqueueSnackbar("Invitation link copied to clipboard!", {
                 variant: "info",
               });

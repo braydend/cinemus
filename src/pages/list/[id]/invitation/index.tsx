@@ -42,14 +42,14 @@ const ListInvitationPage: NextPage = () => {
 
   return (
     <main className="flex flex-col items-center font-raleway text-cinemus-purple">
-      <Heading level="2">
-        {`You've been invited to join ${
-          data.owner.name ?? data.owner.email ?? "someone"
-        }'s list`}
+      {/* TODO: Remove this forced style. It was added to wrap long names correctly, but the solution in /list/[id]/index.tsx wouldn't work */}
+      <Heading level="2" className="[word-wrap:anywhere]">
+        You&apos;ve been invited to join {data.name}
       </Heading>
       <UserStack users={[owner, ...data.members.map(({ user }) => user)]} />
+
       {Boolean(error) && <span className="mt-8 text-red-600">{error}</span>}
-      <div className="mt-8 grid w-1/2 grid-cols-2 gap-4">
+      <div className="mt-8 grid grid-cols-2 gap-4">
         <Button
           onClick={() => {
             joinList(listId);
