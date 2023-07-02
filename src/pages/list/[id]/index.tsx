@@ -165,8 +165,10 @@ const ListPage: NextPage = () => {
 
   return (
     <main className="font-raleway text-cinemus-purple">
-      <header className="flex flex-row justify-between">
-        <Heading level="2">{listData.name}</Heading>
+      <header className="flex flex-col justify-between pb-4 md:flex-row">
+        <Heading level="2" className="break-words">
+          {listData.name}
+        </Heading>
         <div className="flex h-fit flex-row flex-wrap items-center gap-4">
           <UserStack
             users={[
