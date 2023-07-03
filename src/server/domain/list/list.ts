@@ -5,16 +5,12 @@ import { logger } from "../../libs/logger";
 import { type MediaType } from "../../../types";
 import db from "../../db/prisma";
 import { ServerError, UserError } from "../../../errors";
+import { List } from "@prisma/client";
 
 interface ListedMedia {
   id: string;
   __type: "movie" | "show";
   isWatched?: boolean;
-}
-
-export interface List {
-  userId: string;
-  media: ListedMedia[];
 }
 
 export const joinList = async (listId: string, userId: string) => {
@@ -53,6 +49,54 @@ export const getListData = async (listId: string) => {
   logger.profile(`getListData #${listId}`);
 
   return list;
+};
+
+const checkUserAccess = async (
+  userId: string,
+  listId: string,
+  action: "EDIT"
+) => {
+  const list = await getListData(listId);
+  if (action === "EDIT") checkEditAccess(userId, list);
+};
+
+const checkEditAccess = (userId: string, list: List) => {
+  if (list.ownerId !== userId) {
+    throw new UserError({
+      code: "UNAUTHORIZED",
+      message: `Cannot edit list with id #${list.id}`,
+    });
+  }
+};
+
+export const updateListData = async (
+  listId: string,
+  updateData: { name: string },
+  userId: string
+) => {
+  logger.profile(
+    `updateListData #${listId} (data: ${JSON.stringify(updateData)})`
+  );
+
+  await checkUserAccess(userId, listId, "EDIT");
+
+  // try {
+  const list = await db.updateListById(listId, updateData, {
+    members: true,
+    owner: true,
+  });
+
+  logger.profile(
+    `updateListData #${listId} (data: ${JSON.stringify(updateData)})`
+  );
+
+  return list;
+  // } catch (e) {
+  //   throw new UserError({
+  //     code: "NOT_FOUND",
+  //     message: `Cannot find list with id #${listId}`,
+  //   });
+  // }
 };
 
 export const getListMedia = async (listId: string, region?: string) => {

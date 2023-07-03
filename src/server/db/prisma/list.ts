@@ -67,8 +67,24 @@ const getListById = async (
   listId: string,
   joins?: { media?: boolean; members?: boolean; owner?: boolean }
 ) => {
-  return prisma.list.findUnique({
+  return await prisma.list.findUnique({
     where: { id: listId },
+    include: {
+      media: joins?.media,
+      members: { include: { user: joins?.members } },
+      owner: joins?.owner,
+    },
+  });
+};
+
+const updateListById = async (
+  listId: string,
+  updateData: { name: string },
+  joins?: { media?: boolean; members?: boolean; owner?: boolean }
+) => {
+  return await prisma.list.update({
+    where: { id: listId },
+    data: { name: updateData.name },
     include: {
       media: joins?.media,
       members: { include: { user: joins?.members } },
@@ -120,6 +136,7 @@ const prismaListFunctions = {
   removeMediaFromList,
   getListById,
   createList,
+  updateListById,
 };
 
 export default prismaListFunctions;
