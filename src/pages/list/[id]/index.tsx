@@ -24,6 +24,10 @@ type SearchedMedia = ArrayElement<
 const ListPage: NextPage = () => {
   const { enqueueSnackbar } = useSnackbar();
   const [listId, setListId] = useState<string>("");
+  const [isEditMode, setIsEditMode] = useState(false);
+  const [listName, setListName] = useState("");
+  const [selectedMedia, setSelectedMedia] = useState<string>();
+
   const {
     isReady,
     query: { id: listIdParam },
@@ -40,10 +44,37 @@ const ListPage: NextPage = () => {
   const trpcContext = api.useContext();
   const { data: userPreferences } =
     api.userRouter.getUserPreferences.useQuery();
+  // TODO: Would be good to prefetch this data
   const { data: listData, isLoading: isLoadingListData } =
     api.listRouter.getListData.useQuery(listId, {
       enabled: Boolean(listId),
     });
+
+  const { mutate: editList, isLoading: isEditLoading } =
+    api.listRouter.updateListData.useMutation({
+      onError: () => {
+        enqueueSnackbar({
+          message: "Unable to save changes! Please try again later.",
+          variant: "error",
+        });
+      },
+      onSuccess: (updatedList) => {
+        enqueueSnackbar({
+          message: "Successfully updated list!",
+          variant: "success",
+        });
+        setIsEditMode(false);
+        void trpcContext.listRouter.getListData.invalidate(listId);
+      },
+    });
+
+  //TODO: If prefetching data can be achieved, then this can be removed
+  useEffect(() => {
+    if (!isLoadingListData && listData) {
+      setListName(listData.name);
+    }
+  }, [listData, isLoadingListData]);
+
   const { data, isLoading: isLoadingListMedia } =
     api.listRouter.getListMedia.useQuery(listId, {
       enabled: Boolean(listId),
@@ -122,7 +153,6 @@ const ListPage: NextPage = () => {
         await trpcContext.listRouter.getListMedia.invalidate(listId);
       },
     });
-  const [selectedMedia, setSelectedMedia] = useState<string>();
 
   const handleSelection = (
     listId: string,
@@ -154,6 +184,10 @@ const ListPage: NextPage = () => {
     });
   };
 
+  const handleSaveChanges = () => {
+    editList({ listId, name: listName });
+  };
+
   const isLoading = isLoadingListMedia || isLoadingListData;
   const hasData = data && listData;
 
@@ -167,9 +201,17 @@ const ListPage: NextPage = () => {
   return (
     <main className="font-raleway text-cinemus-purple">
       <header className="flex flex-col justify-between pb-4 md:flex-row">
-        <Heading level="2" className="break-words">
-          {listData.name}
-        </Heading>
+        {isEditMode ? (
+          <input
+            type="text"
+            value={listName}
+            onChange={({ target: { value } }) => setListName(value)}
+          />
+        ) : (
+          <Heading level="2" className="break-words">
+            {listData.name}
+          </Heading>
+        )}
         <div className="flex h-fit flex-row flex-wrap items-center gap-4">
           <UserStack
             users={[
@@ -190,6 +232,20 @@ const ListPage: NextPage = () => {
               });
             }}
           />
+          {isEditMode ? (
+            <Button
+              label={isEditLoading ? "Saving" : "Save"}
+              onClick={handleSaveChanges}
+              disabled={isEditLoading}
+              variant="purple"
+            />
+          ) : (
+            <Button
+              label="Edit"
+              onClick={() => setIsEditMode(true)}
+              variant="purple"
+            />
+          )}
         </div>
       </header>
       <MediaSearch

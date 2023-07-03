@@ -8,6 +8,7 @@ import {
   updateListMedia,
   getListMedia,
   createList,
+  updateListData,
 } from "../../domain/list";
 import { getUserPreferences } from "../../domain/userPreferences";
 
@@ -23,7 +24,9 @@ const getListByIdInput = z.string();
 
 const acceptInvitationInput = z.string();
 
-const updateListInput = z.object({
+const updateListDataInput = z.object({ listId: z.string(), name: z.string() });
+
+const updateListMediaInput = z.object({
   listId: z.string(),
   media: z.object({
     id: z.string(),
@@ -72,6 +75,13 @@ export const listRouter = createTRPCRouter({
     .query(async ({ input }) => {
       return await getListData(input);
     }),
+  updateListData: protectedProcedure
+    .input(updateListDataInput)
+    .mutation(async ({ input: { listId, ...updateData }, ctx }) => {
+      const userId = ctx.session.user.id;
+
+      return await updateListData(listId, updateData, userId);
+    }),
   getListMedia: protectedProcedure
     .input(getListByIdInput)
     .query(async ({ input, ctx }) => {
@@ -88,7 +98,7 @@ export const listRouter = createTRPCRouter({
     return await createList(userId);
   }),
   updateListMedia: protectedProcedure
-    .input(updateListInput)
+    .input(updateListMediaInput)
     .mutation(async ({ ctx, input }) => {
       const userId = ctx.session.user.id;
       const prefs = await getUserPreferences(userId);
