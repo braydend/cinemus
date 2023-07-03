@@ -4,6 +4,7 @@ import { type User } from "@prisma/client";
 
 type Props = {
   users: Omit<User, "emailVerified">[];
+  className?: string;
 };
 
 const borderColours = {
@@ -21,12 +22,12 @@ const Counter: FC<{ count: number }> = ({ count }) => {
   );
 };
 
-export const UserStack: FC<Props> = ({ users }) => {
+export const UserStack: FC<Props> = ({ users, className }) => {
   const limitedImages = users.slice(0, MAX_IMAGES);
   const hiddenImageCount = users.length - MAX_IMAGES;
 
   return (
-    <div className={`flex flex-row`}>
+    <div className={`flex flex-row ${className ?? ""}`}>
       {limitedImages.map((user, index) => (
         <div className="mr-[-12px]" key={JSON.stringify(user)}>
           <Avatar

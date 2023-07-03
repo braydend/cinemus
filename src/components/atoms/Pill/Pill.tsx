@@ -7,7 +7,7 @@ interface Props {
 
 export const Pill: FC<Props> = ({ label }) => {
   return (
-    <span className="rounded border border-purple-950 whitespace-nowrap py-0 px-2 h-fit text-purple-950">
+    <span className="h-fit w-min whitespace-nowrap rounded border border-purple-950 px-2 py-0 text-purple-950">
       {label}
     </span>
   );

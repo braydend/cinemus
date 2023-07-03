@@ -50,7 +50,7 @@ const ListsPage: NextPage = () => {
   };
 
   return (
-    <main className="px-12 font-raleway text-cinemus-purple">
+    <main className="px-10 font-raleway text-cinemus-purple">
       <Heading level="2">Lists</Heading>
       {hasNoLists ? (
         <div className="flex flex-col items-center gap-8">
@@ -68,12 +68,16 @@ const ListsPage: NextPage = () => {
           {lists.map((list) => (
             <li
               key={list.id}
-              className="mb-4 flex flex-row items-center justify-between"
+              className="mb-4 flex flex-row items-center justify-between gap-4"
             >
               <Link href={`/list/${list.id}`}>
-                {list.name} <Pill label={list.role} />
+                <div className="flex flex-shrink flex-col flex-wrap break-all md:flex-row md:gap-2">
+                  <Pill label={list.role} />
+                  <div>{list.name}</div>
+                </div>
               </Link>
               <UserStack
+                className="flex-shrink-0 justify-end"
                 users={[list.owner, ...list.members.map(({ user }) => user)]}
               />
             </li>
