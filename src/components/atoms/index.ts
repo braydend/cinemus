@@ -7,3 +7,4 @@ export * from "./Button";
 export * from "./Heading";
 export * from "./Pill";
 export * from "./Avatar";
+export * from "./Tooltip";

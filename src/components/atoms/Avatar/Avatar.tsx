@@ -1,6 +1,7 @@
-import { User } from "@prisma/client";
+import { type User } from "@prisma/client";
 import Image from "next/image";
-import { FC, PropsWithChildren } from "react";
+import { type FC } from "react";
+import { Tooltip } from "../Tooltip";
 
 type Props = {
   user: Omit<Partial<User>, "emailVerified">;
@@ -17,20 +18,6 @@ const gradients = [
   "bg-gradient-to-br from-violet-800 to-indigo-300",
   "bg-gradient-to-tr from-amber-700 to-yellow-500",
 ] as const;
-
-const Tooltip: FC<PropsWithChildren<{ content: string }>> = ({
-  children,
-  content,
-}) => {
-  return (
-    <div className="group relative">
-      {children}
-      <span className="invisible absolute top-16 z-10 inline-block rounded-sm border border-cinemus-purple bg-white p-2 group-hover:visible group-active:visible">
-        {content}
-      </span>
-    </div>
-  );
-};
 
 const imageSize = { small: 48, original: 64 } as const;
 const elementSize = { small: "h-12 w-12", original: "h-16 w-16" } as const;
