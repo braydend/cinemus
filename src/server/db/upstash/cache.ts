@@ -12,11 +12,14 @@ export const createCacheInstance = (): void => {
 };
 
 const getInstance = (): Redis => {
+  logger.profile(`get cache instance`);
+
   if (instance == null) {
     logger.info("creating cache instance");
     createCacheInstance();
   }
 
+  logger.profile(`get cache instance`);
   return instance;
 };
 export const addToCache = async <Data>(
@@ -24,6 +27,7 @@ export const addToCache = async <Data>(
   data: Data,
   daysToCache = 3
 ): Promise<Data> => {
+  logger.profile(`addToCache (key: ${key})`);
   const instance = getInstance();
   const secondsToCache = daysToCache * 24 * 60 * 60;
 
@@ -39,6 +43,7 @@ export const addToCache = async <Data>(
     );
   }
 
+  logger.profile(`addToCache (key: ${key})`);
   return data;
 };
 
@@ -46,20 +51,19 @@ export const retrieveFromCache = async <Data>(
   key: string
 ): Promise<Data | null | undefined> => {
   try {
+    logger.profile(`Cache lookup: key="${key}"`);
     logger.info("get Instance");
     const instance = getInstance();
-
-    logger.profile(`Cache lookup: key="${key}"`);
 
     logger.info("retrieve from cache");
     const result = await instance.get<Data>(key);
 
-    logger.profile(`Cache lookup: key="${key}"`);
     logger.info(`Cache ${result != null ? "hit" : "miss"} for key "${key}"`);
 
+    logger.profile(`Cache lookup: key="${key}"`);
     return result;
   } catch (e) {
-    logger.error(`Error retreiving from cache: ${(e as Error).message}`);
+    logger.error(`Error retrieving from cache: ${(e as Error).message}`);
   }
 };
 
