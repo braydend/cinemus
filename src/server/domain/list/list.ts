@@ -4,8 +4,9 @@ import { getShow } from "../show";
 import { logger } from "../../libs/logger";
 import { type MediaType } from "../../../types";
 import db from "../../db/prisma";
-import { ServerError, UserError } from "../../../errors";
-import { List } from "@prisma/client";
+import { UserError } from "../../../errors";
+import { type List } from "@prisma/client";
+import { sortMediaAlphabetically } from "../../../utils/sort";
 
 interface ListedMedia {
   id: string;
@@ -80,7 +81,6 @@ export const updateListData = async (
 
   await checkUserAccess(userId, listId, "EDIT");
 
-  // try {
   const list = await db.updateListById(listId, updateData, {
     members: true,
     owner: true,
@@ -91,12 +91,6 @@ export const updateListData = async (
   );
 
   return list;
-  // } catch (e) {
-  //   throw new UserError({
-  //     code: "NOT_FOUND",
-  //     message: `Cannot find list with id #${listId}`,
-  //   });
-  // }
 };
 
 export const getListMedia = async (listId: string, region?: string) => {
@@ -120,9 +114,11 @@ export const getListMedia = async (listId: string, region?: string) => {
     }))
   );
 
+  const sortedMedia = hydratedData.sort(sortMediaAlphabetically);
+
   logger.profile(`getListMedia #${listId}`);
 
-  return { media: hydratedData };
+  return { media: sortedMedia };
 };
 
 export const getListsForUser = async (userId: string) => {
