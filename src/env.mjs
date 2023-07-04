@@ -33,7 +33,8 @@ export const env = createEnv({
     MOVIE_DB_API_KEY: z.string(),
     TMDB_URL: z.string(),
     DATABASE_NAME: z.string(),
-    UPSTASH_REDIS_API_KEY: z.string(),
+    UPSTASH_REDIS_REST_URL: z.string(),
+    UPSTASH_REDIS_REST_TOKEN: z.string(),
   },
 
   /**
@@ -53,7 +54,8 @@ export const env = createEnv({
     MOVIE_DB_API_KEY: process.env.MOVIE_DB_API_KEY,
     TMDB_URL: process.env.TMDB_URL,
     DATABASE_NAME: process.env.DATABASE_NAME,
-    UPSTASH_REDIS_API_KEY: process.env.UPSTASH_REDIS_API_KEY,
+    UPSTASH_REDIS_REST_URL: process.env.UPSTASH_REDIS_REST_URL,
+    UPSTASH_REDIS_REST_TOKEN: process.env.UPSTASH_REDIS_REST_TOKEN,
     NEXTAUTH_SECRET: process.env.NEXTAUTH_SECRET,
     NEXTAUTH_URL: process.env.NEXTAUTH_URL,
     GITHUB_CLIENT_ID: process.env.GITHUB_CLIENT_ID,

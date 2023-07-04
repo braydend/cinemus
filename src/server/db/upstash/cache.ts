@@ -1,14 +1,10 @@
 import { Redis } from "@upstash/redis";
 import { logger } from "../../libs/logger";
-import { upstash } from "../../config";
 
 let instance: Redis;
 
 export const createCacheInstance = (): void => {
-  instance = new Redis({
-    url: "https://crucial-bird-36093.upstash.io",
-    token: upstash.REDIS_API_KEY,
-  });
+  instance = Redis.fromEnv();
 };
 
 const getInstance = (): Redis => {
