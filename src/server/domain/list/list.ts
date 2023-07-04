@@ -106,12 +106,11 @@ export const getListMedia = async (listId: string, region?: string) => {
   }
 
   const hydratedData = await Promise.all(
-    list.media.map(async (media) => ({
-      ...(media.type === "movie"
-        ? await getMovie(media.id, region)
-        : await getShow(media.id, region)),
-      isWatched: media.isWatched ?? false,
-    }))
+    list.media.map((media) =>
+      media.type === "movie"
+        ? getMovie(media.id, region)
+        : getShow(media.id, region)
+    )
   );
 
   const sortedMedia = hydratedData.sort(sortMediaAlphabetically);
@@ -148,9 +147,11 @@ export const updateListMedia = async (
     )
   );
 
+  const sortedMedia = hydratedResults.sort(sortMediaAlphabetically);
+
   logger.profile(`updateList #${listId} media:${JSON.stringify(media)}`);
 
-  return hydratedResults;
+  return sortedMedia;
 };
 
 export const removeMediaFromList = async (
@@ -170,9 +171,11 @@ export const removeMediaFromList = async (
     )
   );
 
+  const sortedMedia = hydratedResults.sort(sortMediaAlphabetically);
+
   logger.profile(`removeFromList #${listId} media=${JSON.stringify(media)}`);
 
-  return hydratedResults;
+  return sortedMedia;
 };
 
 export const createList = async (userId: string) => {
