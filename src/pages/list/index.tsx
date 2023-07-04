@@ -82,14 +82,16 @@ const ListsPage: NextPage = () => {
 
   return (
     <main className="px-10 font-raleway text-cinemus-purple">
-      <Heading level="2">Lists</Heading>
-      <Button
-        variant="purple"
-        onClick={handleCreateList}
-        label={isListCreationLoading ? "Creating List" : "Create List"}
-        className="w-fit"
-        disabled={isListCreationLoading}
-      />
+      <header className="flex flex-col gap-2 pb-4 md:flex-row md:justify-between">
+        <Heading level="2">Lists</Heading>
+        <Button
+          variant="purple"
+          onClick={handleCreateList}
+          label={isListCreationLoading ? "Creating List" : "Create List"}
+          className="w-fit"
+          disabled={isListCreationLoading}
+        />
+      </header>
       {hasNoLists ? (
         <div className="flex flex-col items-center gap-8">
           <span>Create a list to get started!</span>
