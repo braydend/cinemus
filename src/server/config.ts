@@ -6,10 +6,6 @@ export const db = {
   DATABASE_NAME: process.env.DATABASE_NAME ?? "",
 };
 
-export const upstash = {
-  REDIS_API_KEY: process.env.UPSTASH_REDIS_API_KEY ?? "",
-};
-
 export const url = {
   TMDB_URL: process.env.TMDB_URL ?? "",
 };
