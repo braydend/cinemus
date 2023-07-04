@@ -6,6 +6,7 @@ import { Button, Heading } from "../../atoms";
 import { UserStack } from "../../molecules";
 import { useRouter } from "next/router";
 import { api } from "../../../utils/api";
+import { useSession } from "next-auth/react";
 
 type ListData = inferRouterOutputs<AppRouter>["listRouter"]["getListData"];
 
@@ -13,6 +14,7 @@ type Props = { data: ListData };
 
 export const ListInfo: FC<Props> = ({ data }) => {
   const { asPath } = useRouter();
+  const session = useSession();
   const trpcContext = api.useContext();
 
   const [listName, setListName] = useState(data.name);
@@ -47,6 +49,8 @@ export const ListInfo: FC<Props> = ({ data }) => {
   const handleSaveChanges = () => {
     editList({ listId: data.id, name: listName });
   };
+
+  const canEdit = data.ownerId === session.data?.user.id;
 
   return (
     <header className="flex flex-col justify-between pb-4 md:flex-row">
@@ -86,11 +90,13 @@ export const ListInfo: FC<Props> = ({ data }) => {
             variant="purple"
           />
         ) : (
-          <Button
-            label="Edit"
-            onClick={() => setIsEditMode(true)}
-            variant="purple"
-          />
+          canEdit && (
+            <Button
+              label="Edit"
+              onClick={() => setIsEditMode(true)}
+              variant="purple"
+            />
+          )
         )}
       </div>
     </header>
