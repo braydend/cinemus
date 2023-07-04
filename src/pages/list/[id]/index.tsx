@@ -40,7 +40,6 @@ export async function getServerSideProps(
 
   await Promise.all([
     helpers.listRouter.getListData.prefetch(id),
-    helpers.listRouter.getListMedia.prefetch(id),
     helpers.userRouter.getUserPreferences.prefetch(),
   ]);
 
@@ -119,26 +118,32 @@ const ListPage: NextPage<
   const isLoading = isLoadingListMedia || isLoadingListData;
   const hasData = data && listData;
 
-  if (isLoading || !hasData) {
-    return <>Loading list...</>;
-  }
-
   const currentSelections: Media[] = data?.media ?? [];
   const isRegionSelected = Boolean(userPreferences?.watchProviderRegion);
 
   return (
     <main className="font-raleway text-cinemus-purple">
-      <ListInfo data={listData} />
-      <MediaSearch
-        onSelect={(selection) => handleSelection(listId, selection)}
-      />
+      {isLoadingListData || !listData ? (
+        <>Loading info...</>
+      ) : (
+        <>
+          <ListInfo data={listData} />
+          <MediaSearch
+            onSelect={(selection) => handleSelection(listId, selection)}
+          />
+        </>
+      )}
       {!isRegionSelected && (
         <Alert severity="info" sx={{ marginTop: "1rem" }}>
           Ready to find out where to watch everything on your list?{" "}
           <Link href={availableRoutes.user}>Select your region</Link>
         </Alert>
       )}
-      <ListMedia media={currentSelections} listId={listId} />
+      {isLoadingListMedia ? (
+        <>Loading media...</>
+      ) : (
+        <ListMedia media={currentSelections} listId={listId} />
+      )}
     </main>
   );
 };
