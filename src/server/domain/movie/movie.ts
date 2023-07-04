@@ -15,8 +15,10 @@ import { addToCache, retrieveFromCache } from "../../db/upstash/cache";
 
 export const getMovie = async (id: string, region?: string): Promise<Media> => {
   const cacheKey = `movie-${id}`;
-  const cachedMovie = await retrieveFromCache<TmdbMovieDetails>(cacheKey);
-  const configuration = await getConfiguration();
+  const [cachedMovie, configuration] = await Promise.all([
+    retrieveFromCache<TmdbMovieDetails>(cacheKey),
+    getConfiguration(),
+  ]);
   const watchProviders =
     region != null
       ? await getMovieWatchProviders(id, configuration, region)
@@ -33,8 +35,10 @@ export const getMovie = async (id: string, region?: string): Promise<Media> => {
 };
 
 export const searchMovies = async (query: string): Promise<Media[]> => {
-  const { results } = await searchMovieRequest(query);
-  const configuration = await getConfiguration();
+  const [{ results }, configuration] = await Promise.all([
+    searchMovieRequest(query),
+    getConfiguration(),
+  ]);
 
   // for (const movie of results) {
   // const cacheKey = `show-${movie.id.toString(10)}`;
