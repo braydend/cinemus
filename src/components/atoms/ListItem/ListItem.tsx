@@ -1,6 +1,7 @@
 import { ListItem as MuiListItem } from "@mui/material";
 import { type FC } from "react";
-import { UnfoldLess, UnfoldMore } from "@mui/icons-material";
+import UnfoldLess from "@mui/icons-material/UnfoldLess";
+import UnfoldMore from "@mui/icons-material/UnfoldMore";
 import Button from "@mui/material/Button";
 import { Pill } from "../Pill";
 import { type inferRouterOutputs } from "@trpc/server";

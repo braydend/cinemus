@@ -1,7 +1,7 @@
 import { api } from "~/utils/api";
 import { sortMediaAlphabetically } from "~/utils/sort";
 import { ListInfo, ListMedia, MediaSearch } from "~/components/organisms";
-import { Alert } from "@mui/material";
+import Alert from "@mui/material/Alert";
 import { type inferRouterOutputs } from "@trpc/server";
 import { appRouter, type AppRouter } from "~/server/api/root";
 import {
@@ -38,9 +38,11 @@ export async function getServerSideProps(
   });
   const id = context.params?.id as string;
 
-  await helpers.listRouter.getListData.prefetch(id);
-  await helpers.listRouter.getListMedia.prefetch(id);
-  await helpers.userRouter.getUserPreferences.prefetch();
+  await Promise.all([
+    helpers.listRouter.getListData.prefetch(id),
+    helpers.listRouter.getListMedia.prefetch(id),
+    helpers.userRouter.getUserPreferences.prefetch(),
+  ]);
 
   return {
     props: {
