@@ -1,14 +1,19 @@
 import { api } from "~/utils/api";
 import { Button, Heading, Pill } from "~/components/atoms";
-import { type NextPage } from "next";
+import { type GetServerSidePropsContext, type NextPage } from "next";
 import { useAuthRequired } from "~/hooks/useAuthRequired";
 import Link from "next/link";
 import { UserStack } from "../../components/molecules";
 import { type inferRouterOutputs } from "@trpc/server";
-import { type AppRouter } from "../../server/api/root";
+import { appRouter, type AppRouter } from "../../server/api/root";
 import { useRouter } from "next/router";
 import { availableRoutes } from "../../routes";
 import { type ArrayElement } from "../../utils/types";
+import { createServerSideHelpers } from "@trpc/react-query/server";
+import { getServerSession } from "next-auth";
+import { authOptions } from "../../server/auth";
+import { prisma } from "../../server/db";
+import superjson from "superjson";
 
 type Lists = inferRouterOutputs<AppRouter>["listRouter"]["getListsForUser"];
 type List =
@@ -16,6 +21,27 @@ type List =
   | ArrayElement<Lists["joinedLists"]>;
 
 type ListWithRole = List & { role: string };
+
+export async function getServerSideProps(
+  context: GetServerSidePropsContext<{ id: string }>
+) {
+  const helpers = createServerSideHelpers({
+    router: appRouter,
+    ctx: {
+      prisma,
+      session: await getServerSession(context.req, context.res, authOptions),
+    },
+    transformer: superjson,
+  });
+
+  await Promise.all([helpers.listRouter.getListsForUser.prefetch()]);
+
+  return {
+    props: {
+      trpcState: helpers.dehydrate(),
+    },
+  };
+}
 
 const ListsPage: NextPage = () => {
   useAuthRequired();
