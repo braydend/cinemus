@@ -17,8 +17,11 @@ import { addToCache, retrieveFromCache } from "../../db/upstash/cache";
 export const getShow = async (id: string, region?: string): Promise<Media> => {
   logger.profile(`getShow #${id}`);
   const cacheKey = `show-${id}`;
-  const cachedShow = await retrieveFromCache<TmdbShowDetails>(cacheKey);
-  const configuration = await getConfiguration();
+  const [cachedShow, configuration] = await Promise.all([
+    retrieveFromCache<TmdbShowDetails>(cacheKey),
+    getConfiguration(),
+  ]);
+
   const watchProviders =
     region != null
       ? await getShowWatchProviders(id, configuration, region)
@@ -45,8 +48,10 @@ export const getShow = async (id: string, region?: string): Promise<Media> => {
 
 export const searchShows = async (query: string): Promise<MediaList> => {
   logger.profile(`searchShows: ${query}`);
-  const { results } = await searchShowRequest(query);
-  const configuration = await getConfiguration();
+  const [{ results }, configuration] = await Promise.all([
+    searchShowRequest(query),
+    getConfiguration(),
+  ]);
 
   // for (const show of results) {
   // const cacheKey = `show-${show.id.toString(10)}`;
