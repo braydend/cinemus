@@ -141,12 +141,11 @@ export const updateListMedia = async (
   const list = await db.addMediaToList(media, listId);
 
   const hydratedResults = await Promise.all(
-    list.media.map(async (media) => ({
-      ...(media.type === "movie"
-        ? await getMovie(media.id, region)
-        : await getShow(media.id, region)),
-      isWatched: media.isWatched ?? false,
-    }))
+    list.media.map((media) =>
+      media.type === "movie"
+        ? getMovie(media.id, region)
+        : getShow(media.id, region)
+    )
   );
 
   logger.profile(`updateList #${listId} media:${JSON.stringify(media)}`);
@@ -164,12 +163,11 @@ export const removeMediaFromList = async (
   const list = await db.removeMediaFromList(media, listId);
 
   const hydratedResults = await Promise.all(
-    list.media.map(async (media) => ({
-      ...(media.type === "movie"
-        ? await getMovie(media.id, region)
-        : await getShow(media.id, region)),
-      isWatched: media.isWatched ?? false,
-    }))
+    list.media.map((media) =>
+      media.type === "movie"
+        ? getMovie(media.id, region)
+        : getShow(media.id, region)
+    )
   );
 
   logger.profile(`removeFromList #${listId} media=${JSON.stringify(media)}`);
