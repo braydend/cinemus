@@ -14,6 +14,7 @@ import { getServerSession } from "next-auth";
 import { authOptions } from "../../server/auth";
 import { prisma } from "../../server/db";
 import superjson from "superjson";
+import { useSnackbar } from "notistack";
 
 type Lists = inferRouterOutputs<AppRouter>["listRouter"]["getListsForUser"];
 type List =
@@ -46,9 +47,13 @@ export async function getServerSideProps(
 const ListsPage: NextPage = () => {
   useAuthRequired();
   const router = useRouter();
+  const { enqueueSnackbar } = useSnackbar();
   const { data, isLoading } = api.listRouter.getListsForUser.useQuery();
   const { mutate: createList, isLoading: isListCreationLoading } =
     api.listRouter.createList.useMutation({
+      onError: (error) => {
+        enqueueSnackbar({ message: error.message, variant: "error" });
+      },
       onSuccess: (newList) => {
         void router.push(`${availableRoutes.list}/${newList.id}`);
       },
@@ -78,16 +83,16 @@ const ListsPage: NextPage = () => {
   return (
     <main className="px-10 font-raleway text-cinemus-purple">
       <Heading level="2">Lists</Heading>
+      <Button
+        variant="purple"
+        onClick={handleCreateList}
+        label={isListCreationLoading ? "Creating List" : "Create List"}
+        className="w-fit"
+        disabled={isListCreationLoading}
+      />
       {hasNoLists ? (
         <div className="flex flex-col items-center gap-8">
           <span>Create a list to get started!</span>
-          <Button
-            variant="purple"
-            onClick={handleCreateList}
-            label={isListCreationLoading ? "Creating List" : "Create List"}
-            className="w-fit"
-            disabled={isListCreationLoading}
-          />
         </div>
       ) : (
         <ul>
