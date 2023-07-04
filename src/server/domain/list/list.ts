@@ -3,9 +3,8 @@ import { getMovie } from "../movie";
 import { getShow } from "../show";
 import { logger } from "../../libs/logger";
 import { type MediaType } from "../../../types";
-import db from "../../db/prisma";
+import db, { user } from "../../db/prisma";
 import { UserError } from "../../../errors";
-import { type List } from "@prisma/client";
 import { sortMediaAlphabetically } from "../../../utils/sort";
 
 interface ListedMedia {
@@ -52,20 +51,23 @@ export const getListData = async (listId: string) => {
   return list;
 };
 
-const checkUserAccess = async (
-  userId: string,
-  listId: string,
-  action: "EDIT"
-) => {
+const checkEditAccess = async (userId: string, listId: string) => {
   const list = await getListData(listId);
-  if (action === "EDIT") checkEditAccess(userId, list);
-};
-
-const checkEditAccess = (userId: string, list: List) => {
   if (list.ownerId !== userId) {
     throw new UserError({
       code: "UNAUTHORIZED",
-      message: `Cannot edit list with id #${list.id}`,
+      message: `Insufficient permissions to edit this list.`,
+    });
+  }
+};
+
+const checkCreateAccess = async (userId: string) => {
+  const userData = await user.getUserById(userId);
+  //TODO: Change this to allow for 2 owned lists (or one? not sure yet)
+  if (userData.role !== "ADMIN") {
+    throw new UserError({
+      code: "UNAUTHORIZED",
+      message: `Insufficient permissions to create a list.`,
     });
   }
 };
@@ -79,7 +81,7 @@ export const updateListData = async (
     `updateListData #${listId} (data: ${JSON.stringify(updateData)})`
   );
 
-  await checkUserAccess(userId, listId, "EDIT");
+  await checkEditAccess(userId, listId);
 
   const list = await db.updateListById(listId, updateData, {
     members: true,
@@ -180,6 +182,8 @@ export const removeMediaFromList = async (
 
 export const createList = async (userId: string) => {
   logger.profile(`createList (userId #${userId})`);
+
+  await checkCreateAccess(userId);
 
   const list = await db.createList(userId);
 
