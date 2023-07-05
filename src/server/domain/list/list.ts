@@ -3,7 +3,7 @@ import { getMovie } from "../movie";
 import { getShow } from "../show";
 import { logger } from "../../libs/logger";
 import { type MediaType } from "../../../types";
-import db, { user } from "../../db/prisma";
+import db, { list, user } from "../../db/prisma";
 import { UserError } from "../../../errors";
 import { sortMediaAlphabetically } from "../../../utils/sort";
 
@@ -62,14 +62,26 @@ const checkEditAccess = async (userId: string, listId: string) => {
 };
 
 const checkCreateAccess = async (userId: string) => {
-  const userData = await user.getUserById(userId);
-  //TODO: Change this to allow for 2 owned lists (or one? not sure yet)
-  if (userData.role !== "ADMIN") {
+  const [userData, lists] = await Promise.all([
+    user.getUserById(userId),
+    list.getListsForUser(userId),
+  ]);
+  const isAdmin = userData.role === "ADMIN";
+  const hasExceededListLimit = lists.ownedLists.length >= 2;
+
+  if (!hasExceededListLimit) return;
+
+  if (!isAdmin) {
     throw new UserError({
       code: "UNAUTHORIZED",
       message: `Insufficient permissions to create a list.`,
     });
   }
+
+  throw new UserError({
+    code: "BAD_REQUEST",
+    message: `You've created too many lists.`,
+  });
 };
 
 const checkDeleteAccess = async (userId: string, listId: string) => {
