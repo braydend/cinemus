@@ -129,6 +129,11 @@ const createList = async (userId: string) => {
   });
 };
 
+const deleteList = async (listId: string) => {
+  await prisma.media.deleteMany({ where: { listId } });
+  return await prisma.list.delete({ where: { id: listId } });
+};
+
 const prismaListFunctions = {
   getListsForUser,
   addMediaToList,
@@ -137,6 +142,7 @@ const prismaListFunctions = {
   getListById,
   createList,
   updateListById,
+  deleteList,
 };
 
 export default prismaListFunctions;

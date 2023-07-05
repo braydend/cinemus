@@ -9,6 +9,7 @@ import {
   getListMedia,
   createList,
   updateListData,
+  deleteList,
 } from "../../domain/list";
 import { getUserPreferences } from "../../domain/userPreferences";
 
@@ -21,6 +22,8 @@ const watchProviderPaymentInput = z
   .optional();
 
 const getListByIdInput = z.string();
+
+const deleteListInput = z.string();
 
 const acceptInvitationInput = z.string();
 
@@ -97,6 +100,12 @@ export const listRouter = createTRPCRouter({
     const userId = ctx.session.user.id;
     return await createList(userId);
   }),
+  deleteList: protectedProcedure
+    .input(deleteListInput)
+    .mutation(async ({ ctx, input }) => {
+      const userId = ctx.session.user.id;
+      return await deleteList(userId, input);
+    }),
   updateListMedia: protectedProcedure
     .input(updateListMediaInput)
     .mutation(async ({ ctx, input }) => {
