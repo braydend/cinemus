@@ -72,6 +72,23 @@ const checkCreateAccess = async (userId: string) => {
   }
 };
 
+const checkDeleteAccess = async (userId: string, listId: string) => {
+  const [userData, list] = await Promise.all([
+    user.getUserById(userId),
+    getListData(listId),
+  ]);
+
+  const isAdmin = userData.role !== "ADMIN";
+  const isListOwner = list.ownerId === userId;
+
+  if (!isAdmin && !isListOwner) {
+    throw new UserError({
+      code: "UNAUTHORIZED",
+      message: `Insufficient permissions to delete this list.`,
+    });
+  }
+};
+
 export const updateListData = async (
   listId: string,
   updateData: { name: string },
@@ -188,6 +205,18 @@ export const createList = async (userId: string) => {
   const list = await db.createList(userId);
 
   logger.profile(`createList (userId #${userId})`);
+
+  return list;
+};
+
+export const deleteList = async (userId: string, listId: string) => {
+  logger.profile(`deleteList (listId #${listId})`);
+
+  await checkDeleteAccess(userId, listId);
+
+  const list = await db.deleteList(listId);
+
+  logger.profile(`deleteList (listId #${listId})`);
 
   return list;
 };
