@@ -25,10 +25,11 @@ model List {
 }
 
 model ListMember {
-    user   User   @relation(fields: [userId], references: [id])
+    user   User       @relation(fields: [userId], references: [id])
     userId String
-    List   List   @relation(fields: [listId], references: [id])
+    List   List       @relation(fields: [listId], references: [id])
     listId String
+    role   MemberRole @default(VIEWER)
 
     @@id([userId, listId])
     @@index([listId])
@@ -105,4 +106,10 @@ model VerificationToken {
 enum UserRole {
     ADMIN
     STANDARD
+}
+
+enum MemberRole {
+    VIEWER
+    COLLABORATOR
+    MODERATOR
 }
