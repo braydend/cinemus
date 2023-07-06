@@ -27,7 +27,16 @@ const deleteListInput = z.string();
 
 const acceptInvitationInput = z.string();
 
-const updateListDataInput = z.object({ listId: z.string(), name: z.string() });
+const updateListDataInput = z.object({
+  listId: z.string(),
+  name: z.string(),
+  members: z.array(
+    z.object({
+      id: z.string(),
+      role: z.enum(["VIEWER", "COLLABORATOR", "MODERATOR"]),
+    })
+  ),
+});
 
 const updateListMediaInput = z.object({
   listId: z.string(),
