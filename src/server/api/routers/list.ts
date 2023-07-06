@@ -10,6 +10,7 @@ import {
   createList,
   updateListData,
   deleteList,
+  removeMemberFromList,
 } from "../../domain/list";
 import { getUserPreferences } from "../../domain/userPreferences";
 
@@ -26,6 +27,8 @@ const getListByIdInput = z.string();
 const deleteListInput = z.string();
 
 const acceptInvitationInput = z.string();
+
+const removeMemberInput = z.object({ listId: z.string(), userId: z.string() });
 
 const updateListDataInput = z.object({
   listId: z.string(),
@@ -93,6 +96,13 @@ export const listRouter = createTRPCRouter({
       const userId = ctx.session.user.id;
 
       return await updateListData(listId, updateData, userId);
+    }),
+  removeMember: protectedProcedure
+    .input(removeMemberInput)
+    .mutation(async ({ input, ctx }) => {
+      const userId = ctx.session.user.id;
+
+      return await removeMemberFromList(input.listId, input.userId, userId);
     }),
   getListMedia: protectedProcedure
     .input(getListByIdInput)
