@@ -3,7 +3,7 @@ import { getMovie } from "../movie";
 import { getShow } from "../show";
 import { logger } from "../../libs/logger";
 import { type MediaType } from "../../../types";
-import db, { list, user } from "../../db/prisma";
+import db, { list, listMember, user } from "../../db/prisma";
 import { UserError } from "../../../errors";
 import { sortMediaAlphabetically } from "../../../utils/sort";
 import { mapListMember } from "../listMember";
@@ -120,7 +120,10 @@ const checkDeleteAccess = async (userId: string, listId: string) => {
 
 export const updateListData = async (
   listId: string,
-  updateData: { name: string },
+  updateData: {
+    name: string;
+    members: { id: string; role: "VIEWER" | "COLLABORATOR" | "MODERATOR" }[];
+  },
   userId: string
 ) => {
   logger.profile(
@@ -129,16 +132,25 @@ export const updateListData = async (
 
   await checkEditAccess(userId, listId);
 
-  const list = await db.updateListById(listId, updateData, {
-    members: true,
-    owner: true,
-  });
+  const [updatedList] = await Promise.all([
+    list.updateListById(
+      listId,
+      { name: updateData.name },
+      {
+        members: true,
+        owner: true,
+      }
+    ),
+    updateData.members.map((memberData) =>
+      listMember.updateListMember(listId, memberData.id, memberData.role)
+    ),
+  ]);
 
   logger.profile(
     `updateListData #${listId} (data: ${JSON.stringify(updateData)})`
   );
 
-  return list;
+  return updatedList;
 };
 
 export const getListMedia = async (listId: string, region?: string) => {
