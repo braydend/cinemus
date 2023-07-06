@@ -6,6 +6,7 @@ import { type ArrayElement } from "../../../utils/types";
 import { ListItem } from "../../atoms";
 import { api } from "../../../utils/api";
 import { sortMediaAlphabetically } from "../../../utils/sort";
+import { useSnackbar } from "notistack";
 
 type Media = ArrayElement<
   inferRouterOutputs<AppRouter>["listRouter"]["getListMedia"]["media"]
@@ -14,6 +15,7 @@ type Props = { media: Media[]; listId: string };
 
 export const ListMedia: FC<Props> = ({ media, listId }) => {
   const trpcContext = api.useContext();
+  const { enqueueSnackbar } = useSnackbar();
 
   const [selectedMedia, setSelectedMedia] = useState<string>();
 
@@ -47,6 +49,7 @@ export const ListMedia: FC<Props> = ({ media, listId }) => {
         listId,
         context?.previousMedia
       );
+      enqueueSnackbar({ message: err.message, variant: "error" });
     },
     onSettled: async () => {
       await trpcContext.listRouter.getListMedia.invalidate(listId);
@@ -86,6 +89,7 @@ export const ListMedia: FC<Props> = ({ media, listId }) => {
           listId,
           context?.previousMedia
         );
+        enqueueSnackbar({ message: err.message, variant: "error" });
       },
       onSettled: async () => {
         await trpcContext.listRouter.getListMedia.invalidate(listId);
