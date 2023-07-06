@@ -94,15 +94,24 @@ const updateListById = async (
 };
 
 const getListsForUser = async (userId: string) => {
-  const ownedLists = await prisma.list.findMany({
-    where: { ownerId: userId },
-    include: { media: true, members: { include: { user: true } }, owner: true },
-  });
-
-  const joinedLists = await prisma.list.findMany({
-    where: { members: { some: { userId } } },
-    include: { media: true, members: { include: { user: true } }, owner: true },
-  });
+  const [ownedLists, joinedLists] = await Promise.all([
+    prisma.list.findMany({
+      where: { ownerId: userId },
+      include: {
+        media: true,
+        members: { include: { user: true } },
+        owner: true,
+      },
+    }),
+    prisma.list.findMany({
+      where: { members: { some: { userId } } },
+      include: {
+        media: true,
+        members: { include: { user: true } },
+        owner: true,
+      },
+    }),
+  ]);
 
   return { ownedLists, joinedLists };
 };
