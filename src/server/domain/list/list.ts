@@ -6,6 +6,7 @@ import { type MediaType } from "../../../types";
 import db, { list, user } from "../../db/prisma";
 import { UserError } from "../../../errors";
 import { sortMediaAlphabetically } from "../../../utils/sort";
+import { mapListMember } from "../listMember";
 
 interface ListedMedia {
   id: string;
@@ -46,14 +47,26 @@ export const getListData = async (listId: string) => {
     });
   }
 
+  const mappedList = {
+    ...list,
+    owner: { ...list.owner, role: "owner" },
+    members: list.members.map(mapListMember),
+  };
+
   logger.profile(`getListData #${listId}`);
 
-  return list;
+  return mappedList;
 };
 
 const checkEditAccess = async (userId: string, listId: string) => {
   const list = await getListData(listId);
-  if (list.ownerId !== userId) {
+
+  const listMember = list.members.find(({ id }) => id === userId);
+
+  const hasPermission =
+    listMember?.role === "COLLABORATOR" || listMember?.role === "MODERATOR";
+
+  if (!hasPermission && list.ownerId !== userId) {
     throw new UserError({
       code: "UNAUTHORIZED",
       message: `Insufficient permissions to edit this list.`,
@@ -90,15 +103,19 @@ const checkDeleteAccess = async (userId: string, listId: string) => {
     getListData(listId),
   ]);
 
+  const listMember = list.members.find(({ id }) => id === userId);
+
   const isAdmin = userData.role !== "ADMIN";
   const isListOwner = list.ownerId === userId;
 
-  if (!isAdmin && !isListOwner) {
-    throw new UserError({
-      code: "UNAUTHORIZED",
-      message: `Insufficient permissions to delete this list.`,
-    });
-  }
+  const hasPermission = listMember?.role === "MODERATOR";
+
+  if (isAdmin || isListOwner || hasPermission) return;
+
+  throw new UserError({
+    code: "UNAUTHORIZED",
+    message: `Insufficient permissions to delete this list.`,
+  });
 };
 
 export const updateListData = async (
@@ -156,17 +173,37 @@ export const getListsForUser = async (userId: string) => {
 
   const lists = await db.getListsForUser(userId);
 
+  const mappedLists = [
+    ...lists.ownedLists.map(({ ...listData }) => ({
+      ...listData,
+      role: "owner",
+      owner: { ...listData.owner, role: "owner" },
+      members: listData.members.map(mapListMember),
+    })),
+    ...lists.joinedLists.map(({ ...listData }) => ({
+      ...listData,
+      role:
+        listData.members.find(({ user: { id } }) => userId === id)?.role ??
+        "member",
+      owner: { ...listData.owner, role: "owner" },
+      members: listData.members.map(mapListMember),
+    })),
+  ];
+
   logger.profile(`getListsForUser #${userId}`);
 
-  return lists;
+  return mappedLists;
 };
 
 export const updateListMedia = async (
   media: ListedMedia,
   listId: string,
+  userId: string,
   region?: string
 ): Promise<Media[]> => {
   logger.profile(`updateList #${listId} data=${JSON.stringify(media)}`);
+
+  await checkEditAccess(userId, listId);
 
   const list = await db.addMediaToList(media, listId);
 
@@ -188,9 +225,12 @@ export const updateListMedia = async (
 export const removeMediaFromList = async (
   media: { id: string; __type: MediaType },
   listId: string,
+  userId: string,
   region?: string
 ): Promise<Media[]> => {
   logger.profile(`removeFromList #${listId} data=${JSON.stringify(media)}`);
+
+  await checkEditAccess(userId, listId);
 
   const list = await db.removeMediaFromList(media, listId);
 

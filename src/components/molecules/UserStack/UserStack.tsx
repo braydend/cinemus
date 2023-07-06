@@ -1,9 +1,14 @@
 import { type FC } from "react";
 import { Avatar } from "../../atoms";
-import { type User } from "@prisma/client";
+import { sentenceCase } from "../../../utils/strings";
 
 type Props = {
-  users: Omit<User, "emailVerified">[];
+  users: {
+    name?: string | null;
+    email?: string | null;
+    image?: string | null;
+    role: string;
+  }[];
   className?: string;
 };
 
@@ -32,8 +37,7 @@ export const UserStack: FC<Props> = ({ users, className }) => {
         <div className="mr-[-12px]" key={JSON.stringify(user)}>
           <Avatar
             user={user}
-            // TODO: This is quite naive. Maybe do this more controlled
-            tooltipSuffix={index === 0 ? "(Owner)" : "(Member)"}
+            tooltipSuffix={sentenceCase(user.role)}
             showTooltip
             className={`border-4 ${
               index === 0 ? borderColours.owner : borderColours.member
