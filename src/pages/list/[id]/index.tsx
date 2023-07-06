@@ -115,9 +115,6 @@ const ListPage: NextPage<
     });
   };
 
-  const isLoading = isLoadingListMedia || isLoadingListData;
-  const hasData = data && listData;
-
   const currentSelections: Media[] = data?.media ?? [];
   const isRegionSelected = Boolean(userPreferences?.watchProviderRegion);
 

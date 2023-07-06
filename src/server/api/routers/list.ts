@@ -116,6 +116,7 @@ export const listRouter = createTRPCRouter({
       return await updateListMedia(
         media,
         listId,
+        userId,
         prefs.watchProviderRegion ?? undefined
       );
     }),
@@ -129,6 +130,7 @@ export const listRouter = createTRPCRouter({
       return await removeMediaFromList(
         media,
         listId,
+        userId,
         prefs.watchProviderRegion ?? undefined
       );
     }),

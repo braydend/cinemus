@@ -4,24 +4,16 @@ import { type GetServerSidePropsContext, type NextPage } from "next";
 import { useAuthRequired } from "~/hooks/useAuthRequired";
 import Link from "next/link";
 import { UserStack } from "../../components/molecules";
-import { type inferRouterOutputs } from "@trpc/server";
-import { appRouter, type AppRouter } from "../../server/api/root";
+import { appRouter } from "../../server/api/root";
 import { useRouter } from "next/router";
 import { availableRoutes } from "../../routes";
-import { type ArrayElement } from "../../utils/types";
 import { createServerSideHelpers } from "@trpc/react-query/server";
 import { getServerSession } from "next-auth";
 import { authOptions } from "../../server/auth";
 import { prisma } from "../../server/db";
 import superjson from "superjson";
 import { useSnackbar } from "notistack";
-
-type Lists = inferRouterOutputs<AppRouter>["listRouter"]["getListsForUser"];
-type List =
-  | ArrayElement<Lists["ownedLists"]>
-  | ArrayElement<Lists["joinedLists"]>;
-
-type ListWithRole = List & { role: string };
+import { sentenceCase } from "../../utils/strings";
 
 export async function getServerSideProps(
   context: GetServerSidePropsContext<{ id: string }>
@@ -48,7 +40,7 @@ const ListsPage: NextPage = () => {
   useAuthRequired();
   const router = useRouter();
   const { enqueueSnackbar } = useSnackbar();
-  const { data, isLoading } = api.listRouter.getListsForUser.useQuery();
+  const { data: lists, isLoading } = api.listRouter.getListsForUser.useQuery();
   const { mutate: createList, isLoading: isListCreationLoading } =
     api.listRouter.createList.useMutation({
       onError: (error) => {
@@ -59,20 +51,7 @@ const ListsPage: NextPage = () => {
       },
     });
 
-  if (isLoading || !data) return <>Loading lists</>;
-
-  const lists: ListWithRole[] = [
-    ...data.ownedLists.map(({ ...listData }) => ({
-      ...listData,
-      role: "owner",
-    })),
-    ...data.joinedLists.map(({ ...listData }) => ({
-      ...listData,
-      role: "member",
-    })),
-  ].reduce((acc, cur) => {
-    return acc.find(({ id }) => id === cur.id) ? acc : [...acc, cur];
-  }, [] as ListWithRole[]);
+  if (isLoading || !lists) return <>Loading lists</>;
 
   const hasNoLists = lists.length === 0;
 
@@ -105,13 +84,13 @@ const ListsPage: NextPage = () => {
             >
               <Link href={`/list/${list.id}`}>
                 <div className="flex flex-shrink flex-col flex-wrap break-all md:flex-row md:gap-2">
-                  <Pill label={list.role} />
+                  <Pill label={sentenceCase(list.role)} />
                   <div>{list.name}</div>
                 </div>
               </Link>
               <UserStack
                 className="flex-shrink-0 justify-end"
-                users={[list.owner, ...list.members.map(({ user }) => user)]}
+                users={[list.owner, ...list.members]}
               />
             </li>
           ))}

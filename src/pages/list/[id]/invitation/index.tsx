@@ -46,7 +46,7 @@ const ListInvitationPage: NextPage = () => {
       <Heading level="2" className="[word-wrap:anywhere]">
         You&apos;ve been invited to join {data.name}
       </Heading>
-      <UserStack users={[owner, ...data.members.map(({ user }) => user)]} />
+      <UserStack users={[owner, ...data.members]} />
 
       {Boolean(error) && <span className="mt-8 text-red-600">{error}</span>}
       <div className="mt-8 grid grid-cols-2 gap-4">

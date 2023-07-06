@@ -132,9 +132,7 @@ export const ListInfo: FC<Props> = ({ data }) => {
         )}
       </div>
       <div className="flex h-fit flex-row items-center gap-4">
-        <UserStack
-          users={[data.owner, ...data.members.map(({ user }) => user)]}
-        />
+        <UserStack users={[data.owner, ...data.members]} />
         <Button
           label="Invite"
           variant="purple"

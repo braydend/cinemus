@@ -1,10 +1,9 @@
-import { type User } from "@prisma/client";
 import Image from "next/image";
 import { type FC } from "react";
 import { Tooltip } from "../Tooltip";
 
 type Props = {
-  user: Omit<Partial<User>, "emailVerified">;
+  user: { name?: string | null; email?: string | null; image?: string | null };
   size?: "small" | "original";
   tooltipSuffix?: string;
   showTooltip?: boolean;
