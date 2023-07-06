@@ -5,8 +5,9 @@ import { Navigation } from "~/components/molecules";
 import { CssBaseline, ThemeProvider, createTheme } from "@mui/material";
 import { SessionProvider } from "next-auth/react";
 import { SnackbarProvider } from "notistack";
-import { Session } from "next-auth";
+import { type Session } from "next-auth";
 import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import NextNProgress from "nextjs-progressbar";
 
 const theme = createTheme({
   palette: {
@@ -32,6 +33,7 @@ const MyApp: AppType<{ session: Session | null }> = ({
         <CssBaseline />
         <Navigation />
         <SnackbarProvider maxSnack={3}>
+          <NextNProgress />
           <div className="p-4">
             <Component {...pageProps} />
           </div>
