@@ -18,6 +18,7 @@ import { createServerSideHelpers } from "@trpc/react-query/server";
 import { prisma } from "../../../server/db";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "../../../server/auth";
+import { enqueueSnackbar } from "notistack";
 
 type List = inferRouterOutputs<AppRouter>["listRouter"]["getListMedia"];
 type Media = ArrayElement<List["media"]>;
@@ -96,6 +97,8 @@ const ListPage: NextPage<
         listId,
         context?.previousMedia
       );
+
+      enqueueSnackbar({ message: err.message, variant: "error" });
     },
     onSettled: async () => {
       await trpcContext.listRouter.getListMedia.invalidate(listId);
