@@ -134,6 +134,13 @@ const deleteList = async (listId: string) => {
   return await prisma.list.delete({ where: { id: listId } });
 };
 
+const removeListMember = async (listId: string, userId: string) => {
+  return await prisma.listMember.delete({
+    where: { userId_listId: { userId, listId } },
+    include: { user: true },
+  });
+};
+
 const prismaListFunctions = {
   getListsForUser,
   addMediaToList,
@@ -143,6 +150,7 @@ const prismaListFunctions = {
   createList,
   updateListById,
   deleteList,
+  removeListMember,
 };
 
 export default prismaListFunctions;

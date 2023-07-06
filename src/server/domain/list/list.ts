@@ -74,6 +74,23 @@ const checkEditAccess = async (userId: string, listId: string) => {
   }
 };
 
+const checkEditDataAccess = async (userId: string, listId: string) => {
+  const list = await getListData(listId);
+
+  const listMember = list.members.find(({ id }) => id === userId);
+
+  const hasPermission = listMember?.role === "MODERATOR";
+
+  const isOwner = list.ownerId === userId;
+
+  if (hasPermission || isOwner) return;
+
+  throw new UserError({
+    code: "UNAUTHORIZED",
+    message: `Insufficient permissions to edit this list.`,
+  });
+};
+
 const checkCreateAccess = async (userId: string) => {
   const [userData, lists] = await Promise.all([
     user.getUserById(userId),
@@ -130,7 +147,7 @@ export const updateListData = async (
     `updateListData #${listId} (data: ${JSON.stringify(updateData)})`
   );
 
-  await checkEditAccess(userId, listId);
+  await checkEditDataAccess(userId, listId);
 
   const [updatedList] = await Promise.all([
     list.updateListById(
@@ -283,4 +300,24 @@ export const deleteList = async (userId: string, listId: string) => {
   logger.profile(`deleteList (listId #${listId})`);
 
   return list;
+};
+
+export const removeMemberFromList = async (
+  listId: string,
+  userToRemove: string,
+  userId: string
+) => {
+  logger.profile(
+    `removeMemberFromList (listId #${listId} userId #${userToRemove})`
+  );
+
+  await checkEditDataAccess(userId, listId);
+
+  const updatedList = await list.removeListMember(listId, userToRemove);
+
+  logger.profile(
+    `removeMemberFromList (listId #${listId} userId #${userToRemove})`
+  );
+
+  return updatedList;
 };

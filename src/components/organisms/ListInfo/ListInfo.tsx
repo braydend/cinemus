@@ -8,7 +8,7 @@ import { useRouter } from "next/router";
 import { api } from "../../../utils/api";
 import { useSession } from "next-auth/react";
 import { availableRoutes } from "../../../routes";
-import { ArrayElement } from "../../../utils/types";
+import { type ArrayElement } from "../../../utils/types";
 
 type ListData = inferRouterOutputs<AppRouter>["listRouter"]["getListData"];
 type Role = "VIEWER" | "COLLABORATOR" | "MODERATOR";
@@ -118,6 +118,23 @@ const EditListInfo: FC<{ initialData: ListData; exitEditMode: () => void }> = ({
       },
     });
 
+  const { mutate: removeMember, isLoading: isRemoveMemberLoading } =
+    api.listRouter.removeMember.useMutation({
+      onSuccess: (removedMember, { userId }) => {
+        void trpcContext.listRouter.getListData.invalidate(initialData.id);
+        setMembers((prev) => [...prev.filter(({ id }) => userId !== id)]);
+        enqueueSnackbar({
+          message: `Successfully removed ${
+            removedMember.user.name ?? removedMember.user.email ?? "member"
+          } from list.`,
+          variant: "success",
+        });
+      },
+      onError: (error) => {
+        enqueueSnackbar({ message: error.message, variant: "error" });
+      },
+    });
+
   const handleSaveChanges = () => {
     editList({
       listId: initialData.id,
@@ -151,6 +168,10 @@ const EditListInfo: FC<{ initialData: ListData; exitEditMode: () => void }> = ({
       ...prev.filter(({ id: userId }) => userId !== member.id),
       member,
     ]);
+  };
+
+  const handleRemoveMember = (userId: string) => {
+    removeMember({ userId, listId: initialData.id });
   };
 
   return (
@@ -204,6 +225,12 @@ const EditListInfo: FC<{ initialData: ListData; exitEditMode: () => void }> = ({
               <option value="COLLABORATOR">Collaborator</option>
               <option value="MODERATOR">Moderator</option>
             </select>
+            <Button
+              label="Remove"
+              onClick={() => handleRemoveMember(member.id)}
+              variant="purple"
+              disabled={isRemoveMemberLoading}
+            />
           </div>
         ))}
       </div>
