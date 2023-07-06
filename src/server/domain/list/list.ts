@@ -202,6 +202,8 @@ export const getListsForUser = async (userId: string) => {
 
   const lists = await db.getListsForUser(userId);
 
+  console.log("lists", lists);
+
   const mappedLists = [
     ...lists.ownedLists.map(({ ...listData }) => ({
       ...listData,
