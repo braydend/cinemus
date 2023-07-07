@@ -59,6 +59,12 @@ export const ListMedia: FC<Props> = ({ media, listId }) => {
       onSettled: async () => {
         await trpcContext.listRouter.getListMedia.invalidate(listId);
       },
+      onSuccess: (_, variables) => {
+        enqueueSnackbar({
+          message: `Successfully updated ${variables.media.title}.`,
+          variant: "info",
+        });
+      },
     });
   const { mutate: removeFromList } =
     api.listRouter.removeMediaFromList.useMutation({
