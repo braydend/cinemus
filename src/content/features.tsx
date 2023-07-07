@@ -16,4 +16,9 @@ export const features: Array<{ title: string; body: string; icon: Icon }> = [
     body: "Find out which streaming services in your region have the TV shows and movies on your watchlist available. Cinemus provides information on streaming availability, so you can easily find where to watch your favorite shows and movies.",
     icon: "search",
   },
+  {
+    title: "Collaborate with others",
+    body: "Share your lists with friends and family, and connect with fellow movie and TV show enthusiasts. Cinemus lets you collaborate with others and discover new content together.",
+    icon: "people",
+  },
 ];
