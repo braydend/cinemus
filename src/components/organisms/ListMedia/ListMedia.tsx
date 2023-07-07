@@ -19,42 +19,47 @@ export const ListMedia: FC<Props> = ({ media, listId }) => {
 
   const [selectedMedia, setSelectedMedia] = useState<string>();
 
-  const { mutate: updateList } = api.listRouter.updateListMedia.useMutation({
-    onMutate: async ({ media: newMedia }) => {
-      await trpcContext.listRouter.getListMedia.cancel(listId);
-      const previousMedia = trpcContext.listRouter.getListMedia.getData(listId);
-      trpcContext.listRouter.getListMedia.setData(listId, (prev) => {
-        const existingMedia = prev?.media ?? media;
-        const dehydratedMedia = existingMedia.filter(
-          ({ id, __type }) =>
-            !(newMedia.id === id.toString(10) && newMedia.__type === __type)
-        );
-        const updatedMedia = [...dehydratedMedia, newMedia]
-          .sort(sortMediaAlphabetically)
-          .map(({ id, isWatched, ...rest }) => ({
-            id: Number(id),
-            isWatched: Boolean(isWatched),
-            ...rest,
-          }));
+  const { mutate: updateMediaWatchedStatus } =
+    api.listRouter.updateMediaWatchedStatus.useMutation({
+      onMutate: async ({ media: updatedMedia }) => {
+        await trpcContext.listRouter.getListMedia.cancel(listId);
+        const previousMedia =
+          trpcContext.listRouter.getListMedia.getData(listId);
+        trpcContext.listRouter.getListMedia.setData(listId, (prev) => {
+          const existingMedia = prev?.media ?? media;
+          const dehydratedMedia = existingMedia.filter(
+            ({ id, __type }) =>
+              !(
+                updatedMedia.id === id.toString(10) &&
+                updatedMedia.__type === __type
+              )
+          );
+          const updatedList = [...dehydratedMedia, updatedMedia]
+            .sort(sortMediaAlphabetically)
+            .map(({ id, isWatched, ...rest }) => ({
+              id: Number(id),
+              isWatched: Boolean(isWatched),
+              ...rest,
+            }));
 
-        return {
-          ...prev,
-          media: updatedMedia,
-        };
-      });
-      return { previousMedia };
-    },
-    onError: (err, newTodo, context) => {
-      trpcContext.listRouter.getListMedia.setData(
-        listId,
-        context?.previousMedia
-      );
-      enqueueSnackbar({ message: err.message, variant: "error" });
-    },
-    onSettled: async () => {
-      await trpcContext.listRouter.getListMedia.invalidate(listId);
-    },
-  });
+          return {
+            ...prev,
+            media: updatedList,
+          };
+        });
+        return { previousMedia };
+      },
+      onError: (err, newTodo, context) => {
+        trpcContext.listRouter.getListMedia.setData(
+          listId,
+          context?.previousMedia
+        );
+        enqueueSnackbar({ message: err.message, variant: "error" });
+      },
+      onSettled: async () => {
+        await trpcContext.listRouter.getListMedia.invalidate(listId);
+      },
+    });
   const { mutate: removeFromList } =
     api.listRouter.removeMediaFromList.useMutation({
       onMutate: async (mediaToRemove) => {
@@ -103,12 +108,13 @@ export const ListMedia: FC<Props> = ({ media, listId }) => {
     });
   };
 
-  const handleWatchedChange = ({ id, ...rest }: Media): void => {
-    updateList({
+  const handleWatchedChange = (media: Media): void => {
+    updateMediaWatchedStatus({
       listId,
       media: {
-        id: id.toString(10),
-        ...rest,
+        ...media,
+        id: media.id.toString(),
+        isWatched: media.isWatched ?? false,
       },
     });
   };
