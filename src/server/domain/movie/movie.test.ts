@@ -1,6 +1,6 @@
 import { it, expect, describe, vi } from "vitest";
-import { type Media } from "../media";
-import { getMovie, searchMovies } from "./movie";
+import { type MediaResponse } from "../media";
+import { hydrateMovie, searchMovies } from "./movie";
 import * as tmdb from "~/server/externalApi/tmdb";
 import { getImages } from "../image";
 import { buildStubConfiguration } from "~/../test/mocks/tmdb";
@@ -36,14 +36,14 @@ describe("movie domain", () => {
   describe("getMovie", () => {
     it("hits API if not in cache", async () => {
       const apiSpy = vi.spyOn(tmdb, "getMovie");
-      const expectedMovie: Media = {
+      const expectedMovie: MediaResponse = {
         __type: "movie",
         title: "Stub Movie",
         genres: ["Horror", "Comedy"],
         images: getImages("/posterPath.jpg", configuration),
         id: 12345,
       };
-      const result = await getMovie("12345");
+      const result = await hydrateMovie("12345");
 
       expect(apiSpy).toHaveBeenCalledOnce();
       expect(result).toEqual(expectedMovie);
@@ -54,7 +54,7 @@ describe("movie domain", () => {
       await clearCache();
 
       const apiSpy = vi.spyOn(tmdb, "getMovie");
-      const expectedMovie: Media = {
+      const expectedMovie: MediaResponse = {
         __type: "movie",
         genres: ["Horror", "Comedy"],
         title: "Stub Movie",
@@ -72,7 +72,7 @@ describe("movie domain", () => {
           },
         ],
       };
-      const result = await getMovie("12345", "AU");
+      const result = await hydrateMovie("12345", "AU");
 
       expect(apiSpy).toHaveBeenCalledOnce();
       expect(result).toEqual(expectedMovie);
@@ -80,14 +80,14 @@ describe("movie domain", () => {
 
     it("retrieves from cache if it exists", async () => {
       const apiSpy = vi.spyOn(tmdb, "getMovie");
-      const expectedMovie: Media = {
+      const expectedMovie: MediaResponse = {
         __type: "movie",
         title: "Stub Movie",
         genres: ["Horror", "Comedy"],
         images: getImages("/posterPath.jpg", configuration),
         id: 12345,
       };
-      const result = await getMovie("12345");
+      const result = await hydrateMovie("12345");
 
       expect(apiSpy).not.toHaveBeenCalled();
       expect(result).toEqual(expectedMovie);
@@ -95,7 +95,7 @@ describe("movie domain", () => {
 
     it("retrieves from cache with watch providers if it exists and region is specified", async () => {
       const apiSpy = vi.spyOn(tmdb, "getShow");
-      const expectedMovie: Media = {
+      const expectedMovie: MediaResponse = {
         __type: "movie",
         title: "Stub Movie",
         images: getImages("/posterPath.jpg", configuration),
@@ -113,7 +113,7 @@ describe("movie domain", () => {
           },
         ],
       };
-      const result = await getMovie("12345", "AU");
+      const result = await hydrateMovie("12345", "AU");
 
       expect(apiSpy).not.toHaveBeenCalled();
       expect(result).toEqual(expectedMovie);
@@ -123,7 +123,7 @@ describe("movie domain", () => {
   describe("searchMovies", () => {
     it("hits API if not in cache", async () => {
       const apiSpy = vi.spyOn(tmdb, "searchMovies");
-      const expectedMovies: Media[] = [
+      const expectedMovies: MediaResponse[] = [
         {
           __type: "movie",
           title: "Stub Movie Two",
@@ -154,7 +154,7 @@ describe("movie domain", () => {
 
     it("retrieves from cache if it exists", async () => {
       const apiSpy = vi.spyOn(tmdb, "getMovie");
-      const expectedMovies: Media[] = [
+      const expectedMovies: MediaResponse[] = [
         {
           __type: "movie",
           title: "Stub Movie Two",

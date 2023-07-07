@@ -1,6 +1,6 @@
 import { it, expect, describe, vi } from "vitest";
-import { type Media } from "../media";
-import { getShow, searchShows } from "./show";
+import { type MediaResponse } from "../media";
+import { hydrateShow, searchShows } from "./show";
 import * as tmdb from "~/server/externalApi/tmdb";
 import { getImages } from "../image";
 import { buildStubConfiguration } from "~/../test/mocks/tmdb";
@@ -36,14 +36,14 @@ describe("show domain", () => {
   describe("getShow", () => {
     it("hits API if not in cache", async () => {
       const apiSpy = vi.spyOn(tmdb, "getShow");
-      const expectedShow: Media = {
+      const expectedShow: MediaResponse = {
         __type: "show",
         title: "Stub Show",
         genres: ["Horror", "Comedy"],
         images: getImages("/posterPath.jpg", configuration),
         id: 12345,
       };
-      const result = await getShow("12345");
+      const result = await hydrateShow("12345");
 
       expect(apiSpy).toHaveBeenCalledOnce();
       expect(result).toEqual(expectedShow);
@@ -54,7 +54,7 @@ describe("show domain", () => {
       await clearCache();
 
       const apiSpy = vi.spyOn(tmdb, "getShow");
-      const expectedShow: Media = {
+      const expectedShow: MediaResponse = {
         __type: "show",
         title: "Stub Show",
         genres: ["Horror", "Comedy"],
@@ -72,7 +72,7 @@ describe("show domain", () => {
           },
         ],
       };
-      const result = await getShow("12345", "AU");
+      const result = await hydrateShow("12345", "AU");
 
       expect(apiSpy).toHaveBeenCalledOnce();
       expect(result).toEqual(expectedShow);
@@ -80,14 +80,14 @@ describe("show domain", () => {
 
     it("retrieves from cache if it exists", async () => {
       const apiSpy = vi.spyOn(tmdb, "getShow");
-      const expectedShow: Media = {
+      const expectedShow: MediaResponse = {
         __type: "show",
         title: "Stub Show",
         genres: ["Horror", "Comedy"],
         images: getImages("/posterPath.jpg", configuration),
         id: 12345,
       };
-      const result = await getShow("12345");
+      const result = await hydrateShow("12345");
 
       expect(apiSpy).not.toHaveBeenCalled();
       expect(result).toEqual(expectedShow);
@@ -95,7 +95,7 @@ describe("show domain", () => {
 
     it("retrieves from cache with watch providers if it exists and region is specified", async () => {
       const apiSpy = vi.spyOn(tmdb, "getShow");
-      const expectedShow: Media = {
+      const expectedShow: MediaResponse = {
         __type: "show",
         title: "Stub Show",
         images: getImages("/posterPath.jpg", configuration),
@@ -113,7 +113,7 @@ describe("show domain", () => {
           },
         ],
       };
-      const result = await getShow("12345", "AU");
+      const result = await hydrateShow("12345", "AU");
 
       expect(apiSpy).not.toHaveBeenCalled();
       expect(result).toEqual(expectedShow);
@@ -123,7 +123,7 @@ describe("show domain", () => {
   describe("searchShows", () => {
     it("hits API if not in cache", async () => {
       const apiSpy = vi.spyOn(tmdb, "searchShows");
-      const expectedShows: Media[] = [
+      const expectedShows: MediaResponse[] = [
         {
           __type: "show",
           title: "Stub Show Two",
@@ -154,7 +154,7 @@ describe("show domain", () => {
 
     it("retrieves from cache if it exists", async () => {
       const apiSpy = vi.spyOn(tmdb, "getShow");
-      const expectedShows: Media[] = [
+      const expectedShows: MediaResponse[] = [
         {
           __type: "show",
           title: "Stub Show Two",

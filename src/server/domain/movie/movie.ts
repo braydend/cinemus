@@ -6,35 +6,39 @@ import {
 import {
   mapMediaDetailsToMedia,
   mapSearchResponseToMedia,
-  type Media,
+  type MediaResponse,
 } from "../media";
 
 import { getConfiguration } from "../configuration";
 import { getMovieWatchProviders } from "../watchProviders";
 import { addToCache, retrieveFromCache } from "../../db/upstash/cache";
+import { type Media } from "@prisma/client";
 
-export const getMovie = async (id: string, region?: string): Promise<Media> => {
-  const cacheKey = `movie-${id}`;
+export const hydrateMovie = async (movie: Media, region?: string) => {
+  const cacheKey = `movie-${movie.id}`;
   const [cachedMovie, configuration] = await Promise.all([
     retrieveFromCache<TmdbMovieDetails>(cacheKey),
     getConfiguration(),
   ]);
   const watchProviders =
     region != null
-      ? await getMovieWatchProviders(id, configuration, region)
+      ? await getMovieWatchProviders(movie.id, configuration, region)
       : undefined;
   if (cachedMovie != null) {
     return mapMediaDetailsToMedia(cachedMovie, configuration, watchProviders);
   }
 
-  const movie = await fetchMovie(id);
+  const fetchedMovie = await fetchMovie(movie.id);
   // eslint-disable-next-line @typescript-eslint/no-floating-promises
-  addToCache(cacheKey, movie);
+  addToCache(cacheKey, fetchedMovie);
 
-  return mapMediaDetailsToMedia(movie, configuration, watchProviders);
+  return {
+    ...mapMediaDetailsToMedia(fetchedMovie, configuration, watchProviders),
+    isWatched: movie.isWatched,
+  };
 };
 
-export const searchMovies = async (query: string): Promise<Media[]> => {
+export const searchMovies = async (query: string): Promise<MediaResponse[]> => {
   const [{ results }, configuration] = await Promise.all([
     searchMovieRequest(query),
     getConfiguration(),
