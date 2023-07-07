@@ -1,1 +1,1 @@
-export type Icon = "tv" | "search" | "tick";
+export type Icon = "tv" | "search" | "tick" | "people";

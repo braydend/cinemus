@@ -2,6 +2,7 @@ import { type FC } from "react";
 import TV from "../../../assets/television.png";
 import Search from "../../../assets/magnifying-glass.png";
 import Tick from "../../../assets/check-mark.png";
+import People from "~/assets/silhouettes.png";
 import { type Icon } from "../../../content/icons";
 import { Heading } from "../../atoms";
 import Image, { type StaticImageData } from "next/image";
@@ -18,6 +19,7 @@ export const Card: FC<Props> = ({ title, body, icon, className = "" }) => {
     tv: TV,
     search: Search,
     tick: Tick,
+    people: People,
   };
 
   return (
