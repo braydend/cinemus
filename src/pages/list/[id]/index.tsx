@@ -1,5 +1,4 @@
 import { api } from "~/utils/api";
-import { sortMediaAlphabetically } from "~/utils/sort";
 import { ListInfo, ListMedia, MediaSearch } from "~/components/organisms";
 import Alert from "@mui/material/Alert";
 import { type inferRouterOutputs } from "@trpc/server";
@@ -19,6 +18,7 @@ import { prisma } from "../../../server/db";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "../../../server/auth";
 import { enqueueSnackbar } from "notistack";
+import { useState } from "react";
 
 type List = inferRouterOutputs<AppRouter>["listRouter"]["getListMedia"];
 type Media = ArrayElement<List["media"]>;
@@ -57,6 +57,7 @@ const ListPage: NextPage<
 > = ({ listId }) => {
   useAuthRequired();
   const trpcContext = api.useContext();
+  const [mediaToAdd, setMediaToAdd] = useState<string>();
 
   const { data: userPreferences } =
     api.userRouter.getUserPreferences.useQuery();
@@ -67,41 +68,17 @@ const ListPage: NextPage<
   const { data, isLoading: isLoadingListMedia } =
     api.listRouter.getListMedia.useQuery(listId);
 
-  const { mutate: updateList } = api.listRouter.updateListMedia.useMutation({
-    onMutate: async ({ media: newMedia }) => {
-      await trpcContext.listRouter.getListMedia.cancel(listId);
-      const previousMedia = trpcContext.listRouter.getListMedia.getData(listId);
-      trpcContext.listRouter.getListMedia.setData(listId, (prev) => {
-        const existingMedia = prev?.media ?? [];
-        const dehydratedMedia = existingMedia.filter(
-          ({ id, __type }) =>
-            !(newMedia.id === id.toString(10) && newMedia.__type === __type)
-        );
-        const updatedMedia = [...dehydratedMedia, newMedia]
-          .sort(sortMediaAlphabetically)
-          .map(({ id, isWatched, ...rest }) => ({
-            id: Number(id),
-            isWatched: Boolean(isWatched),
-            ...rest,
-          }));
-
-        return {
-          ...prev,
-          media: updatedMedia,
-        };
-      });
-      return { previousMedia };
-    },
-    onError: (err, newTodo, context) => {
-      trpcContext.listRouter.getListMedia.setData(
-        listId,
-        context?.previousMedia
-      );
-
+  const { mutate: addMediaToList } = api.listRouter.addMediaToList.useMutation({
+    onError: (err) => {
       enqueueSnackbar({ message: err.message, variant: "error" });
     },
-    onSettled: async () => {
-      await trpcContext.listRouter.getListMedia.invalidate(listId);
+    onSuccess: () => {
+      enqueueSnackbar({
+        message: `Successfully added ${mediaToAdd ?? "media"}!`,
+        variant: "success",
+      });
+      setMediaToAdd(undefined);
+      void trpcContext.listRouter.getListMedia.invalidate(listId);
     },
   });
 
@@ -109,11 +86,12 @@ const ListPage: NextPage<
     listId: string,
     { id, ...rest }: SearchedMedia
   ): void => {
-    updateList({
+    setMediaToAdd(rest.title);
+    addMediaToList({
       listId,
       media: {
-        id: id.toString(10),
         ...rest,
+        id: id.toString(10),
       },
     });
   };
@@ -139,6 +117,7 @@ const ListPage: NextPage<
           <Link href={availableRoutes.user}>Select your region</Link>
         </Alert>
       )}
+      {mediaToAdd && <span>Adding {mediaToAdd}...</span>}
       {isLoadingListMedia ? (
         <>Loading media...</>
       ) : (

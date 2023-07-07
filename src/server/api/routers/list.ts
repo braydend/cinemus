@@ -11,6 +11,7 @@ import {
   updateListData,
   deleteList,
   removeMemberFromList,
+  addMediaToList,
 } from "../../domain/list";
 import { getUserPreferences } from "../../domain/userPreferences";
 
@@ -21,6 +22,37 @@ const watchProviderPaymentInput = z
   })
   .array()
   .optional();
+
+const mediaInput = z.object({
+  id: z.string(),
+  __type: z.enum(["movie", "show"]),
+  isWatched: z.boolean(),
+  title: z.string(),
+  genres: z.string().array(),
+  watchProviders: z
+    .object({
+      region: z.string(),
+      flatrate: watchProviderPaymentInput,
+      buy: watchProviderPaymentInput,
+      ads: watchProviderPaymentInput,
+      rent: watchProviderPaymentInput,
+      free: watchProviderPaymentInput,
+    })
+    .array()
+    .optional(),
+  images: z.object({
+    backdrop: z.record(z.string()),
+    logo: z.record(z.string()),
+    poster: z.record(z.string()),
+    profile: z.record(z.string()),
+    still: z.record(z.string()),
+  }),
+});
+
+const addOrRemoveMediaInput = z.object({
+  __type: z.enum(["movie", "show"]),
+  id: z.string(),
+});
 
 const getListByIdInput = z.string();
 
@@ -43,39 +75,17 @@ const updateListDataInput = z.object({
 
 const updateListMediaInput = z.object({
   listId: z.string(),
-  media: z.object({
-    id: z.string(),
-    __type: z.enum(["movie", "show"]),
-    isWatched: z.boolean().optional(),
-    title: z.string(),
-    genres: z.string().array(),
-    watchProviders: z
-      .object({
-        region: z.string(),
-        flatrate: watchProviderPaymentInput,
-        buy: watchProviderPaymentInput,
-        ads: watchProviderPaymentInput,
-        rent: watchProviderPaymentInput,
-        free: watchProviderPaymentInput,
-      })
-      .array()
-      .optional(),
-    images: z.object({
-      backdrop: z.record(z.string()),
-      logo: z.record(z.string()),
-      poster: z.record(z.string()),
-      profile: z.record(z.string()),
-      still: z.record(z.string()),
-    }),
-  }),
+  media: mediaInput,
 });
 
 const removeFromListInput = z.object({
   listId: z.string(),
-  media: z.object({
-    __type: z.enum(["movie", "show"]),
-    id: z.string(),
-  }),
+  media: addOrRemoveMediaInput,
+});
+
+const addMediaToListInput = z.object({
+  listId: z.string(),
+  media: addOrRemoveMediaInput,
 });
 
 export const listRouter = createTRPCRouter({
@@ -152,5 +162,12 @@ export const listRouter = createTRPCRouter({
         userId,
         prefs.watchProviderRegion ?? undefined
       );
+    }),
+  addMediaToList: protectedProcedure
+    .input(addMediaToListInput)
+    .mutation(async ({ ctx, input: { media, listId } }) => {
+      const userId = ctx.session.user.id;
+
+      return await addMediaToList(userId, media, listId);
     }),
 });

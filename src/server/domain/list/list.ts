@@ -287,6 +287,36 @@ export const removeMediaFromList = async (
   return sortedMedia;
 };
 
+export const addMediaToList = async (
+  userId: string,
+  mediaData: { id: string; __type: MediaType },
+  listId: string
+) => {
+  logger.profile(`addMediaToList (list: #${listId}, mediaId:${mediaData.id})`);
+
+  await checkEditMediaAccess(userId, listId);
+
+  const [createdMedia, userPreferences] = await Promise.all([
+    media.addMediaToList(listId, mediaData.id, mediaData.__type),
+    getUserPreferences(userId),
+  ]);
+
+  const newMedia =
+    mediaData.__type === "movie"
+      ? await hydrateMovie(
+          createdMedia,
+          userPreferences?.watchProviderRegion ?? undefined
+        )
+      : await hydrateShow(
+          createdMedia,
+          userPreferences?.watchProviderRegion ?? undefined
+        );
+
+  logger.profile(`addMediaToList (list: #${listId}, mediaId:${mediaData.id})`);
+
+  return newMedia;
+};
+
 export const createList = async (userId: string) => {
   logger.profile(`createList (userId #${userId})`);
 
