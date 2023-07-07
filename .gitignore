@@ -43,3 +43,6 @@ yarn-error.log*
 
 # Sentry Auth Token
 .sentryclirc
+/test-results/
+/playwright-report/
+/playwright/.cache/
