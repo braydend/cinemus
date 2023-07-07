@@ -71,6 +71,7 @@ const ListPage: NextPage<
 
   const { mutate: addMediaToList } = api.listRouter.addMediaToList.useMutation({
     onError: (err) => {
+      setMediaToAdd(undefined);
       enqueueSnackbar({ message: err.message, variant: "error" });
     },
     onSuccess: () => {
