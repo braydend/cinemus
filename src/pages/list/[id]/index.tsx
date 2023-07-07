@@ -19,6 +19,7 @@ import { getServerSession } from "next-auth/next";
 import { authOptions } from "../../../server/auth";
 import { enqueueSnackbar } from "notistack";
 import { useState } from "react";
+import { sortMediaAlphabetically } from "../../../utils/sort";
 
 type List = inferRouterOutputs<AppRouter>["listRouter"]["getListMedia"];
 type Media = ArrayElement<List["media"]>;
@@ -96,7 +97,9 @@ const ListPage: NextPage<
     });
   };
 
-  const currentSelections: Media[] = data?.media ?? [];
+  const currentSelections: Media[] = (data?.media ?? []).sort(
+    sortMediaAlphabetically
+  );
   const isRegionSelected = Boolean(userPreferences?.watchProviderRegion);
 
   return (

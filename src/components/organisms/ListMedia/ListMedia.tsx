@@ -20,7 +20,7 @@ export const ListMedia: FC<Props> = ({ media, listId }) => {
   const [selectedMedia, setSelectedMedia] = useState<string>();
 
   const { mutate: updateMediaWatchedStatus } =
-    api.listRouter.updateMediaWatchedStatus.useMutation({
+    api.listRouter.updateListMedia.useMutation({
       onMutate: async ({ media: updatedMedia }) => {
         await trpcContext.listRouter.getListMedia.cancel(listId);
         const previousMedia =
