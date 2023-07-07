@@ -7,16 +7,17 @@ import { logger } from "../../libs/logger";
 import {
   mapMediaDetailsToMedia,
   mapSearchResponseToMediaList,
-  type Media,
+  type MediaResponse,
   type MediaList,
 } from "../media";
 import { getConfiguration } from "../configuration";
 import { getShowWatchProviders } from "../watchProviders";
 import { addToCache, retrieveFromCache } from "../../db/upstash/cache";
+import type { Media } from "@prisma/client";
 
-export const getShow = async (id: string, region?: string): Promise<Media> => {
-  logger.profile(`getShow #${id}`);
-  const cacheKey = `show-${id}`;
+export const hydrateShow = async (show: Media, region?: string) => {
+  logger.profile(`getShow #${show.id}`);
+  const cacheKey = `show-${show.id}`;
   const [cachedShow, configuration] = await Promise.all([
     retrieveFromCache<TmdbShowDetails>(cacheKey),
     getConfiguration(),
@@ -24,26 +25,26 @@ export const getShow = async (id: string, region?: string): Promise<Media> => {
 
   const watchProviders =
     region != null
-      ? await getShowWatchProviders(id, configuration, region)
+      ? await getShowWatchProviders(show.id, configuration, region)
       : undefined;
 
   if (cachedShow != null) {
     return mapMediaDetailsToMedia(cachedShow, configuration, watchProviders);
   }
 
-  const show = await fetchShow(id);
+  const fetchedShow = await fetchShow(show.id);
   // eslint-disable-next-line @typescript-eslint/no-floating-promises
-  addToCache(cacheKey, show);
+  addToCache(cacheKey, fetchedShow);
 
   const mappedMedia = mapMediaDetailsToMedia(
-    show,
+    fetchedShow,
     configuration,
     watchProviders
   );
 
-  logger.profile(`getShow #${id}`);
+  logger.profile(`getShow #${show.id}`);
 
-  return mappedMedia;
+  return { ...mappedMedia, isWatched: show.isWatched };
 };
 
 export const searchShows = async (query: string): Promise<MediaList> => {

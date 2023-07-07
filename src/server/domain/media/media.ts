@@ -1,4 +1,6 @@
 import {
+  getMovie,
+  getShow,
   type TmdbConfigurationResponse,
   type TmdbMovieDetails,
   type TmdbSearchMovieResult,
@@ -7,25 +9,25 @@ import {
 } from "~/server/externalApi";
 import { getImages, type Images } from "../image";
 import { type WatchProvider } from "../watchProviders";
+import { Media } from "@prisma/client";
 
 // TODO: remove this and replace with common typing
-export interface Media {
+export interface MediaResponse {
   id: number;
   title: string;
   images: Images;
   __type: "movie" | "show";
   genres: string[];
-  isWatched?: boolean;
   watchProviders?: WatchProvider[];
 }
 
-export type MediaList = Media[];
+export type MediaList = MediaResponse[];
 
 export const mapSearchResponseToMedia = (
   response: TmdbSearchShowResult | TmdbSearchMovieResult,
   configuration: TmdbConfigurationResponse,
   watchProviders?: WatchProvider[]
-): Media => {
+): MediaResponse => {
   const isMovie = response.__type === "movie";
   const images = getImages(response.poster_path, configuration);
 
@@ -43,7 +45,7 @@ export const mapMediaDetailsToMedia = (
   response: TmdbMovieDetails | TmdbShowDetails,
   configuration: TmdbConfigurationResponse,
   watchProviders?: WatchProvider[]
-): Media => {
+): MediaResponse => {
   const isMovie = response.__type === "movie";
   const images = getImages(response.poster_path, configuration);
 

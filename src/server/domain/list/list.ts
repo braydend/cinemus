@@ -1,12 +1,12 @@
-import { type Media } from "../media";
-import { getMovie } from "../movie";
-import { getShow } from "../show";
+import { hydrateMovie } from "../movie";
+import { hydrateShow } from "../show";
 import { logger } from "../../libs/logger";
 import { type MediaType } from "../../../types";
-import db, { list, listMember, user } from "../../db/prisma";
+import db, { list, listMember, media, user } from "../../db/prisma";
 import { UserError } from "../../../errors";
 import { sortMediaAlphabetically } from "../../../utils/sort";
 import { mapListMember } from "../listMember";
+import { getUserPreferences } from "../userPreferences";
 
 interface ListedMedia {
   id: string;
@@ -58,7 +58,7 @@ export const getListData = async (listId: string) => {
   return mappedList;
 };
 
-const checkEditAccess = async (userId: string, listId: string) => {
+const checkEditMediaAccess = async (userId: string, listId: string) => {
   const list = await getListData(listId);
 
   const listMember = list.members.find(({ id }) => id === userId);
@@ -185,12 +185,19 @@ export const getListMedia = async (listId: string, region?: string) => {
   const hydratedData = await Promise.all(
     list.media.map((media) =>
       media.type === "movie"
-        ? getMovie(media.id, region)
-        : getShow(media.id, region)
+        ? hydrateMovie(media, region)
+        : hydrateShow(media, region)
     )
   );
 
-  const sortedMedia = hydratedData.sort(sortMediaAlphabetically);
+  const mappedMedia = hydratedData.map((media) => ({
+    ...media,
+    isWatched:
+      list.media.find(({ id }) => id === media.id.toString())?.isWatched ??
+      false,
+  }));
+
+  const sortedMedia = mappedMedia.sort(sortMediaAlphabetically);
 
   logger.profile(`getListMedia #${listId}`);
 
@@ -231,18 +238,18 @@ export const updateListMedia = async (
   listId: string,
   userId: string,
   region?: string
-): Promise<Media[]> => {
+) => {
   logger.profile(`updateList #${listId} data=${JSON.stringify(media)}`);
 
-  await checkEditAccess(userId, listId);
+  await checkEditMediaAccess(userId, listId);
 
   const list = await db.addMediaToList(media, listId);
 
   const hydratedResults = await Promise.all(
     list.media.map((media) =>
       media.type === "movie"
-        ? getMovie(media.id, region)
-        : getShow(media.id, region)
+        ? hydrateMovie(media, region)
+        : hydrateShow(media, region)
     )
   );
 
@@ -258,18 +265,18 @@ export const removeMediaFromList = async (
   listId: string,
   userId: string,
   region?: string
-): Promise<Media[]> => {
+) => {
   logger.profile(`removeFromList #${listId} data=${JSON.stringify(media)}`);
 
-  await checkEditAccess(userId, listId);
+  await checkEditMediaAccess(userId, listId);
 
   const list = await db.removeMediaFromList(media, listId);
 
   const hydratedResults = await Promise.all(
     list.media.map((media) =>
       media.type === "movie"
-        ? getMovie(media.id, region)
-        : getShow(media.id, region)
+        ? hydrateMovie(media, region)
+        : hydrateShow(media, region)
     )
   );
 
