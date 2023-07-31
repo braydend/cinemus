@@ -19,14 +19,6 @@ export async function getServerSideProps(
   context: GetServerSidePropsContext<{ id: string }>
 ) {
   const session = await getServerSession(context.req, context.res, authOptions);
-  const helpers = createServerSideHelpers({
-    router: appRouter,
-    ctx: {
-      prisma,
-      session,
-    },
-    transformer: superjson,
-  });
 
   if (!session) {
     return {
@@ -36,6 +28,15 @@ export async function getServerSideProps(
       },
     };
   }
+
+  const helpers = createServerSideHelpers({
+    router: appRouter,
+    ctx: {
+      prisma,
+      session,
+    },
+    transformer: superjson,
+  });
 
   await Promise.all([helpers.listRouter.getListsForUser.prefetch()]);
 
