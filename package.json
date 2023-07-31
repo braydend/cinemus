@@ -26,6 +26,7 @@
     "@trpc/server": "^10.26.0",
     "@upstash/redis": "^1.21.0",
     "axios": "^1.4.0",
+    "dayjs": "^1.11.9",
     "next": "^13.4.2",
     "next-auth": "^4.22.1",
     "nextjs-progressbar": "^0.0.16",
