@@ -18,14 +18,24 @@ import { sentenceCase } from "../../utils/strings";
 export async function getServerSideProps(
   context: GetServerSidePropsContext<{ id: string }>
 ) {
+  const session = await getServerSession(context.req, context.res, authOptions);
   const helpers = createServerSideHelpers({
     router: appRouter,
     ctx: {
       prisma,
-      session: await getServerSession(context.req, context.res, authOptions),
+      session,
     },
     transformer: superjson,
   });
+
+  if (!session) {
+    return {
+      redirect: {
+        destination: "/",
+        permanent: false,
+      },
+    };
+  }
 
   await Promise.all([helpers.listRouter.getListsForUser.prefetch()]);
 
