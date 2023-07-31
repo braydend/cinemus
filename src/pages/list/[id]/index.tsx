@@ -30,11 +30,21 @@ type SearchedMedia = ArrayElement<
 export async function getServerSideProps(
   context: GetServerSidePropsContext<{ id: string }>
 ) {
+  const session = await getServerSession(context.req, context.res, authOptions);
+
+  if (!session) {
+    return {
+      redirect: {
+        destination: "/",
+        permanent: false,
+      },
+    };
+  }
   const helpers = createServerSideHelpers({
     router: appRouter,
     ctx: {
       prisma,
-      session: await getServerSession(context.req, context.res, authOptions),
+      session,
     },
     transformer: superjson,
   });
