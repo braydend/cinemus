@@ -1,27 +1,9 @@
 import { GetServerSidePropsContext, type NextPage } from "next";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "../../server/auth";
-
-// export async function getServerSideProps(
-//   context: GetServerSidePropsContext<{ id: string }>
-// ) {
-//   const helpers = createServerSideHelpers({
-//     router: appRouter,
-//     ctx: {
-//       prisma,
-//       session: await getServerSession(context.req, context.res, authOptions),
-//     },
-//     transformer: superjson,
-//   });
-
-//   await Promise.all([helpers.listRouter.getListsForUser.prefetch()]);
-
-//   return {
-//     props: {
-//       trpcState: helpers.dehydrate(),
-//     },
-//   };
-// }
+import { api } from "../../utils/api";
+import { Heading } from "../../components/atoms";
+import dayjs from "dayjs";
 
 export const getServerSideProps = async (
   context: GetServerSidePropsContext
@@ -44,9 +26,59 @@ export const getServerSideProps = async (
 };
 
 const AdminPage: NextPage = () => {
+  const { isLoading: isUsersLoading, data: users } =
+    api.userRouter.getAllUsers.useQuery();
+
+  const statusColours = {
+    bad: "text-red-500",
+    okay: "text-orange-500",
+    good: "text-green-500",
+  };
+
   return (
     <main>
-      <h1>Cinemus Admin</h1>
+      <Heading level="1">Cinemus Admin</Heading>
+      <div className="border border-black p-4">
+        <Heading level="2">Users</Heading>
+        {isUsersLoading ? (
+          <div>Loading users...</div>
+        ) : (
+          <ul>
+            {users?.map((user) => {
+              const latestSession = user.sessions
+                .sort((a, b) => (a.expires > b.expires ? 1 : -1))
+                .at(-1);
+              const hasSession = latestSession !== undefined;
+              const isSessionExpired = (expiry: Date) =>
+                expiry < dayjs().toDate();
+              const isExpiringSoon = (expiry: Date) =>
+                expiry < dayjs().add(7, "days").toDate();
+              return (
+                <li key={user.id}>
+                  <span className="font-bold">{user.role}</span>&nbsp;
+                  {user.name ?? user.email} ({user.id})
+                  {hasSession && (
+                    <>
+                      <span> - Latest session expiry: </span>
+                      <span
+                        className={
+                          isSessionExpired(latestSession.expires)
+                            ? statusColours.bad
+                            : isExpiringSoon(latestSession.expires)
+                            ? statusColours.okay
+                            : statusColours.good
+                        }
+                      >
+                        {latestSession?.expires.toDateString()}
+                      </span>
+                    </>
+                  )}
+                </li>
+              );
+            })}
+          </ul>
+        )}
+      </div>
     </main>
   );
 };
