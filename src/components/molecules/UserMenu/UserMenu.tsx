@@ -60,6 +60,13 @@ export const UserMenu: FC = () => {
               <Typography textAlign="center">Preferences</Typography>
             </Link>
           </MenuItem>
+          {sessionData.user.role === "ADMIN" && (
+            <MenuItem onClick={handleCloseUserMenu}>
+              <Link href={"/admin"}>
+                <Typography textAlign="center">Admin</Typography>
+              </Link>
+            </MenuItem>
+          )}
           <MenuItem onClick={handleLogout}>
             <Typography textAlign="center">Logout</Typography>
           </MenuItem>
