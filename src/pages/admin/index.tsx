@@ -1,10 +1,9 @@
-import { type GetServerSidePropsContext, type NextPage } from "next";
+import { GetServerSidePropsContext, type NextPage } from "next";
 import { getServerSession } from "next-auth/next";
 import { authOptions } from "../../server/auth";
 import { api } from "../../utils/api";
 import { Heading } from "../../components/atoms";
 import dayjs from "dayjs";
-import Link from "next/link";
 
 export const getServerSideProps = async (
   context: GetServerSidePropsContext
@@ -72,9 +71,6 @@ const AdminPage: NextPage = () => {
                       >
                         {latestSession?.expires.toDateString()}
                       </span>
-                      <Link href={`/api/admin/emulateUser?userId=${user.id}`}>
-                        Emulate
-                      </Link>
                     </>
                   )}
                 </li>
