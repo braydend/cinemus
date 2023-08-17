@@ -37,7 +37,7 @@ export const UserStack: FC<Props> = ({ users, className }) => {
         <div className="mr-[-12px]" key={JSON.stringify(user)}>
           <Avatar
             user={user}
-            tooltipSuffix={sentenceCase(user.role)}
+            tooltipSuffix={`(${sentenceCase(user.role)})`}
             showTooltip
             className={`border-4 ${
               index === 0 ? borderColours.owner : borderColours.member
