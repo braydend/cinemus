@@ -1,4 +1,4 @@
-import { List, Divider } from "@mui/material";
+import { List, Divider, Switch } from "@mui/material";
 import { type inferRouterOutputs } from "@trpc/server";
 import { type FC, useState } from "react";
 import { type AppRouter } from "../../../server/api/root";
@@ -16,6 +16,7 @@ type Props = { media: Media[]; listId: string };
 export const ListMedia: FC<Props> = ({ media, listId }) => {
   const trpcContext = api.useContext();
   const { enqueueSnackbar } = useSnackbar();
+  const [includeWatched, setIncludeWatched] = useState(false);
 
   const [selectedMedia, setSelectedMedia] = useState<string>();
 
@@ -119,25 +120,37 @@ export const ListMedia: FC<Props> = ({ media, listId }) => {
     });
   };
 
+  const mediaToDisplay = media.filter((m) =>
+    includeWatched ? m : m.isWatched === false
+  );
+
   return (
-    <List>
-      {media.map((mediaItem, index) => (
-        <>
-          <ListItem
-            key={mediaItem.id}
-            media={mediaItem}
-            onRemove={() => {
-              handleRemoval(listId, mediaItem);
-            }}
-            onWatchedChange={(updatedMedia) => {
-              handleWatchedChange(updatedMedia);
-            }}
-            onSelect={setSelectedMedia}
-            isSelected={selectedMedia === mediaItem.id.toString(10)}
-          />
-          {index < media.length - 1 && <Divider />}
-        </>
-      ))}
-    </List>
+    <>
+      <Switch
+        checked={includeWatched}
+        onChange={() => setIncludeWatched((prev) => !prev)}
+        id="include-watched-switch"
+      />
+      <label htmlFor="include-watched-switch">Include watched media</label>
+      <List>
+        {mediaToDisplay.map((mediaItem, index) => (
+          <>
+            <ListItem
+              key={mediaItem.id}
+              media={mediaItem}
+              onRemove={() => {
+                handleRemoval(listId, mediaItem);
+              }}
+              onWatchedChange={(updatedMedia) => {
+                handleWatchedChange(updatedMedia);
+              }}
+              onSelect={setSelectedMedia}
+              isSelected={selectedMedia === mediaItem.id.toString(10)}
+            />
+            {index < media.length - 1 && <Divider />}
+          </>
+        ))}
+      </List>
+    </>
   );
 };
