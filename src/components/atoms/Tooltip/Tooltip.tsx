@@ -1,17 +1,12 @@
-import { type FC, type PropsWithChildren } from "react";
+import { type FC, type ReactElement } from "react";
+import MuiTooltip from "@mui/material/Tooltip";
 
-type Props = { content: string };
+type Props = { content: string; children: ReactElement };
 
-export const Tooltip: FC<PropsWithChildren<Props>> = ({
-  children,
-  content,
-}) => {
+export const Tooltip: FC<Props> = ({ children, content }) => {
   return (
-    <div className="group relative">
-      {children}
-      <span className="invisible absolute top-16 z-10 inline-block rounded-sm border border-cinemus-purple bg-white p-2 group-hover:visible group-active:visible">
-        {content}
-      </span>
-    </div>
+    <MuiTooltip disableFocusListener title={content}>
+      <div>{children}</div>
+    </MuiTooltip>
   );
 };
