@@ -12,6 +12,7 @@ import { type CreateNextContextOptions } from "@trpc/server/adapters/next";
 import { type Session } from "next-auth";
 import superjson from "superjson";
 import { ZodError } from "zod";
+import * as Sentry from "@sentry/node";
 import { getServerAuthSession } from "~/server/auth";
 import { prisma } from "~/server/db";
 
@@ -83,6 +84,12 @@ const t = initTRPC.context<typeof createTRPCContext>().create({
   },
 });
 
+const sentryMiddleware = t.middleware(
+  Sentry.Handlers.trpcMiddleware({
+    attachRpcInput: true,
+  })
+);
+
 /**
  * 3. ROUTER & PROCEDURE (THE IMPORTANT BIT)
  *
@@ -98,13 +105,20 @@ const t = initTRPC.context<typeof createTRPCContext>().create({
 export const createTRPCRouter = t.router;
 
 /**
+ * Base procedure
+ *
+ * This contains common middleware that should be shared between all procedures
+ */
+const baseProcedure = t.procedure.use(sentryMiddleware)
+
+/**
  * Public (unauthenticated) procedure
  *
  * This is the base piece you use to build new queries and mutations on your tRPC API. It does not
  * guarantee that a user querying is authorized, but you can still access user session data if they
  * are logged in.
  */
-export const publicProcedure = t.procedure;
+export const publicProcedure = baseProcedure;
 
 /** Reusable middleware that enforces users are logged in before running the procedure. */
 const enforceUserIsAuthed = t.middleware(({ ctx, next }) => {
@@ -139,5 +153,5 @@ const enforceUserIsAdmin = t.middleware(({ ctx, next }) => {
  *
  * @see https://trpc.io/docs/procedures
  */
-export const protectedProcedure = t.procedure.use(enforceUserIsAuthed);
-export const adminProcedure = t.procedure.use(enforceUserIsAdmin);
+export const protectedProcedure = baseProcedure.use(enforceUserIsAuthed);
+export const adminProcedure = baseProcedure.use(enforceUserIsAdmin);
