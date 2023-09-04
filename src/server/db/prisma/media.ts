@@ -24,8 +24,21 @@ const addMediaToList = async (
   }
 };
 
+const getMostPopularShow = async () => {
+  const count = await prisma.media.groupBy({
+    by: ["id"],
+    where: { type: "show" },
+    _count: { listId: true },
+  });
+
+  console.table(count);
+
+  return await prisma.media.findFirst({ where: { type: "show" } });
+};
+
 const prismaMediaFunctions = {
   addMediaToList,
+  getMostPopularShow,
 };
 
 export default prismaMediaFunctions;
