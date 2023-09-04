@@ -209,8 +209,7 @@ export const getListsForUser = async (userId: string) => {
 
   const lists = await db.getListsForUser(userId);
 
-  console.log("lists", lists);
-
+  logger.profile(`getListsForUser map data #${userId}`);
   const mappedLists = [
     ...lists.ownedLists.map(({ ...listData }) => ({
       ...listData,
@@ -227,6 +226,7 @@ export const getListsForUser = async (userId: string) => {
       members: listData.members.map(mapListMember),
     })),
   ];
+  logger.profile(`getListsForUser map data #${userId}`);
 
   logger.profile(`getListsForUser #${userId}`);
 

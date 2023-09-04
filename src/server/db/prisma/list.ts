@@ -1,5 +1,6 @@
 import { prisma } from "~/server/db";
 import { ServerError } from "../../../errors";
+import { logger } from "../../libs/logger";
 
 interface UpdateMediaInput {
   id: string;
@@ -94,6 +95,8 @@ const updateListById = async (
 };
 
 const getListsForUser = async (userId: string) => {
+  logger.profile(`getListsForUser db call #${userId}`);
+
   const [ownedLists, joinedLists] = await Promise.all([
     prisma.list.findMany({
       where: { ownerId: userId },
@@ -112,6 +115,8 @@ const getListsForUser = async (userId: string) => {
       },
     }),
   ]);
+
+  logger.profile(`getListsForUser db call #${userId}`);
 
   return { ownedLists, joinedLists };
 };
