@@ -1,0 +1,13 @@
+{
+  "version": "5",
+  "dialect": "mysql",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "5",
+      "when": 1693897867647,
+      "tag": "0000_spotty_otto_octavius",
+      "breakpoints": true
+    }
+  ]
+}
