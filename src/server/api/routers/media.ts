@@ -1,11 +1,15 @@
 import { z } from "zod";
-import { createTRPCRouter, protectedProcedure } from "~/server/api/trpc";
+import {
+  createTRPCRouter,
+  protectedProcedure,
+  publicProcedure,
+} from "~/server/api/trpc";
 import { searchMovies } from "../../domain/movie";
 import { searchShows } from "../../domain/show";
 import { getWatchProviderRegions } from "../../domain/watchProviders";
 
 export const mediaRouter = createTRPCRouter({
-  searchMedia: protectedProcedure
+  searchMedia: publicProcedure
     .input(z.object({ type: z.enum(["show", "movie"]), query: z.string() }))
     .query(async ({ input: { query, type } }) => {
       const isMovie = type === "movie";
