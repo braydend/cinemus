@@ -7,6 +7,7 @@ import { type inferRouterOutputs } from "@trpc/server";
 import { type AppRouter } from "../../../server/api/root";
 import { type ArrayElement } from "../../../utils/types";
 import { api } from "../../../utils/api";
+import { Pill } from "../../atoms";
 
 type SearchedMedia = ArrayElement<
   inferRouterOutputs<AppRouter>["mediaRouter"]["searchMedia"]
@@ -55,27 +56,32 @@ export const SearchBox: FC<Props> = ({
   ): JSX.Element => {
     const hasImage = Boolean(option.images.logo?.xsmall);
     return (
-      <li {...props}>
-        <Box
-          minWidth={"32px"}
-          height={"48px"}
-          marginRight={"0.5rem"}
-          sx={{ backgroundColor: "black" }}
-          display={"block"}
-        >
-          {hasImage ? (
-            <div className="relative aspect-[2/3] w-8">
-              <Image
-                src={option.images.logo.xsmall ?? ""}
-                fill
-                alt={`${option.title} poster`}
-              />
-            </div>
-          ) : (
-            <>&nbsp;</>
-          )}
-        </Box>
-        {option.title}
+      <li
+        {...props}
+        className="flex h-12 flex-row items-center justify-between pr-2 hover:bg-cinemus-purple hover:text-white"
+      >
+        <div className="flex h-12 flex-row items-center">
+          <Box
+            minWidth={"32px"}
+            marginRight={"0.5rem"}
+            sx={{ backgroundColor: "black" }}
+            display={"block"}
+          >
+            {hasImage ? (
+              <div className="relative aspect-[2/3] w-8">
+                <Image
+                  src={option.images.logo.xsmall ?? ""}
+                  fill
+                  alt={`${option.title} poster`}
+                />
+              </div>
+            ) : (
+              <>&nbsp;</>
+            )}
+          </Box>
+          {option.title}
+        </div>
+        <Pill label={option.__type === "movie" ? "Movie" : "TV Show"} />
       </li>
     );
   };
